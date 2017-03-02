@@ -1,4 +1,4 @@
-var { buildSchema } = require('graphql');
+var {buildSchema} = require('graphql');
 
 // Construct a schema, using GraphQL schema language
 exports.schema = buildSchema(`
@@ -91,7 +91,7 @@ input FilterFunctionInput {
   arguments : [FilterArgumentInput]
 }
 
-type OrderBy {
+input OrderBy {
   fieldName : String # eg : endTime, properties.location
   order : SortOrder
 }
@@ -248,26 +248,6 @@ input EventTypeInput {
   id: ID! # human-readable, unique, ex: org.oasis-open.cxs.webClient.PageView,org.acmeCrm.cxs.crmClient.ColdCall
 }
 
-# Queries
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-# Definitions
-
-type Query {
-  event(id : String) : Event
-  events(filter : Filter, orderBy : [OrderBy]) : [EventConnection]
-}
-
-# Mutations 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-# Definitions
-
-type Mutation {
-  createEvent(applicationKey: ApplicationKeyInput, EventInput: EventInput!) : Event
-  collectEvent(applicationKey: ApplicationKeyInput, EventInputs: [EventInput]!) : Int
-}
-
 # PROFILE TYPES
 # ----------------------------------------------------------------------------
 
@@ -330,9 +310,8 @@ enum ImportStrategy {
   MERGE
 }
 
-type ImportOptions {
+input ImportOptionsInput {
   strategy : ImportStrategy
-  
 }
 
 type Progress {
@@ -344,23 +323,6 @@ type ImportResult {
   progress: Progress
   importedProfilesCount : Int
   skippedProfiles : [ClientProfile]
-}
-
-# Queries
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-# Definitions
-
-type Query {
-  count(filter : Filter) : Int # used to count profiles matching a condition
-  profilesByTopic(topicId : String) : [MasterProfile]
-}
-
-# Subscription
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-type Subscription {
-  importClientProfiles(applicationKey: ApplicationKeyInput, profiles : [ClientProfile], importOptions: ImportOptions) : ImportResult
 }
 
 # CLIENT TYPES
@@ -379,7 +341,7 @@ input ApplicationKeyInput {
 type Client {
   applicationKeys: [ApplicationKey]
   description: String!
-  name: String!
+  id: String!
   thirdPartySystem : Boolean
 }
 
@@ -413,49 +375,157 @@ type DynamicSegmentMatch {
   executionTimeMillis : Int
 }
 
-# Queries
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-# Definitions
-
-type Query {
-  context(dynamicSegments : [DynamicSegmentInput], clientProfileId: String) : Context
-}
-
-
-# Mutations
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-# Definitions
-
-type Mutation {
-  getContext(applicationKey: ApplicationKeyInput, events: [EventInput], dynamicSegments : [DynamicSegmentInput], clientProfileId: String!) : Context
-}
-
-
-# Subscriptions
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-# Definitions
-
-type Subscription {
-  context(dynamicSegments : [DynamicSegmentInput], clientProfileId: String) : Context
-}
-
-
 # INBOUND EVENT TYPES
 # ----------------------------------------------------------------------------
 # Inbound event could be used to push information from the context server back to a client. An example of an inbound event could 
 # include resolved locations, resolved client identification (server). Inbound events could be used for real-time personalization
 
-type Subscription {
-  inboundEvents(clientProfileId : String, filter: FilterInput) : Event!
+type Query {
+  event(id : String) : Event
+  events(filter : FilterInput, orderBy : [OrderBy]) : [EventConnection]
+  
+  count(filter : FilterInput) : Int # used to count profiles matching a condition
+  profilesByTopic(topicId : String) : [MasterProfile]
+  
+  context(dynamicSegments : [DynamicSegmentInput], clientProfileId: String) : Context  
 }
 
+type Mutation {
+  createEvent(applicationKey: ApplicationKeyInput, EventInput: EventInput!) : Event
+  collectEvent(applicationKey: ApplicationKeyInput, EventInputs: [EventInput]!) : Int
+  getContext(applicationKey: ApplicationKeyInput, events: [EventInput], dynamicSegments : [DynamicSegmentInput], clientProfileId: String!) : Context
+}
+
+type Subscription {
+  inboundEvents(clientProfileId : String, filter: FilterInput) : Event!
+  context(dynamicSegments : [DynamicSegmentInput], clientProfileId: String) : Context
+  importClientProfiles(applicationKey: ApplicationKeyInput, profiles : [ClientProfileInput], importOptions: ImportOptionsInput) : ImportResult
+}
 
 `);
 
+var pageViewEventSchema = {
+    name: "pageViewEventSchema",
+    description: "Schema for a page view event",
+    types: [
+        {
+            name: "targetPage",
+            description: "ID of page that has been viewed",
+            type: "string",
+            identifier: false,
+            aliases: []
+        }
+    ]
+};
+
+var clientProfileSchema = {
+    name: "clientProfileSchema",
+    description: "Schema for a client profile",
+    types: [
+        {
+            name: "clientIdentifier",
+            description: "ID of the profile for this client",
+            type: "string",
+            identifier: true,
+            aliases: []
+        }
+    ]
+};
+
+var masterProfileSchema = {
+    name: "masterProfileSchema",
+    description: "Schema for a master profile",
+    types: [
+        {
+            name: "email",
+            description: "Email of a profile",
+            type: "string",
+            identifier: true,
+            aliases: []
+        }
+    ]
+};
+
+var pageViewEventType = {
+    id: "pageView",
+    description: "Page view event",
+    schema: pageViewEventSchema
+};
+
+
+let fakeApplicationKeys = {
+    '1234567890': {
+        client : {
+            id : "Saleforce"
+        },
+        label: "First application key created",
+        key: "1234567890",
+        permissions: ["createEvent", "createEventTypes", "fullAccess"]
+    }
+};
+
+let fakeClients = {
+    '0': {
+        applicationKeys: [fakeApplicationKeys['1234567890']],
+        description: "Salesforce.com CXS client",
+        id: "Saleforce",
+        thirdPartySystem: true
+    }
+};
+
+var fakeMasterProfiles = {
+    '0': {
+        id: '0',
+        properties: [
+            {
+                key: "prop1",
+                value: "value1",
+                clients: [fakeClients['0']]
+            }
+        ],
+        clientProfiles: [],
+        interests: [],
+        segments: [],
+        schema: masterProfileSchema,
+    }
+};
+
+var fakeClientProfiles = {
+    '0': {
+        id: '0',
+        properties: [
+            {
+                key: "clientProp1",
+                value: "clientValue1"
+            }
+        ],
+        client: fakeClients['0'],
+        masterProfile: fakeMasterProfiles['0'],
+        schema: clientProfileSchema
+    }
+};
+
+var fakeEvents = {
+    "0": {
+        id: "0",
+        type: pageViewEventType,
+        subject: fakeClientProfiles['0'],
+        object: "objectId",
+        location: {
+            latitude: 10.0,
+            longitude: 3.0
+        },
+        timestamp: 0,
+        properties: {
+            propKey1: "propValue1"
+        }
+    }
+};
+
 // The root provides a resolver function for each API endpoint
 exports.root = {
+    event: function ({id}) {
+        return fakeEvents[id];
+    }
 };
 
