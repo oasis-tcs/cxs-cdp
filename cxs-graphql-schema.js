@@ -122,23 +122,69 @@ type EventConnection {
   pageInfo : PageInfo
 }
 
-type ClientProfileEdge {
-  node : ClientProfile
+type ProfileEdge {
+  node : Profile
   cursor : String!
 }
 
-type ClientProfileConnection {
-  edges : [ClientProfileEdge]
+type ProfileConnection {
+  totalCount: Int
+  edges : [ProfileEdge]
   pageInfo : PageInfo
 }
 
-type MasterProfileEdge {
-  node : MasterProfile
+type CommonProfileEdge {
+  node : CommonProfile
   cursor : String!
 }
 
-type MasterProfileConnection {
-  edges : [MasterProfileEdge]
+type CommonProfileConnection {
+  totalCount: Int
+  edges : [CommonProfileEdge]
+  pageInfo : PageInfo
+}
+
+type PersonaEdge {
+  node: Persona
+  cursor: String!
+}
+
+type PersonaConnection {
+  totalCount: Int
+  edges : [PersonaEdge]
+  pageInfo : PageInfo
+}
+
+type SegmentEdge {
+  node: Segment
+  cursor: String!
+}
+
+type SegmentConnection {
+  totalCount: Int
+  edges : [SegmentEdge]
+  pageInfo : PageInfo
+}
+
+type ListEdge {
+  node: List
+  cursor: String!
+}
+
+type ListConnection {
+  totalCount: Int
+  edges : [ListEdge]
+  pageInfo : PageInfo
+}
+
+type TopicEdge {
+  node: Topic
+  cursor: String!
+}
+
+type TopicConnection {
+  totalCount: Int
+  edges : [TopicEdge]
   pageInfo : PageInfo
 }
 
@@ -183,6 +229,14 @@ type Scope {
 
 type Persona {
   scope : Scope!
+  id : ID!
+  properties : [KeyValue]
+  schema: SchemaCompountType
+}
+
+input PersonaInput {
+  id : ID
+  properties : [KeyValueInput]
 }
 
 type Segment {
@@ -194,14 +248,27 @@ type Segment {
   profileFilter: Filter
 }
 
+input SegmentInput {
+  # TODO TBD
+}
+
 type List {
   scope: Scope!
+  # TODO TBD
+}
+
+input List {
+  # TODO TBD
 }
 
 type Topic {
   scope : Scope!
   id: ID! # cannot change
   displayName : String
+}
+
+input TopicInput {
+  # TODO TBD
 }
 
 # EVENT-RELATED TYPES
@@ -220,7 +287,7 @@ input GeoPointInput {
 type Event {
   id: ID!
   type: [EventType]!
-  subject: ClientProfile!
+  subject: Profile!
   object: String!
   location: [GeoPoint]
   timestamp: Int
@@ -229,7 +296,7 @@ type Event {
 
 input EventInput {
   type: [EventTypeInput]!
-  subject: ClientProfileInput!
+  subject: String! # this must be a profile ID
   object: String!
   location: [GeoPointInput]
   timestamp: Int
@@ -251,21 +318,22 @@ input EventTypeInput {
 # PROFILE TYPES
 # ----------------------------------------------------------------------------
 
-# Browser --(structured event)--> Client -> ClientProfile -> MasterProfile
+# Browser --(structured event)--> Client -> Profile -> CommonProfile
 
-type ClientProfile {
+type Profile {
   id: ID!
   properties : [KeyValue] # properties must match schema 
   client : Client
-  masterProfile : MasterProfile
+  commonProfile : CommonProfile
   schema: SchemaCompoundType # defined in the CXS server configuration 
 }
 
-input ClientProfileInput {
-  id: ID!
+input ProfileInput {
+  id: ID # optional in the case of a new profile
+  properties: [KeyValueInput]
 }
 
-type MasterPropertyValue {
+type CommonPropertyValue {
   key: String!
   value: String
   clients : [Client]
@@ -276,13 +344,13 @@ type Interest {
   score : Float # 0.0 to 1.0
 }
 
-type MasterProfile {
+type CommonProfile {
   id: ID!
-  properties : [MasterPropertyValue] # properties must match schema 
-  clientProfiles : [ClientProfile]
+  properties : [CommonPropertyValue] # properties must match schema 
+  profiles : [Profile]
   interests: [Interest]
   segments : [Segment]
-  events(filter : FilterInput, first : Int, last: Int, after : String, before: String) : [EventConnection] # TODO: decide whether to use Relay-style pagination or another one
+  events(filter : FilterInput, first : Int, last: Int, after : String, before: String) : EventConnection
   privacy : Privacy
   schema: SchemaCompoundType  # defined in the CXS server configuration 
 }
@@ -319,10 +387,14 @@ type Progress {
   message: String
 }
 
-type ImportResult {
+interface JobStatus {
+  progress: Progress
+}
+
+type ImportJobStatus implements JobStatus {
   progress: Progress
   importedProfilesCount : Int
-  skippedProfiles : [ClientProfile]
+  skippedProfiles : [Profile]
 }
 
 # CLIENT TYPES
@@ -353,7 +425,7 @@ type ContextQuery {
 }
 
 type Context {
-  clientProfile : ClientProfile
+  profile : Profile
   properties : [KeyValue] # could be computed by querying events, or stored pre-computed (ipAddress=1.2.3.4, location=TGV from Geneva to Paris, Wagon 12, Seat 71)
   events(filter : FilterInput) : [Event] # e.g. last 5 events the user has sent
   segments : [Segment]
@@ -381,25 +453,61 @@ type DynamicSegmentMatch {
 # include resolved locations, resolved client identification (server). Inbound events could be used for real-time personalization
 
 type Query {
-  event(id : String) : Event
-  events(filter : FilterInput, orderBy : [OrderBy]) : [EventConnection]
+  getEvent(id : String!) : Event
+  findEvents(filter : FilterInput, orderBy : [OrderBy], first: Int, after: String, last: Int, before: String) : EventConnection
   
-  count(filter : FilterInput) : Int # used to count profiles matching a condition
-  profilesByTopic(topicId : String) : [MasterProfile]
+  getProfile(profileId : String) : Profile
+  findProfiles(filter: FilterInput, orderBy: [OrderBy], first: Int, after: String, last: Int, before: String) : ProfileConnection
   
-  context(dynamicSegments : [DynamicSegmentInput], clientProfileId: String) : Context  
+  getPersona(personaId : String) : Persona
+  findPersonas(filter: FilterInput, orderBy: [OrderBy], first: Int, after: String, last: Int, before: String) : PersonaConnection
+  
+  getSegment(segmentId : String) : Segment
+  findSegments(filter: FilterInput, orderBy: [OrderBy], first: Int, after: String, last: Int, before: String) : SegmentConnection
+
+  getList(listId : String) : List
+  findLists(filter: FilterInput, orderBy: [OrderBy], first: Int, after: String, last: Int, before: String) : ListConnection
+
+  getTopic(topicId : String) : Topic
+  findTopics(filter: FilterInput, orderBy: [OrderBy], first: Int, after: String, last: Int, before: String) : TopicConnection
+
+  getContext(dynamicSegments : [DynamicSegmentInput], profileId: String) : Context  
 }
 
 type Mutation {
-  createEvent(applicationKey: ApplicationKeyInput, EventInput: EventInput!) : Event
-  collectEvent(applicationKey: ApplicationKeyInput, EventInputs: [EventInput]!) : Int
-  getContext(applicationKey: ApplicationKeyInput, events: [EventInput], dynamicSegments : [DynamicSegmentInput], clientProfileId: String!) : Context
+
+  # Events may be used to control common profiles, such as controlling privacy settings, reset interests, but mostly profile
+  # changes. Mutations will not be added for this
+  
+  sendEvent(applicationKey: ApplicationKeyInput, EventInput: EventInput!) : Event
+  sendEvents(applicationKey: ApplicationKeyInput, EventInputs: [EventInput]!) : Int
+  
+  createOrUpdateProfile(profile : ProfileInput) : Profile
+  deleteProfile(profileId : String) : Profile
+  
+  createOrUpdatePersona(persona : PersonaInput) : Persona
+  deletePersona(personaId : String) : Persona
+  
+  createOrUpdateSegment(segment : SegmentInput) : Segment
+  deleteSegment(segmentId : String) : Segment
+  
+  createOrUpdateList(list : ListInput) : List
+  deleteList(listId : String) : List
+  
+  createOrUpdateTopic(topic : TopicInput) : Topic
+  deleteTopic(topicId : String) : Topic
+      
+  updateContext(applicationKey: ApplicationKeyInput, events: [EventInput], dynamicSegments : [DynamicSegmentInput], profileId: String!) : Context
+  
+  startProfileImportJob(applicationKey: ApplicationKeyInput, profiles : [ProfileInput], importOptions: ImportOptionsInput) : String!
 }
 
 type Subscription {
-  inboundEvents(clientProfileId : String, filter: FilterInput) : Event!
-  context(dynamicSegments : [DynamicSegmentInput], clientProfileId: String) : Context
-  importClientProfiles(applicationKey: ApplicationKeyInput, profiles : [ClientProfileInput], importOptions: ImportOptionsInput) : ImportResult
+  eventListener(profileId : String, filter: FilterInput) : Event!
+  
+  contextListener(dynamicSegments : [DynamicSegmentInput], profileId: String) : Context
+  
+  jobListener(jobId: String) : JobStatus
 }
 
 `);
@@ -418,9 +526,9 @@ var pageViewEventSchema = {
     ]
 };
 
-var clientProfileSchema = {
-    name: "clientProfileSchema",
-    description: "Schema for a client profile",
+var profileSchema = {
+    name: "profileSchema",
+    description: "Schema for a profile",
     types: [
         {
             name: "clientIdentifier",
@@ -432,9 +540,9 @@ var clientProfileSchema = {
     ]
 };
 
-var masterProfileSchema = {
-    name: "masterProfileSchema",
-    description: "Schema for a master profile",
+var commonProfileSchema = {
+    name: "commonProfileSchema",
+    description: "Schema for a common profile",
     types: [
         {
             name: "email",
@@ -473,7 +581,7 @@ let fakeClients = {
     }
 };
 
-var fakeMasterProfiles = {
+var fakeCommonProfiles = {
     '0': {
         id: '0',
         properties: [
@@ -483,14 +591,14 @@ var fakeMasterProfiles = {
                 clients: [fakeClients['0']]
             }
         ],
-        clientProfiles: [],
+        profiles: [],
         interests: [],
         segments: [],
-        schema: masterProfileSchema,
+        schema: commonProfileSchema,
     }
 };
 
-var fakeClientProfiles = {
+var fakeProfiles = {
     '0': {
         id: '0',
         properties: [
@@ -500,8 +608,8 @@ var fakeClientProfiles = {
             }
         ],
         client: fakeClients['0'],
-        masterProfile: fakeMasterProfiles['0'],
-        schema: clientProfileSchema
+        commonProfile: fakeCommonProfiles['0'],
+        schema: profileSchema
     }
 };
 
@@ -509,7 +617,7 @@ var fakeEvents = {
     "0": {
         id: "0",
         type: pageViewEventType,
-        subject: fakeClientProfiles['0'],
+        subject: fakeProfiles['0'],
         object: "objectId",
         location: {
             latitude: 10.0,
