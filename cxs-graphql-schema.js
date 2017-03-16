@@ -231,7 +231,7 @@ type Persona {
   scope : Scope!
   id : ID!
   properties : [KeyValue]
-  schema: SchemaCompountType
+  schema: SchemaCompoundType
 }
 
 input PersonaInput {
@@ -250,15 +250,23 @@ type Segment {
 
 input SegmentInput {
   # TODO TBD
+  scope: String!
+  name : ID! # this can be generated from displayname, but never changed
+  displayName : String
 }
 
 type List {
   scope: Scope!
+  name : ID! # this can be generated from displayname, but never changed
+  displayName : String
   # TODO TBD
 }
 
-input List {
+input ListInput {
   # TODO TBD
+  scope: String!
+  name : ID! # this can be generated from displayname, but never changed
+  displayName : String
 }
 
 type Topic {
@@ -269,6 +277,9 @@ type Topic {
 
 input TopicInput {
   # TODO TBD
+  scope : String!
+  id: ID! # cannot change
+  displayName : String
 }
 
 # EVENT-RELATED TYPES
