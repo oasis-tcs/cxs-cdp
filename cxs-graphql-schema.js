@@ -1,7 +1,22 @@
 var {buildSchema} = require('graphql');
+var { GraphQLSchema } = require('graphql'); // CommonJS
 
 // Construct a schema, using GraphQL schema language
 exports.schema = buildSchema(`
+
+# GENERIC TYPES
+# ----------------------------------------------------------------------------
+
+type KeyValue {
+  key: String!
+  value : String
+}
+
+input KeyValueInput {
+  key: String!
+  value : String
+}
+
 # QUERY AND FILTER TYPES
 # ----------------------------------------------------------------------------
 enum SortOrder {
@@ -190,33 +205,33 @@ type TopicConnection {
 
 # GENERIC SCHEMA DEFINITIONS
 # ----------------------------------------------------------------------------
+# Schemas are used to validate property structures for events and profiles,
+# they do not necessarily impose integrity constraints on implementations. 
+# Schemas may change over time
 
-# the union is used to make it possible to define recursive type structures
-
-union SchemaType = SchemaScalarType | SchemaCompoundType
-
-type SchemaScalarType {
+type CXSSchema {
   name : String!
   description : String
-  type : String # scalar type
+  types : [CXSPropertyType]
+  mandatoryTypes : [String]
+}
+
+enum CXSPropertyValueType {
+  STRING,
+  INT,
+  FLOAT,
+  DATE,
+  BOOLEAN
+}
+
+# Schemas types are global and may be used in multiple schemas.
+type CXSPropertyType {
+  name : String!
+  description : String
+  type : CXSPropertyValueType! 
+  multivalued : Boolean
   identifier : Boolean
   aliases : [String] # email, e-mail, mail, mel, couriel
-}
-
-type SchemaCompoundType {
-  name : String!
-  description : String
-  types : [SchemaType]
-}
-
-type KeyValue {
-  key: String!
-  value : String
-}
-
-input KeyValueInput {
-  key: String!
-  value : String
 }
 
 # MANAGEMENT OBJECTS
@@ -231,7 +246,7 @@ type Persona {
   scope : Scope!
   id : ID!
   properties : [KeyValue]
-  schema: SchemaCompoundType
+  schema: CXSSchema
 }
 
 input PersonaInput {
@@ -297,7 +312,7 @@ input GeoPointInput {
 
 type Event {
   id: ID!
-  type: [EventType]!
+  type: EventType!
   subject: Profile!
   object: String!
   location: [GeoPoint]
@@ -306,7 +321,7 @@ type Event {
 }
 
 input EventInput {
-  type: [EventTypeInput]!
+  type: EventTypeInput!
   subject: String! # this must be a profile ID
   object: String!
   location: [GeoPointInput]
@@ -319,7 +334,7 @@ input EventInput {
 type EventType {
   id: ID! # human-readable, unique, ex: org.oasis-open.cxs.webClient.PageView,org.acmeCrm.cxs.crmClient.ColdCall
   description: String
-  schema : SchemaCompoundType
+  schema : CXSSchema
 }
 
 input EventTypeInput {
@@ -336,7 +351,7 @@ type Profile {
   properties : [KeyValue] # properties must match schema 
   client : Client
   commonProfile : CommonProfile
-  schema: SchemaCompoundType # defined in the CXS server configuration 
+  schema: CXSSchema # defined in the CXS server configuration 
 }
 
 input ProfileInput {
@@ -363,7 +378,7 @@ type CommonProfile {
   segments : [Segment]
   events(filter : FilterInput, first : Int, last: Int, after : String, before: String) : EventConnection
   privacy : Privacy
-  schema: SchemaCompoundType  # defined in the CXS server configuration 
+  schema: CXSSchema  # defined in the CXS server configuration 
 }
 
 type Privacy {
@@ -528,9 +543,10 @@ var pageViewEventSchema = {
     description: "Schema for a page view event",
     types: [
         {
+            __typename: "SchemaScalarType",
             name: "targetPage",
             description: "ID of page that has been viewed",
-            type: "string",
+            type: "STRING",
             identifier: false,
             aliases: []
         }
@@ -643,8 +659,40 @@ var fakeEvents = {
 
 // The root provides a resolver function for each API endpoint
 exports.root = {
-    event: function ({id}) {
+    getEvent: function ({id}) {
         return fakeEvents[id];
     }
 };
 
+/*
+var SchemaScalarTypes = new graphql.GraphQLEnumType ({
+    name: 'SchemaScalarTypes',
+    values: {
+        STRING : { value : 0},
+        INT : { value : 1},
+        FLOAT: { value : 2},
+        DATE: { value : 3},
+        BOOLEAN: { value : 4}
+    }
+});
+
+var SchemaScalarType = new graphql.GraphQLObjectType({
+    name: 'SchemaScalarType',
+    description: "This is the leaf type for a schema object",
+    fields : {
+        name: {type: graphql.GraphQLString},
+        description: {type: graphql.GraphQLString},
+        type: {type: new graphql.GraphQLNonNull(SchemaScalarTypes)},
+        identifier: {type: graphql.GraphQLBoolean},
+        aliases: {type: new graphql.GraphQLList(graphql.GraphQLString)}
+    }
+});
+
+var MyAppSchema = new GraphQLSchema({
+    query: MyAppQueryRootType,
+    mutation: MyAppMutationRootType
+});
+
+exports.schema = MyAppSchema;
+
+*/
