@@ -18,5 +18,7 @@
 
 <features xmlns="http://karaf.apache.org/xmlns/features/v1.2.0" name="cxs-graphql-api-features">
     <feature description="Implementation of the Context Server GraphQL API" version="${project.version}" name="cxs-graphql-api-impl">
+        <bundle start-level="77">mvn:com.graphql-java/graphql-java-servlet/2.1.0</bundle>
+        <bundle start-level="78">mvn:org.oasis_open.contextserver/cxs-graphql-api-impl/${project.version}</bundle>
     </feature>
 </features>

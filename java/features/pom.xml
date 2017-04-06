@@ -14,9 +14,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.graphql-java</groupId>
-            <artifactId>graphql-java-servlet</artifactId>
-            <version>2.1.0</version>
+            <groupId>org.oasis_open.contextserver</groupId>
+            <artifactId>cxs-graphql-api-impl</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
@@ -29,6 +29,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <startLevel>85</startLevel>
+                    <aggregateFeatures>true</aggregateFeatures>
                 </configuration>
             </plugin>
         </plugins>
