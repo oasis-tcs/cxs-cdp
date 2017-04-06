@@ -29,6 +29,15 @@
             <type>xml</type>
             <scope>runtime</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.oasis_open.contextserver</groupId>
+            <artifactId>cxs-graphql-api-features</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <classifier>features</classifier>
+            <type>xml</type>
+            <scope>runtime</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -77,6 +86,7 @@
                     </bootFeatures>
                     <installedFeatures>
                         <feature>wrapper</feature>
+                        <feature>cxs-graphql-api-impl</feature>
                     </installedFeatures>
                 </configuration>
             </plugin>

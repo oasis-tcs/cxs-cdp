@@ -4,16 +4,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>org.oasis_open.contextserver</groupId>
-        <artifactId>cxs-graphql-api-root</artifactId>
+        <artifactId>cxs-graphql-api-bundles</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>cxs-graphql-api-bundles</artifactId>
-    <packaging>pom</packaging>
-
-    <modules>
-        <module>graphql-impl</module>
-    </modules>
+    <artifactId>cxs-graphql-api-impl</artifactId>
 
 </project>
