@@ -1,10 +1,6 @@
 package org.oasis_open.contextserver.graphql;
 
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.component.annotations.ReferenceCardinality;
-import org.osgi.service.component.annotations.ReferencePolicy;
 
 import graphql.schema.GraphQLFieldDefinition;
 import graphql.schema.GraphQLObjectType;
@@ -28,9 +24,16 @@ import static graphql.schema.GraphQLObjectType.newObject;
 @Component(
         name="CXSGraphQLProvider"
 )
-public class CXSGraphQLProvider implements GraphQLQueryProvider, GraphQLMutationProvider, GraphQLTypesProvider {
+public class CXSGraphQLProvider implements GraphQLQueryProvider, GraphQLTypesProvider {
     public GraphQLObjectType getQuery() {
-        return null;
+        GraphQLObjectType queryType = newObject()
+                .name("helloWorldQuery")
+                .field(newFieldDefinition()
+                        .type(GraphQLString)
+                        .name("hello")
+                        .staticValue("world"))
+                .build();
+        return queryType;
     }
 
     public Object context() {
@@ -38,7 +41,7 @@ public class CXSGraphQLProvider implements GraphQLQueryProvider, GraphQLMutation
     }
 
     public String getName() {
-        return null;
+        return "CXSGraphQLProvider";
     }
 
     public Collection<GraphQLFieldDefinition> getMutations() {
