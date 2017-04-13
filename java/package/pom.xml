@@ -92,10 +92,10 @@
                     <!-- no startupFeatures -->
                     <bootFeatures>
                         <feature>minimal</feature>
-                    </bootFeatures>
-                    <installedFeatures>
                         <feature>wrapper</feature>
                         <feature>cxs-graphql-api-features</feature>
+                    </bootFeatures>
+                    <installedFeatures>
                     </installedFeatures>
                 </configuration>
             </plugin>

@@ -22,7 +22,8 @@ import static graphql.schema.GraphQLObjectType.newObject;
  * Created by loom on 06.04.17.
  */
 @Component(
-        name="CXSGraphQLProvider"
+        name="CXSGraphQLProvider",
+        immediate=true
 )
 public class CXSGraphQLProvider implements GraphQLQueryProvider, GraphQLTypesProvider {
     public GraphQLObjectType getQuery() {
