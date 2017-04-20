@@ -1,0 +1,31 @@
+{
+  "name": "graphiql",
+  "version": "1.0.0",
+  "description": "Embedded GraphiQL for the Context Server Specification",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jahia/jahia-web-marketing.git"
+  },
+  "author": "",
+  "license": "SEE LICENSE IN pom.xml",
+  "bugs": {
+    "url": "https://github.com/Jahia/jahia-web-marketing/issues"
+  },
+  "homepage": "https://github.com/Jahia/jahia-web-marketing#readme",
+  "dependencies": {
+    "graphiql" : "^0.10.0",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-batch": "^1.0.5",
+    "gulp-concat": "^2.6.1",
+    "gulp-watch": "^4.3.11",
+    "yargs": "^7.0.2"
+  }
+}

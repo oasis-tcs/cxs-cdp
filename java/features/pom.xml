@@ -71,6 +71,12 @@
             <artifactId>cxs-graphql-api-impl</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.oasis_open.contextserver</groupId>
+            <artifactId>cxs-graphql-api-graphiql</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <type>war</type>
+        </dependency>
 
     </dependencies>
 
