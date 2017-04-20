@@ -32,7 +32,7 @@ public class CXSGraphQLProvider implements GraphQLQueryProvider, GraphQLTypesPro
         data.put("scope2", "23456");
     }
 
-    public Collection<GraphQLFieldDefinition> getQueryFieldDefinitions() {
+    public Collection<GraphQLFieldDefinition> getQueries() {
         List<GraphQLFieldDefinition> fieldDefinitions = new ArrayList<GraphQLFieldDefinition>();
         fieldDefinitions.add(newFieldDefinition()
                 .type(new GraphQLList(CXSGraphQLScope))

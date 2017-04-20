@@ -36,7 +36,7 @@ public class CXSEventGraphQLProvider implements GraphQLQueryProvider {
                     .staticValue("pageView")
             ).build();
 
-    public Collection<GraphQLFieldDefinition> getQueryFieldDefinitions() {
+    public Collection<GraphQLFieldDefinition> getQueries() {
         List<GraphQLFieldDefinition> fieldDefinitions = new ArrayList<GraphQLFieldDefinition>();
         fieldDefinitions.add(
                 newFieldDefinition()
