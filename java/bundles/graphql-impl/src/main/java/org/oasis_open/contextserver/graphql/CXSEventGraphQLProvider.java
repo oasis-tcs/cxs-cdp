@@ -1,26 +1,60 @@
 package org.oasis_open.contextserver.graphql;
 
+import graphql.Scalars;
 import graphql.schema.*;
 import graphql.servlet.GraphQLQueryProvider;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import static graphql.Scalars.GraphQLID;
+import static graphql.Scalars.GraphQLLong;
 import static graphql.Scalars.GraphQLString;
 import static graphql.schema.GraphQLFieldDefinition.newFieldDefinition;
 import static graphql.schema.GraphQLObjectType.newObject;
+import static graphql.schema.GraphQLArgument.newArgument;
 
 /**
  * Created by loom on 20.04.17.
  */
 @Component(
-        name="CXSEventGraphQLProvider",
-        immediate=true
+        name = "CXSEventGraphQLProvider",
+        immediate = true
 )
 public class CXSEventGraphQLProvider implements GraphQLQueryProvider {
+
+    private EventService eventService;
+
+    private static GraphQLObjectType CXSProperties = newObject()
+            .name("Properties")
+            .description("Generic key-value (string,string) properties")
+            .field(newFieldDefinition()
+                    .type(GraphQLID)
+                    .name("key")
+                    .description("A unique identifier for the property")
+                    .dataFetcher(new DataFetcher() {
+                        public Object get(DataFetchingEnvironment environment) {
+                            Map.Entry<Object,Object> propertyEntry = environment.getSource();
+                            return propertyEntry.getKey();
+                        }
+                    })
+            )
+            .field(newFieldDefinition()
+                    .type(GraphQLID)
+                    .name("value")
+                    .description("A value for the property")
+                    .dataFetcher(new DataFetcher() {
+                        public Object get(DataFetchingEnvironment environment) {
+                            Map.Entry<Object,Object> propertyEntry = environment.getSource();
+                            return propertyEntry.getValue();
+                        }
+                    })
+            )
+            .build();
 
     private static GraphQLObjectType CXSGraphQLEvent = newObject()
             .name("Event")
@@ -28,13 +62,73 @@ public class CXSEventGraphQLProvider implements GraphQLQueryProvider {
             .field(newFieldDefinition()
                     .type(GraphQLID)
                     .name("id")
-                    .staticValue("eventId")
+                    .description("A unique identifier for the event")
+                    .dataFetcher(new DataFetcher() {
+                        public Object get(DataFetchingEnvironment environment) {
+                            Event event = environment.getSource();
+                            return event.getId();
+                        }
+                    })
             )
             .field(newFieldDefinition()
                     .type(GraphQLString)
                     .name("eventType")
-                    .staticValue("pageView")
-            ).build();
+                    .description("An identifier for the event type")
+                    .dataFetcher(new DataFetcher() {
+                        public Object get(DataFetchingEnvironment environment) {
+                            Event event = environment.getSource();
+                            return event.getEventType();
+                        }
+                    })
+            )
+            .field(newFieldDefinition()
+                    .type(GraphQLLong)
+                    .name("timestamp")
+                    .description("The difference, measured in milliseconds, between the current time and midnight, January 1, 1970 UTC.")
+                    .dataFetcher(new DataFetcher() {
+                        public Object get(DataFetchingEnvironment environment) {
+                            Event event = environment.getSource();
+                            return event.getTimestamp();
+                        }
+                    }))
+            .field(newFieldDefinition()
+                    .type(GraphQLString)
+                    .name("subject")
+                    .description("The entity that has fired the event (using the profile)")
+                    .dataFetcher(new DataFetcher() {
+                        public Object get(DataFetchingEnvironment environment) {
+                            Event event = environment.getSource();
+                            return event.getSubject();
+                        }
+                    }))
+            .field(newFieldDefinition()
+                    .type(GraphQLString)
+                    .name("object")
+                    .description("The object on which the event was fired.")
+                    .dataFetcher(new DataFetcher() {
+                        public Object get(DataFetchingEnvironment environment) {
+                            Event event = environment.getSource();
+                            return event.getObject();
+                        }
+                    })
+            )
+            .field(newFieldDefinition()
+                    .type(new GraphQLList(CXSProperties))
+                    .name("properties")
+                    .description("Generic properties for the event")
+                    .dataFetcher(new DataFetcher() {
+                        public Object get(DataFetchingEnvironment environment) {
+                            Event event = environment.getSource();
+                            return new ArrayList<Map.Entry<Object,Object>>(event.getProperties().entrySet());
+                        }
+                    })
+            )
+            .build();
+
+    @Reference
+    public void setEventService(EventService eventService) {
+        this.eventService = eventService;
+    }
 
     public Collection<GraphQLFieldDefinition> getQueries() {
         List<GraphQLFieldDefinition> fieldDefinitions = new ArrayList<GraphQLFieldDefinition>();
@@ -42,12 +136,25 @@ public class CXSEventGraphQLProvider implements GraphQLQueryProvider {
                 newFieldDefinition()
                         .name("events")
                         .type(new GraphQLList(CXSGraphQLEvent))
+                        .argument(newArgument().name("offset").type(Scalars.GraphQLLong).build())
+                        .argument(newArgument().name("pageSize").type(Scalars.GraphQLLong).build())
                         .dataFetcher(new DataFetcher() {
                             public Object get(DataFetchingEnvironment environment) {
-                                return null;
+                                Long offset = environment.getArgument("offset");
+                                if (offset == null) {
+                                    offset = 0L;
+                                }
+                                ;
+                                Long pageSize = environment.getArgument("pageSize");
+                                if (pageSize == null) {
+                                    pageSize = 50L;
+                                }
+                                return eventService.getEvents(offset, pageSize);
                             }
                         })
                         .build());
         return fieldDefinitions;
     }
+
+
 }
