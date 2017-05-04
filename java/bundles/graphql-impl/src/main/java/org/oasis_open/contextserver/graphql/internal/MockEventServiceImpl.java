@@ -2,7 +2,6 @@ package org.oasis_open.contextserver.graphql.internal;
 
 import org.oasis_open.contextserver.graphql.Event;
 import org.oasis_open.contextserver.graphql.EventService;
-import org.oasis_open.contextserver.graphql.PartialList;
 import org.osgi.service.component.annotations.Component;
 
 import java.util.*;
@@ -20,8 +19,18 @@ public class MockEventServiceImpl implements EventService {
 
     public MockEventServiceImpl() {
         UUID.randomUUID().toString();
-        Event pageViewEvent = new Event(UUID.randomUUID().toString(), System.currentTimeMillis(), "pageView", "thomas-profile-id", "/cars/modelx", new Properties());
-        Event buttonClickEvent = new Event(UUID.randomUUID().toString(), System.currentTimeMillis(), "buttonClick", "thomas-profile-id", "/cars/modelx#buy", new Properties());
+
+        Properties pageProperties = new Properties();
+        pageProperties.put("pageId", UUID.randomUUID().toString());
+        pageProperties.put("pagePath", "/cars/modelx");
+        pageProperties.put("pageLanguage", "en");
+        Event pageViewEvent = new Event(UUID.randomUUID().toString(), System.currentTimeMillis(), "pageView", "thomas-profile-id", "/cars/modelx", pageProperties);
+
+        Properties buttonClickProperties = new Properties();
+        buttonClickProperties.put("clickPositionX", "5");
+        buttonClickProperties.put("clickPositionY", "7");
+        buttonClickProperties.put("clickLengthMillis", "9");
+        Event buttonClickEvent = new Event(UUID.randomUUID().toString(), System.currentTimeMillis(), "buttonClick", "thomas-profile-id", "/cars/modelx#buy", buttonClickProperties);
         mockEventDatabase.put(pageViewEvent.getId(), pageViewEvent);
         mockEventDatabase.put(buttonClickEvent.getId(), buttonClickEvent);
     }
