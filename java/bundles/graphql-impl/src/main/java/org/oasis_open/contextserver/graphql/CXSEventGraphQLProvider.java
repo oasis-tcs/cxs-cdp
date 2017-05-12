@@ -1,6 +1,5 @@
 package org.oasis_open.contextserver.graphql;
 
-import graphql.Scalars;
 import graphql.schema.*;
 import graphql.servlet.GraphQLQueryProvider;
 import org.osgi.service.component.annotations.Component;
@@ -135,15 +134,23 @@ public class CXSEventGraphQLProvider implements GraphQLQueryProvider {
         fieldDefinitions.add(
                 newFieldDefinition()
                         .name("findEvents")
+                        .description("An access point to retrieve CXS events")
                         .type(CXSGraphQLProvider.newCXSConnection("Event", CXSGraphQLEvent))
-                        // .argument(newArgument().name("filter").type(CXSFilterType).build())
-                        // .argument(newArgument().name("orderBy").type(CXSOrderByType).build())
-                        .argument(newArgument().name("first").type(Scalars.GraphQLLong).build())
-                        .argument(newArgument().name("after").type(Scalars.GraphQLString).build())
-                        .argument(newArgument().name("last").type(Scalars.GraphQLLong).build())
-                        .argument(newArgument().name("before").type(Scalars.GraphQLString).build())
+                        .argument(newArgument()
+                                .name("filter")
+                                .description("A filter for the events")
+                                .type(CXSGraphQLProvider.CXSFilterFunction)
+                                .build())
+                        .argument(newArgument()
+                                .name("orderBy")
+                                .description("A list of fields to sort by")
+                                .type(new GraphQLList(CXSGraphQLProvider.CXSOrderBy))
+                                .build())
+                        .argument(CXSGraphQLProvider.newRelayCursorArguments())
                         .dataFetcher(new DataFetcher() {
                             public Object get(DataFetchingEnvironment environment) {
+                                Map<String,?> filterArgument = environment.getArgument("filter");
+                                List<Map<String,?>> orderBysArgument = environment.getArgument("orderBy");
                                 Long firstElements = environment.getArgument("first");
                                 if (firstElements == null) {
                                     firstElements = 0L;
@@ -154,8 +161,14 @@ public class CXSEventGraphQLProvider implements GraphQLQueryProvider {
                                     lastElements = 50L;
                                 }
                                 String beforeCursor = environment.getArgument("before");
-
-                                return eventService.findEvents(firstElements, afterCursor, lastElements, beforeCursor);
+                                CXSFilterFunction filterFunction = new CXSFilterFunction(filterArgument);
+                                List<CXSOrderBy> orderBys = new ArrayList<CXSOrderBy>();
+                                if (orderBysArgument != null) {
+                                    for (Map<String, ?> orderByArgument : orderBysArgument) {
+                                        orderBys.add(new CXSOrderBy(orderByArgument));
+                                    }
+                                }
+                                return eventService.findEvents(filterFunction, orderBys, firstElements, afterCursor, lastElements, beforeCursor);
                             }
                         })
                         .build());

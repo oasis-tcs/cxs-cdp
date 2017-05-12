@@ -1,5 +1,6 @@
 package org.oasis_open.contextserver.graphql;
 
+import graphql.Scalars;
 import graphql.schema.*;
 import org.osgi.service.component.annotations.Component;
 
@@ -8,11 +9,13 @@ import graphql.servlet.GraphQLTypesProvider;
 
 import java.util.*;
 
-import static graphql.Scalars.GraphQLBoolean;
-import static graphql.Scalars.GraphQLID;
-import static graphql.Scalars.GraphQLString;
+import static graphql.Scalars.*;
+import static graphql.schema.GraphQLArgument.newArgument;
 import static graphql.schema.GraphQLFieldDefinition.newFieldDefinition;
 import static graphql.schema.GraphQLObjectType.newObject;
+import static graphql.schema.GraphQLInputObjectType.newInputObject;
+import static graphql.schema.GraphQLInputObjectField.newInputObjectField;
+import static graphql.schema.GraphQLEnumType.newEnum;
 
 /**
  * Created by loom on 06.04.17.
@@ -66,7 +69,100 @@ public class CXSGraphQLProvider implements GraphQLQueryProvider, GraphQLTypesPro
         return types;
     }
 
-    private static GraphQLType CXSScope = newObject()
+    public static GraphQLEnumType CXSFilterArgumentType = newEnum()
+            .name("FilterArgumentType")
+            .description("An enum that specifies the type of argument for a filter argument")
+            .value("BOOLEAN")
+            .value("INT")
+            .value("FLOAT")
+            .value("STRING")
+            .value("FILTERFUNCTION")
+            .build();
+
+    public static GraphQLInputObjectType CXSFilterArgument = newInputObject()
+            .name("FilterArgument")
+            .description("A single filter argument value")
+            .field(newInputObjectField()
+                    .name("type")
+                    .description("The type of the argument value, which will also determine which field will contain the actual value")
+                    .type(CXSFilterArgumentType)
+                    .build()
+            )
+            .field(newInputObjectField()
+                    .name("booleanArg")
+                    .description("This field will contain the argument value if the type is BOOLEAN")
+                    .type(GraphQLBoolean)
+                    .build()
+            )
+            .field(newInputObjectField()
+                    .name("intArg")
+                    .description("This field will contain the argument value if the type is INT")
+                    .type(GraphQLLong)
+                    .build()
+            )
+            .field(newInputObjectField()
+                    .name("floatArg")
+                    .description("This field will contain the argument value if the type is FLOAT")
+                    .type(GraphQLFloat)
+                    .build()
+            )
+            .field(newInputObjectField()
+                    .name("stringArg")
+                    .description("This field will contain the argument value if the type is STRING")
+                    .type(GraphQLFloat)
+                    .build()
+            )
+            .field(newInputObjectField()
+                    .name("functionArg")
+                    .description("This field will contain the argument value if the type is FILTERFUNCTION")
+                    .type(new GraphQLTypeReference("FilterFunction"))
+                    .build()
+            )
+            .build();
+
+    public static GraphQLInputObjectType CXSFilterFunction = newInputObject()
+            .name("FilterFunction")
+            .description("A filter function is used to filter object collections")
+            .field(newInputObjectField()
+                    .name("function")
+                    .description("The name of the function")
+                    .type(GraphQLString)
+                    .build()
+            )
+            .field(newInputObjectField()
+                    .name("arguments")
+                    .description("The arguments of the function")
+                    .type(new GraphQLList(CXSFilterArgument))
+                    .build()
+            )
+            .build();
+
+    public static GraphQLEnumType CXSSortOrder = newEnum()
+            .name("SortOrder")
+            .description("The possible direction for a sort order")
+            .value("ASC")
+            .value("DESC")
+            .value("UNSPECIFIED")
+            .build();
+
+    public static GraphQLInputObjectType CXSOrderBy = newInputObject()
+            .name("OrderBy")
+            .description("A type that contains information on how to order by field values")
+            .field(newInputObjectField()
+                    .name("fieldName")
+                    .description("The name of the field to sort by")
+                    .type(GraphQLString)
+                    .build()
+            )
+            .field(newInputObjectField()
+                    .name("order")
+                    .description("The direction of the sorting (order)")
+                    .type(CXSSortOrder)
+                    .build()
+            )
+            .build();
+
+    public static GraphQLType CXSScope = newObject()
                 .name("Scope")
                 .description("A scope is used to regroup management object")
                 .field(newFieldDefinition()
@@ -80,7 +176,7 @@ public class CXSGraphQLProvider implements GraphQLQueryProvider, GraphQLTypesPro
                         })
                 ).build();
 
-    private static GraphQLType CXSTopic = newObject()
+    public static GraphQLType CXSTopic = newObject()
             .name("Topic")
             .description("A topic is used to track interests")
             .field(newFieldDefinition()
@@ -177,5 +273,30 @@ public class CXSGraphQLProvider implements GraphQLQueryProvider, GraphQLTypesPro
                         })
                 )
                 .build();
+    }
+
+    public static List<GraphQLArgument> newRelayCursorArguments() {
+        List<GraphQLArgument> arguments = new ArrayList<GraphQLArgument>();
+        arguments.add(newArgument()
+                .name("first")
+                .description("Number of arguments to retrieve from the position of the 'after' cursor")
+                .type(Scalars.GraphQLLong)
+                .build());
+        arguments.add(newArgument()
+                .name("after")
+                .description("The cursor position at which to start retrieving the number of elements specified by the 'first' argument")
+                .type(Scalars.GraphQLString)
+                .build());
+        arguments.add(newArgument()
+                .name("last")
+                .description("The number of elements to retrieve before the 'before' cursor position")
+                .type(Scalars.GraphQLLong)
+                .build());
+        arguments.add(newArgument()
+                .name("before")
+                .description("The cursor position at which to end retrieve the 'last' number of elements")
+                .type(Scalars.GraphQLString)
+                .build());
+        return arguments;
     }
 }

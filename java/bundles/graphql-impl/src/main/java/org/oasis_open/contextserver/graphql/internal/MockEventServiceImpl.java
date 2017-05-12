@@ -34,7 +34,7 @@ public class MockEventServiceImpl implements EventService {
         mockEventDatabase.put(buttonClickEvent.getId(), buttonClickEvent);
     }
 
-    public RelayConnection<Event> findEvents(long first, String after, long last, String before) {
+    public RelayConnection<Event> findEvents(CXSFilterFunction filterFunction, List<CXSOrderBy> orderBys, long first, String after, long last, String before) {
         List<RelayEdge<Event>> eventEdges = new ArrayList<RelayEdge<Event>>();
         for (Event event : mockEventDatabase.values()) {
             RelayEdge<Event> eventEdge = new RelayEdge<Event>(event, event.getId());
