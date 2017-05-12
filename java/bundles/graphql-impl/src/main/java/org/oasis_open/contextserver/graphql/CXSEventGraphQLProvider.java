@@ -134,22 +134,28 @@ public class CXSEventGraphQLProvider implements GraphQLQueryProvider {
         List<GraphQLFieldDefinition> fieldDefinitions = new ArrayList<GraphQLFieldDefinition>();
         fieldDefinitions.add(
                 newFieldDefinition()
-                        .name("events")
-                        .type(new GraphQLList(CXSGraphQLEvent))
-                        .argument(newArgument().name("offset").type(Scalars.GraphQLLong).build())
-                        .argument(newArgument().name("pageSize").type(Scalars.GraphQLLong).build())
+                        .name("findEvents")
+                        .type(CXSGraphQLProvider.newCXSConnection("Event", CXSGraphQLEvent))
+                        // .argument(newArgument().name("filter").type(CXSFilterType).build())
+                        // .argument(newArgument().name("orderBy").type(CXSOrderByType).build())
+                        .argument(newArgument().name("first").type(Scalars.GraphQLLong).build())
+                        .argument(newArgument().name("after").type(Scalars.GraphQLString).build())
+                        .argument(newArgument().name("last").type(Scalars.GraphQLLong).build())
+                        .argument(newArgument().name("before").type(Scalars.GraphQLString).build())
                         .dataFetcher(new DataFetcher() {
                             public Object get(DataFetchingEnvironment environment) {
-                                Long offset = environment.getArgument("offset");
-                                if (offset == null) {
-                                    offset = 0L;
+                                Long firstElements = environment.getArgument("first");
+                                if (firstElements == null) {
+                                    firstElements = 0L;
                                 }
-                                ;
-                                Long pageSize = environment.getArgument("pageSize");
-                                if (pageSize == null) {
-                                    pageSize = 50L;
+                                String afterCursor = environment.getArgument("after");
+                                Long lastElements = environment.getArgument("last");
+                                if (lastElements == null) {
+                                    lastElements = 50L;
                                 }
-                                return eventService.getEvents(offset, pageSize);
+                                String beforeCursor = environment.getArgument("before");
+
+                                return eventService.findEvents(firstElements, afterCursor, lastElements, beforeCursor);
                             }
                         })
                         .build());

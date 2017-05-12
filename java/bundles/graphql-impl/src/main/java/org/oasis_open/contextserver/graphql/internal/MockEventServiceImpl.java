@@ -1,7 +1,6 @@
 package org.oasis_open.contextserver.graphql.internal;
 
-import org.oasis_open.contextserver.graphql.Event;
-import org.oasis_open.contextserver.graphql.EventService;
+import org.oasis_open.contextserver.graphql.*;
 import org.osgi.service.component.annotations.Component;
 
 import java.util.*;
@@ -35,7 +34,12 @@ public class MockEventServiceImpl implements EventService {
         mockEventDatabase.put(buttonClickEvent.getId(), buttonClickEvent);
     }
 
-    public List<Event> getEvents(long offset, long pageSize) {
-        return new ArrayList<Event>(mockEventDatabase.values());
+    public RelayConnection<Event> findEvents(long first, String after, long last, String before) {
+        List<RelayEdge<Event>> eventEdges = new ArrayList<RelayEdge<Event>>();
+        for (Event event : mockEventDatabase.values()) {
+            RelayEdge<Event> eventEdge = new RelayEdge<Event>(event, event.getId());
+            eventEdges.add(eventEdge);
+        }
+        return new RelayConnection<Event>(eventEdges, new RelayPageInfo(false, false));
     }
 }
