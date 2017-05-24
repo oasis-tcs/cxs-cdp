@@ -302,7 +302,7 @@ input GeoPointInput {
 
 type Event {
   id: ID!
-  type: EventType!
+  eventType: EventType!
   subject: Profile!
   object: String!
   location: [GeoPoint]
@@ -311,7 +311,7 @@ type Event {
 }
 
 input EventInput {
-  type: EventTypeInput!
+  eventTypeId: String!
   subject: String! # this must be a profile ID
   object: String!
   location: [GeoPointInput]
@@ -382,12 +382,6 @@ type PropertyPolicy {
   policyName : String!
 }
 
-# TODO do we need both this and policy ?
-type PropertyPermission {
-  permission : String!
-  applicationKey : ApplicationKey
-}
-
 enum ImportStrategy {
   SKIP,
   OVERWRITE, 
@@ -415,19 +409,20 @@ type ImportJobStatus implements JobStatus {
 
 # CLIENT TYPES
 # ----------------------------------------------------------------------------
-type ApplicationKey {
-  client: Client!
-  label : String!
-  key: ID!
-  permissions: [String] # "createEvent", "createEventTypes", "fullAccess"
-}
+# Application keys are no longer part of the specification, implementations will probably need to use 
+# a concept similar to this so we leave them as example for the time being.
+#type ApplicationKey {
+#  client: Client!
+#  label : String!
+#  key: ID!
+#  permissions: [String] # "createEvent", "createEventTypes", "fullAccess"
+#}
 
-input ApplicationKeyInput {
-  key: ID!
-}
+#input ApplicationKeyInput {
+#  key: ID!
+#}
 
 type Client {
-  applicationKeys: [ApplicationKey]
   description: String!
   id: String!
   thirdPartySystem : Boolean
@@ -495,8 +490,7 @@ type Mutation {
   # Events may be used to control common profiles, such as controlling privacy settings, reset interests, but mostly profile
   # changes. Mutations will not be added for this
   
-  sendEvent(applicationKey: ApplicationKeyInput, EventInput: EventInput!) : Event
-  sendEvents(applicationKey: ApplicationKeyInput, EventInputs: [EventInput]!) : Int
+  logEvents(events: [EventInput]!) : Int
   
   createOrUpdateProfile(profile : ProfileInput) : Profile
   deleteProfile(profileId : String) : Profile
@@ -513,9 +507,9 @@ type Mutation {
   createOrUpdateTopic(topic : TopicInput) : Topic
   deleteTopic(topicId : String) : Topic
       
-  updateContext(applicationKey: ApplicationKeyInput, events: [EventInput], dynamicSegments : [DynamicSegmentInput], profileId: String!) : Context
+  updateContext(events: [EventInput], dynamicSegments : [DynamicSegmentInput], profileId: String!) : Context
   
-  startProfileImportJob(applicationKey: ApplicationKeyInput, profiles : [ProfileInput], importOptions: ImportOptionsInput) : String!
+  startProfileImportJob(profiles : [ProfileInput], importOptions: ImportOptionsInput) : String!
 }
 
 type Subscription {
@@ -577,21 +571,8 @@ var pageViewEventType = {
     schema: pageViewEventSchema
 };
 
-
-let fakeApplicationKeys = {
-    '1234567890': {
-        client : {
-            id : "Saleforce"
-        },
-        label: "First application key created",
-        key: "1234567890",
-        permissions: ["createEvent", "createEventTypes", "fullAccess"]
-    }
-};
-
 let fakeClients = {
     '0': {
-        applicationKeys: [fakeApplicationKeys['1234567890']],
         description: "Salesforce.com CXS client",
         id: "Saleforce",
         thirdPartySystem: true

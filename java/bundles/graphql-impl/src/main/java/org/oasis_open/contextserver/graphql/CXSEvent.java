@@ -5,25 +5,27 @@ import java.util.Properties;
 /**
  * Created by loom on 04.05.17.
  */
-public class Event {
+public class CXSEvent {
     private String id;
     private Long timestamp;
     private String eventType;
 
     private String subject; // e.g. profileId
     private String object; // e.g. page
+    private CXSGeoPoint location;
 
     private Properties properties;
 
-    public Event() {
+    public CXSEvent() {
     }
 
-    public Event(String id, Long timestamp, String eventType, String subject, String object, Properties properties) {
+    public CXSEvent(String id, Long timestamp, String eventType, String subject, String object, CXSGeoPoint location, Properties properties) {
         this.id = id;
         this.timestamp = timestamp;
         this.eventType = eventType;
         this.subject = subject;
         this.object = object;
+        this.location = location;
         this.properties = properties;
     }
 
@@ -65,6 +67,14 @@ public class Event {
 
     public void setObject(String object) {
         this.object = object;
+    }
+
+    public CXSGeoPoint getLocation() {
+        return location;
+    }
+
+    public void setLocation(CXSGeoPoint location) {
+        this.location = location;
     }
 
     public Properties getProperties() {

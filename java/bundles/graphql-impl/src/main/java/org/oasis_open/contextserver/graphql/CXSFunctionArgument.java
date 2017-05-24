@@ -18,7 +18,9 @@ public class CXSFunctionArgument {
         this.intValue = (Integer) functionArgumentData.get("int");
         this.floatValue = (Double) functionArgumentData.get("float");
         this.stringValue = (String) functionArgumentData.get("string");
-        Map<String,?> functionArgData = (Map<String,?>) functionArgumentData.get("function");
-        this.functionValue = new CXSFilterFunction(functionArgData);
+        Map<String,?> functionValueData = (Map<String,?>) functionArgumentData.get("function");
+        if (functionValueData != null) {
+            this.functionValue = new CXSFilterFunction(functionValueData);
+        }
     }
 }
