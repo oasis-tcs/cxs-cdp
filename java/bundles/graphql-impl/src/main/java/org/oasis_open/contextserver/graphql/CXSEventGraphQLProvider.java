@@ -161,7 +161,11 @@ public class CXSEventGraphQLProvider implements GraphQLQueryProvider {
                                     lastElements = 50L;
                                 }
                                 String beforeCursor = environment.getArgument("before");
-                                CXSFilterFunction filterFunction = new CXSFilterFunction(filterArgument);
+                                CXSFilterFunction filterFunction = null;
+                                if (filterArgument != null) {
+                                    filterFunction = new CXSFilterFunction(filterArgument);
+                                }
+
                                 List<CXSOrderBy> orderBys = new ArrayList<CXSOrderBy>();
                                 if (orderBysArgument != null) {
                                     for (Map<String, ?> orderByArgument : orderBysArgument) {
