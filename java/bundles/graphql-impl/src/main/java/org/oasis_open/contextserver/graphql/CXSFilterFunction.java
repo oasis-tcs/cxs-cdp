@@ -8,11 +8,11 @@ import java.util.Map;
  * Created by loom on 12.05.17.
  */
 public class CXSFilterFunction {
-    String functionName;
+    String name;
     List<CXSFunctionArgument> arguments;
 
     CXSFilterFunction(Map<String,?> filterFunctionArgument) {
-        this.functionName = (String) filterFunctionArgument.get("function");
+        this.name = (String) filterFunctionArgument.get("name");
         List<Map<String,?>> argumentList = (List<Map<String,?>>) filterFunctionArgument.get("arguments");
         this.arguments = new ArrayList<CXSFunctionArgument>();
         if (argumentList != null) {

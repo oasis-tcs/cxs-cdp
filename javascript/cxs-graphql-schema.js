@@ -70,39 +70,29 @@ enum SortOrder {
 # initially wanted to do this but it is not supported by GraphQL :
 # union FilterArgument = Boolean | Int | Float | String | FilterFunction
 
-enum FilterArgumentType {
-  BOOLEAN,
-  INT,
-  FLOAT,
-  STRING,
-  FILTERFUNCTION
-}
-
 type FilterArgument {
-  type: FilterArgumentType
-  booleanArg : Boolean
-  intArg : Int
-  floatArg : Float
-  stringArg : String
-  functionArg : FilterFunction
+  boolean : Boolean
+  int : Int
+  float : Float
+  string : String
+  function : FilterFunction
 }
 
 input FilterArgumentInput {
-  type: FilterArgumentType
-  booleanArg : Boolean
-  intArg : Int
-  floatArg : Float
-  stringArg : String
-  functionArg : FilterFunctionInput
+  boolean : Boolean
+  int : Int
+  float : Float
+  string : String
+  function : FilterFunctionInput
 }
 
 type FilterFunction {
-  function : String!
+  name : String!
   arguments : [FilterArgument]
 }
 
 input FilterFunctionInput {
-  function : String!
+  name : String!
   arguments : [FilterArgumentInput]
 }
 
