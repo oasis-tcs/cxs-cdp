@@ -109,6 +109,38 @@ input FilterInput {
   filterFunction : FilterFunctionInput
 }
 
+type AndFilter implements Filter {
+  and : [Filter]
+}
+
+type OrFilter implements Filter {
+  or : [Filter]
+}
+
+type GeoDistanceFilter implements Filter {
+  property : String,
+  city : String,
+  distance : Int
+}
+
+type GTIntFilter implements Filter {
+  property : String,
+  value: Int 
+  equal : Boolean
+}
+
+type GTFloatFilter implements Filter {
+  property : String,
+  value : Float,
+  equal : Boolean
+}
+
+type GTDateFilter implements Filter {
+  property : String,
+  value : DateTime,
+  equal : Boolean
+}
+
 # PAGINATION-RELATED TYPES
 # ----------------------------------------------------------------------------
 
