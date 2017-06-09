@@ -35,7 +35,7 @@ enum SortOrder {
 #   GEODISTANCE(location,'Geneva', '30km')
 # )
 
-# query filteredEvents(filter : Filter, orderBy : [OrderBy]) {
+# query filteredEvents($filter : Filter, $orderBy : [OrderBy]) {
 #   events(filter : $filter, orderBy : $orderBy) {
 #     edges {
 #       type
@@ -44,7 +44,7 @@ enum SortOrder {
 # }
 # variables:
 # {
-#   "filterFunction": {
+#   "filter": {
 #     "function" : "OR",
 #     "arguments" : [
 #       {
@@ -66,6 +66,34 @@ enum SortOrder {
 #     { fieldName : "properties.pageID", order : "DESC" }
 #   ]
 # }
+
+# query filteredEvents($filter : EventFilter, $orderBy : [EventOrderBy]) {
+#   events(filter : $filter, orderBy : $orderBy) {
+#     edges {
+#       type
+#     }
+#   }
+# }
+# variables:
+# {
+#   "filter": {
+#     "OR" : [
+#       {
+#         "AND" : [
+#           { "timestamp_GT" : "January 1st, 2016" }
+#           { "timestamp_LT" : "January 1st, 2017" },
+#           { "type_EQ" : "PageView" },
+#           { "body_QUERY" : "#JSONIQ" }
+#         ]
+#       },
+#       {
+#         "location_GEODISTANCE" : { city: "Geneva", distance: "30" }
+#       }
+#     ]
+#   },
+#   "orderBy" : [ type_ASC, properties.pageID_DESC ]
+# }
+
 
 # initially wanted to do this but it is not supported by GraphQL :
 # union FilterArgument = Boolean | Int | Float | String | FilterFunction
@@ -107,38 +135,6 @@ type Filter {
 
 input FilterInput {
   filterFunction : FilterFunctionInput
-}
-
-type AndFilter implements Filter {
-  and : [Filter]
-}
-
-type OrFilter implements Filter {
-  or : [Filter]
-}
-
-type GeoDistanceFilter implements Filter {
-  property : String,
-  city : String,
-  distance : Int
-}
-
-type GTIntFilter implements Filter {
-  property : String,
-  value: Int 
-  equal : Boolean
-}
-
-type GTFloatFilter implements Filter {
-  property : String,
-  value : Float,
-  equal : Boolean
-}
-
-type GTDateFilter implements Filter {
-  property : String,
-  value : DateTime,
-  equal : Boolean
 }
 
 # PAGINATION-RELATED TYPES
@@ -340,6 +336,15 @@ type Event {
   location: [GeoPoint]
   timestamp: Int
   properties: [KeyValue]
+  body: JSON
+}
+
+type EventFilter {
+  id_EQ : ID!
+  id_NEQ : ID!
+  eventTypeId_EQ : String!
+  eventTypeId_CONTAINS : String!
+  subjectId_EQ : String!
 }
 
 input EventInput {
@@ -522,7 +527,7 @@ type Mutation {
   # Events may be used to control common profiles, such as controlling privacy settings, reset interests, but mostly profile
   # changes. Mutations will not be added for this
   
-  logEvents(events: [EventInput]!) : Int
+  logEvents(events: [EventInput]!) : Int  
   
   createOrUpdateProfile(profile : ProfileInput) : Profile
   deleteProfile(profileId : String) : Profile
