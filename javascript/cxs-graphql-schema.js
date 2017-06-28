@@ -412,11 +412,19 @@ type Privacy {
   doNotTrack: Boolean
   anonymousBrowsing : Boolean
   propertiesPolicy : [PropertyPolicy]
+  consents : [Consent]
 }
 
 type PropertyPolicy {
   propertyKey : String!
   policyName : String!
+}
+
+type Consent {
+  scope : String
+  permissions : [String]
+  grantDate : Long
+  revokeDate : Long
 }
 
 enum ImportStrategy {
@@ -520,6 +528,10 @@ type Query {
   findTopics(filter: FilterInput, orderBy: [OrderBy], first: Int, after: String, last: Int, before: String) : TopicConnection
 
   getContext(dynamicSegments : [DynamicSegmentInput], profileId: String) : Context  
+  
+  # Privacy and consent
+  getConsents() : [Consent]
+  
 }
 
 type Mutation {
@@ -547,6 +559,14 @@ type Mutation {
   updateContext(events: [EventInput], dynamicSegments : [DynamicSegmentInput], profileId: String!) : Context
   
   startProfileImportJob(profiles : [ProfileInput], importOptions: ImportOptionsInput) : String!
+  
+  # Consent mutations, see http://ec.europa.eu/ipg/basics/legal/cookies/index_en.htm
+  grantConsent(scope : String, permissions : [String], fromDate : Long, toDate : Long)
+  revokeConsent(scope : String, permissions : [String])
+  
+  # Privacy 
+  deleteAllPersonalData()
+  
 }
 
 type Subscription {
