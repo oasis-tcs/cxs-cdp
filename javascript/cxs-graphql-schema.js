@@ -227,11 +227,11 @@ type TopicConnection {
 # they do not necessarily impose integrity constraints on implementations. 
 # Schemas may change over time
 
+# todo : remove schemas as we don't really need them now that we use mappings.
 type CXSSchema {
   name : String!
   description : String
   types : [CXSPropertyType]
-  mandatoryTypes : [String]
 }
 
 enum CXSPropertyValueType {
@@ -248,6 +248,7 @@ type CXSPropertyType {
   description : String
   type : CXSPropertyValueType! 
   multivalued : Boolean
+  mandatory : Boolean
   identifier : Boolean
   aliases : [String] # email, e-mail, mail, mel, couriel
 }
@@ -371,7 +372,20 @@ input EventTypeInput {
 # PROFILE TYPES
 # ----------------------------------------------------------------------------
 
-# Browser --(structured event)--> Client -> Profile -> CommonProfile
+# Browser -- (structured event) --> Client -> Profile -> CommonProfile
+
+# todo : we should not need the client profile anymore if we update profiles always through
+# events and use property mappings to push or pull data between the CXS server and external
+# systems such as a CRM. The history of external or internal profile modifications will be 
+# accessible through the profile update events. CXS must also specify a way to provide 
+# subscriptions on profile modifications so that external systems can retrieve the profile 
+# modifications. Mappings could be used to control data flow in relations to Privacy 
+# management. Mappings could also remove the need for schemas and only require property types
+# to be defined.
+# the new flow would look like this : 
+
+# Browser -- (structured event) --> Client -> Mapping -> CommonProfile 
+
 
 type Profile {
   id: ID!
@@ -407,6 +421,29 @@ type CommonProfile {
   privacy : Privacy
   schema: CXSSchema  # defined in the CXS server configuration 
 }
+
+enum MappingDirection {
+  LEFT_TO_RIGHT,
+  RIGHT_TO_LEFT,
+  BIDIRECTIONAL
+}
+
+type MappedPropertyType {
+  name : String,
+  type : String,
+  readOnly : Boolean,
+  source : String,
+  identifier : Boolean,
+  truthSource : Boolean
+}
+
+type PropertyTypeMapping {
+    direction : MappingDirection
+    leftProperty : MappedPropertyType
+    rightProperty : MappedPropertyType
+    fieldConverterIdentifier : String              
+}
+
 
 type Privacy {
   doNotTrack: Boolean
@@ -531,6 +568,8 @@ type Query {
   
   # Privacy and consent
   getConsents() : [Consent]
+  getAllPersonalData()
+  
   
 }
 
