@@ -221,25 +221,21 @@ type TopicConnection {
   pageInfo : PageInfo
 }
 
-# GENERIC SCHEMA DEFINITIONS
+# GLOBAL PROPERTY DEFINITIONS
 # ----------------------------------------------------------------------------
-# Schemas are used to validate property structures for events and profiles,
-# they do not necessarily impose integrity constraints on implementations. 
-# Schemas may change over time
 
-# todo : remove schemas as we don't really need them now that we use mappings.
-type CXSSchema {
-  name : String!
-  description : String
-  types : [CXSPropertyType]
-}
+# Property types may define simple types such as : 
+# - boolean (e.g. musicLover : boolean)
+# - inline types (e.g. location : {longitude : float, latitude: float})
+# - referenced types (e.g. locations : [location]) 
 
 enum CXSPropertyValueType {
   STRING,
   INT,
   FLOAT,
-  DATE,
-  BOOLEAN
+  DATE, # ISO-8601 format equivalent to Java 8 Instant format.
+  BOOLEAN,
+  SET # allows for nested property set
 }
 
 # Schemas types are global and may be used in multiple schemas.
@@ -247,10 +243,10 @@ type CXSPropertyType {
   name : String!
   description : String
   type : CXSPropertyValueType! 
-  multivalued : Boolean
+  multivalued : Boolean # must maintain order
   mandatory : Boolean
-  identifier : Boolean
-  aliases : [String] # email, e-mail, mail, mel, couriel
+  identifier : Boolean,
+  tags : [String] # profile property type, event property type, etc.. 
 }
 
 # MANAGEMENT OBJECTS
@@ -265,7 +261,6 @@ type Persona {
   scope : Scope!
   id : ID!
   properties : [KeyValue]
-  schema: CXSSchema
 }
 
 input PersonaInput {
@@ -348,31 +343,90 @@ type EventFilter {
   subjectId_EQ : String!
 }
 
+# Example event input : 
+# 
+# { 
+#   subject : "12345",
+#   timestamp : 1723498748,
+#   updateProfile : { 
+#       firstName : "Serge",
+#       lastName : "Huber
+#   }
+# }
+#
+# Event inputs could contain data for multiple event occuring simultaneously. In general, 
+# event inputs will only use a single top-level nested property.
+#
+# { 
+#   subject : "12345",
+#   timestamp : 1723498748,
+#   updateProfile : { 
+#       firstName : "Serge",
+#       lastName : "Huber
+#   }
+#   pageView : {
+#       pageURL : "/test/test/test.html",
+#       referrer : 
+#   },
+#   salesForceLeadUpdate : {
+#   }
+#    
+
 input EventInput {
-  eventTypeId: String!
   subject: String! # this must be a profile ID
-  object: String!
-  location: [GeoPointInput]
+  object: String! # do we need it ?
+  location: [GeoPointInput] # optional
   timestamp: Int
-  properties: [KeyValueInput]
+  # the actual payload will be dynamically generated based on the configuration property definitions
 }
 
-# event types are defined using schema types, see event-analysis.md for examples
-
-type EventType {
-  id: ID! # human-readable, unique, ex: org.oasis-open.cxs.webClient.PageView,org.acmeCrm.cxs.crmClient.ColdCall
-  description: String
-  schema : CXSSchema
-}
-
-input EventTypeInput {
-  id: ID! # human-readable, unique, ex: org.oasis-open.cxs.webClient.PageView,org.acmeCrm.cxs.crmClient.ColdCall
-}
+#
+# The event input type is dynamically updated to include all the property definitions that were
+# added to the context server. Here is an example of what it could look like after a while:
+#
+# input EventInput {
+#   subject: String! # this must be a profile ID
+#   object: String! # do we need it ?
+#   location: [GeoPointInput] # optional
+#   timestamp: Int
+#   updateProfile : UpdateProfileInput,
+#   pageView : PageViewInput,
+#   saleForcesLeadUpdate : SalesForceLeadUpdateInput
+# }
+#
+# input AddressInput {
+#   streetNumber : Int,
+#   streetName : String,
+#   city : String,
+#   postalCode : String,
+#   country : String
+# }
+# 
+# input UpdateProfileInput : {
+#   firstName : String,
+#   lastName : String,
+#   email : String,
+#   address : AddressInput,
+#   twitter : String
+#   ...
+# }
+# 
+# input PageViewInput {
+#   pagePath : String
+#   pageId : String,
+#   referrer : String
+# }
+#
+# input SalesForceLeadUpdate {
+#   leadStatus : String,
+#   leadID : String,
+#   firstName : String,
+#   lastName : String,
+#   email : String
+# }
 
 # PROFILE TYPES
 # ----------------------------------------------------------------------------
-
-# Browser -- (structured event) --> Client -> Profile -> CommonProfile
 
 # todo : we should not need the client profile anymore if we update profiles always through
 # events and use property mappings to push or pull data between the CXS server and external
@@ -384,42 +438,22 @@ input EventTypeInput {
 # to be defined.
 # the new flow would look like this : 
 
-# Browser -- (structured event) --> Client -> Mapping -> CommonProfile 
-
-
-type Profile {
-  id: ID!
-  properties : [KeyValue] # properties must match schema 
-  client : Client
-  commonProfile : CommonProfile
-  schema: CXSSchema # defined in the CXS server configuration 
-}
-
-input ProfileInput {
-  id: ID # optional in the case of a new profile
-  properties: [KeyValueInput]
-}
-
-type CommonPropertyValue {
-  key: String!
-  value: String
-  clients : [Client]
-}
+# Browser -- (structured event) --> Client -> Mapping -> Profile 
 
 type Interest {
   topic: Topic!
   score : Float # 0.0 to 1.0
 }
 
-type CommonProfile {
+type Profile {
   id: ID!
-  properties : [CommonPropertyValue] # properties must match schema 
+  clientProfileIDs : [String]
+  properties : [KeyValue] # properties must match schema 
   profiles : [Profile]
   interests: [Interest]
   segments : [Segment]
   events(filter : FilterInput, first : Int, last: Int, after : String, before: String) : EventConnection
   privacy : Privacy
-  schema: CXSSchema  # defined in the CXS server configuration 
 }
 
 enum MappingDirection {
@@ -441,7 +475,8 @@ type PropertyTypeMapping {
     direction : MappingDirection
     leftProperty : MappedPropertyType
     rightProperty : MappedPropertyType
-    fieldConverterIdentifier : String              
+    fieldConverterIdentifier : String  
+    differentialObfuscation : Boolean # optional            
 }
 
 
