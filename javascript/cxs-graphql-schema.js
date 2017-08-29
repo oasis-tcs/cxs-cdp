@@ -238,7 +238,6 @@ enum CXSPropertyValueType {
   SET # allows for nested property set
 }
 
-# Schemas types are global and may be used in multiple schemas.
 type CXSPropertyType {
   name : String!
   description : String
@@ -327,12 +326,12 @@ input GeoPointInput {
 type Event {
   id: ID!
   eventType: EventType!
-  subject: Profile!
+  clientProfileId: String!
+  profile : Profile!
   object: String!
   location: [GeoPoint]
   timestamp: Int
-  properties: [KeyValue]
-  body: JSON
+  # ... properties will be updated based on the defined property types 
 }
 
 type EventFilter {
@@ -373,7 +372,7 @@ type EventFilter {
 #    
 
 input EventInput {
-  subject: String! # this must be a profile ID
+  clientProfileID: String! # this must be a client profile ID
   object: String! # do we need it ?
   location: [GeoPointInput] # optional
   timestamp: Int
@@ -385,7 +384,7 @@ input EventInput {
 # added to the context server. Here is an example of what it could look like after a while:
 #
 # input EventInput {
-#   subject: String! # this must be a profile ID
+#   subject: String! # this must be a client profile ID
 #   object: String! # do we need it ?
 #   location: [GeoPointInput] # optional
 #   timestamp: Int
@@ -428,17 +427,23 @@ input EventInput {
 # PROFILE TYPES
 # ----------------------------------------------------------------------------
 
-# todo : we should not need the client profile anymore if we update profiles always through
+# Wwe update profiles always through
 # events and use property mappings to push or pull data between the CXS server and external
-# systems such as a CRM. The history of external or internal profile modifications will be 
+# systems such as a CRM. The history of external or internal profile modifications is 
 # accessible through the profile update events. CXS must also specify a way to provide 
 # subscriptions on profile modifications so that external systems can retrieve the profile 
 # modifications. Mappings could be used to control data flow in relations to Privacy 
-# management. Mappings could also remove the need for schemas and only require property types
-# to be defined.
-# the new flow would look like this : 
+# management. 
+
+# the flow looks like this : 
 
 # Browser -- (structured event) --> Client -> Mapping -> Profile 
+
+# Profile merges are optional in the CXS specification. They may be supported by using a property
+# defined as an identifier as a merge key (multiple merge keys may of course exist) to merge multiple
+# profiles. The resulting merged profile MUST contain all the client profile IDs of the merged profiles
+# as well as the merged profile data. The original profiles that were merged may be flagged or deleted, 
+# this is implementation specific. 
 
 type Interest {
   topic: Topic!
@@ -447,13 +452,12 @@ type Interest {
 
 type Profile {
   id: ID!
-  clientProfileIDs : [String]
-  properties : [KeyValue] # properties must match schema 
-  profiles : [Profile]
+  clientProfileIDs : [String] # need to be globally unique across clients so we could prefix them with client ID.
   interests: [Interest]
   segments : [Segment]
   events(filter : FilterInput, first : Int, last: Int, after : String, before: String) : EventConnection
-  privacy : Privacy
+  consents : [Consents]
+  # properties must be generated from property type definitions
 }
 
 enum MappingDirection {
@@ -479,25 +483,42 @@ type PropertyTypeMapping {
     differentialObfuscation : Boolean # optional            
 }
 
+#
+# Consents are given and revoked through events. This means that the CXS specification defines 
+# reserved property types for providing consent grants and revocations.
+#
+# Examples:
+# {
+#   scope : "jahia.com",
+#   actions : [
+#     {name:"send-to-salesforce", description:"send profile data to Salesforce CRM"}, 
+#     {name:"location-storage", description:"store my location"}
+#   ],
+#   grantDate : 3498734899
+#   # no revoke date means it will not expire or defaults to system or legal standard (GDPR)
+# }
+#
 
-type Privacy {
-  doNotTrack: Boolean
-  anonymousBrowsing : Boolean
-  propertiesPolicy : [PropertyPolicy]
-  consents : [Consent]
-}
-
-type PropertyPolicy {
-  propertyKey : String!
-  policyName : String!
+type Action {
+    name : ID!
+    description : String
 }
 
 type Consent {
   scope : String
-  permissions : [String]
+  actions : [Action]
   grantDate : Long
   revokeDate : Long
 }
+
+input ConsentInput {
+  scope: String,
+  actions : [String],
+  grantDate : Long,
+  revokeDate : Long
+}
+
+
 
 enum ImportStrategy {
   SKIP,
@@ -635,6 +656,7 @@ type Mutation {
   startProfileImportJob(profiles : [ProfileInput], importOptions: ImportOptionsInput) : String!
   
   # Consent mutations, see http://ec.europa.eu/ipg/basics/legal/cookies/index_en.htm
+  # todo : maybe this should be done through authorized events
   grantConsent(scope : String, permissions : [String], fromDate : Long, toDate : Long)
   revokeConsent(scope : String, permissions : [String])
   
@@ -653,53 +675,10 @@ type Subscription {
 
 `);
 
-var pageViewEventSchema = {
-    name: "pageViewEventSchema",
-    description: "Schema for a page view event",
-    types: [
-        {
-            __typename: "SchemaScalarType",
-            name: "targetPage",
-            description: "ID of page that has been viewed",
-            type: "STRING",
-            identifier: false,
-            aliases: []
-        }
-    ]
-};
-
-var profileSchema = {
-    name: "profileSchema",
-    description: "Schema for a profile",
-    types: [
-        {
-            name: "clientIdentifier",
-            description: "ID of the profile for this client",
-            type: "string",
-            identifier: true,
-            aliases: []
-        }
-    ]
-};
-
-var commonProfileSchema = {
-    name: "commonProfileSchema",
-    description: "Schema for a common profile",
-    types: [
-        {
-            name: "email",
-            description: "Email of a profile",
-            type: "string",
-            identifier: true,
-            aliases: []
-        }
-    ]
-};
 
 var pageViewEventType = {
     id: "pageView",
     description: "Page view event",
-    schema: pageViewEventSchema
 };
 
 let fakeClients = {
@@ -723,7 +702,6 @@ var fakeCommonProfiles = {
         profiles: [],
         interests: [],
         segments: [],
-        schema: commonProfileSchema,
     }
 };
 
@@ -738,7 +716,6 @@ var fakeProfiles = {
         ],
         client: fakeClients['0'],
         commonProfile: fakeCommonProfiles['0'],
-        schema: profileSchema
     }
 };
 
@@ -766,29 +743,6 @@ exports.root = {
     }
 };
 
-/*
-var SchemaScalarTypes = new graphql.GraphQLEnumType ({
-    name: 'SchemaScalarTypes',
-    values: {
-        STRING : { value : 0},
-        INT : { value : 1},
-        FLOAT: { value : 2},
-        DATE: { value : 3},
-        BOOLEAN: { value : 4}
-    }
-});
-
-var SchemaScalarType = new graphql.GraphQLObjectType({
-    name: 'SchemaScalarType',
-    description: "This is the leaf type for a schema object",
-    fields : {
-        name: {type: graphql.GraphQLString},
-        description: {type: graphql.GraphQLString},
-        type: {type: new graphql.GraphQLNonNull(SchemaScalarTypes)},
-        identifier: {type: graphql.GraphQLBoolean},
-        aliases: {type: new graphql.GraphQLList(graphql.GraphQLString)}
-    }
-});
 
 var MyAppSchema = new GraphQLSchema({
     query: MyAppQueryRootType,
@@ -796,5 +750,3 @@ var MyAppSchema = new GraphQLSchema({
 });
 
 exports.schema = MyAppSchema;
-
-*/
