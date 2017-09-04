@@ -4,19 +4,6 @@ var { GraphQLSchema } = require('graphql'); // CommonJS
 // Construct a schema, using GraphQL schema language
 exports.schema = buildSchema(`
 
-# GENERIC TYPES
-# ----------------------------------------------------------------------------
-
-type KeyValue {
-  key: String!
-  value : String
-}
-
-input KeyValueInput {
-  key: String!
-  value : String
-}
-
 # QUERY AND FILTER TYPES
 # ----------------------------------------------------------------------------
 enum SortOrder {
@@ -224,28 +211,114 @@ type TopicConnection {
 # GLOBAL PROPERTY DEFINITIONS
 # ----------------------------------------------------------------------------
 
-# Property types may define simple types such as : 
-# - boolean (e.g. musicLover : boolean)
-# - inline types (e.g. location : {longitude : float, latitude: float})
-# - referenced types (e.g. locations : [location]) 
+# Example property type definitions:
+#
+# {
+#   __typename : "SetPropertyType", 
+#   name : "address",
+#   multivalued : true,
+#   mandatory : false,
+#   identifier : false,
+#   tags : [ ],
+#   properties : [
+#     { 
+#       __typename : "StringPropertyType", 
+#       name : "city",
+#       multivalued : false,
+#       mandatory : true,
+#       identifier : false,
+#       tags : [ ],
+#     },
+#     { 
+#       __typename : "IntPropertyType", 
+#       name : "postalCode",
+#       multivalued : false,
+#       mandatory : true,
+#       identifier : false,
+#       tags : [ ],
+#       minValue : 0,
+#       maxValue : 999999
+#     }
+#   ]
+# } 
+# 
 
-enum CXSPropertyValueType {
-  STRING,
-  INT,
-  FLOAT,
-  DATE, # ISO-8601 format equivalent to Java 8 Instant format.
-  BOOLEAN,
-  SET # allows for nested property set
-}
-
-type CXSPropertyType {
+interface PropertyType {
   name : String!
-  description : String
-  type : CXSPropertyValueType! 
   multivalued : Boolean # must maintain order
   mandatory : Boolean
   identifier : Boolean,
   tags : [String] # profile property type, event property type, etc.. 
+}
+
+type StringPropertyType {
+  name : String!
+  multivalued : Boolean # must maintain order
+  mandatory : Boolean
+  identifier : Boolean,
+  tags : [String] # profile property type, event property type, etc..
+  regexp : String 
+  defaultValue : String
+}
+
+type IntPropertyType {
+  name : String!
+  multivalued : Boolean # must maintain order
+  mandatory : Boolean
+  identifier : Boolean,
+  tags : [String] # profile property type, event property type, etc..
+  minValue : Int
+  maxValue : Int 
+  defaultValue : Int
+}
+
+type FloatPropertyType {
+  name : String!
+  multivalued : Boolean # must maintain order
+  mandatory : Boolean
+  identifier : Boolean,
+  tags : [String] # profile property type, event property type, etc..
+  minValue : Float
+  maxValue : Float
+  defaultValue : Float
+}
+
+# Date are in ISO-8601 format equivalent to Java 8 Instant format.
+type DatePropertyType {
+  name : String!
+  multivalued : Boolean # must maintain order
+  mandatory : Boolean
+  identifier : Boolean,
+  tags : [String] # profile property type, event property type, etc..
+  defaultValue : String
+}
+
+type BooleanPropertyType {
+  name : String!
+  multivalued : Boolean # must maintain order
+  mandatory : Boolean
+  identifier : Boolean,
+  tags : [String] # profile property type, event property type, etc..
+  defaultValue : Boolean
+}
+
+# Maps to a String with a lat,lon format
+type GeoPointPropertyType {
+  name : String!
+  multivalued : Boolean # must maintain order
+  mandatory : Boolean
+  identifier : Boolean,
+  tags : [String] # profile property type, event property type, etc..
+  defaultValue : String
+}
+
+type SetPropertyType {
+  name : String!
+  multivalued : Boolean # must maintain order
+  mandatory : Boolean
+  identifier : Boolean,
+  tags : [String] # profile property type, event property type, etc..
+  properties : [PropertyType] 
 }
 
 # MANAGEMENT OBJECTS
@@ -259,12 +332,16 @@ type Scope {
 type Persona {
   scope : Scope!
   id : ID!
-  properties : [KeyValue]
+  segments : [Segment]
+  interests : [Interest]
+  properties : ProfileProperties
 }
 
 input PersonaInput {
   id : ID
-  properties : [KeyValueInput]
+  properties : ProfilePropertiesInput
+  segments : [String]
+  interests : [InterestInput]
 }
 
 type Segment {
@@ -312,82 +389,134 @@ input TopicInput {
 
 # EVENT-RELATED TYPES
 # ----------------------------------------------------------------------------
+# 
+# Predefined event types include : 
+# - updating profile properties
+# - updating consent ( see http://ec.europa.eu/ipg/basics/legal/cookies/index_en.htm )
+)
+# - transaction (generic)
+# - like (“user likes a product”)
+# - Dislike (“visitor dislikes a comment”)
+# - Abuse, “user reports abuse on a page”
+# - Rate (score in percent) “user rates product 4 out of 5 stars”
+# - Vote
+# - Download (“user downloaded a digital product”)
+# - Register/Submission
+# - Login
+# - Logout
+# - RequestFriendship
+# - AcceptFriendship
+# - DenyFriendship
+# - Click
+# - View
+# - Contribute (comment, blog etc?)
+# - Conversion (purchase, download, signs up for a service
+# - Session start
+# - Session paused
+# - Session resumed
+# - Session end
 
-type GeoPoint {
-  latitude : Float
-  longitude: Float
+type EventType {
+  name : String
+  propertyType : SetPropertyType 
 }
 
-input GeoPointInput {
-  latitude : Float
-  longitude: Float
+type EventProperties {
+  # ... properties will be updated based on the defined property types
 }
 
 type Event {
   id: ID!
   eventType: EventType!
-  clientProfileId: String!
+  profileID: ProfileID!
   profile : Profile!
   object: String!
-  location: [GeoPoint]
-  timestamp: Int
-  # ... properties will be updated based on the defined property types 
+  location: String
+  timestamp: String # ISO-8601 format Java 8 Instant equivalent
+  properties : EventProperties 
 }
 
 type EventFilter {
   id_EQ : ID!
   id_NEQ : ID!
-  eventTypeId_EQ : String!
-  eventTypeId_CONTAINS : String!
-  subjectId_EQ : String!
+  eventTypeID_EQ : String!
+  eventTypeID_CONTAINS : String!
+  subjectID_EQ : String!
 }
 
 # Example event input : 
-# 
+# Update profile example
 # { 
-#   subject : "12345",
-#   timestamp : 1723498748,
-#   updateProfile : { 
+#   _profileID : {clientID : "salesforce", id: "12345"},
+#   _timestamp : "1970-01-01T00:00:00Z",
+#   _object: "12345"
+#   profileUpdate : { 
 #       firstName : "Serge",
 #       lastName : "Huber
 #   }
 # }
+# Page view example
+# { 
+#   _profileID : {clientID : "web", id: "12345"},
+#   _timestamp : "1970-01-01T00:00:00Z",
+#   _object: "pageID"
+#   _location : "41.12,-71.34", 
+#   pageView : {
+#       url : "/test/test/test.html",
+#       referrer : "http://www.cnn.com"
+#   },
+# }   
 #
-# Event inputs could contain data for multiple event occuring simultaneously. In general, 
-# event inputs will only use a single top-level nested property.
+# Location tracking event (for example using beacons)
 #
 # { 
-#   subject : "12345",
-#   timestamp : 1723498748,
-#   updateProfile : { 
-#       firstName : "Serge",
-#       lastName : "Huber
-#   }
-#   pageView : {
-#       pageURL : "/test/test/test.html",
-#       referrer : 
+#   _profileID : {clientID : "walmartApp", id: "12345"},
+#   _timestamp : "1970-01-01T00:00:00Z",
+#   _object: "regionID"
+#   _location : "41.12,-71.34", 
+#   regionChange : {
+#       type : "enter" / "exit"
+#       groupName : "walmart-geneva"
 #   },
-#   salesForceLeadUpdate : {
-#   }
-#    
+# }   
 
 input EventInput {
-  clientProfileID: String! # this must be a client profile ID
-  object: String! # do we need it ?
-  location: [GeoPointInput] # optional
-  timestamp: Int
+  _profileID: ProfileID! 
+  _object: String! #
+  _location: [GeoPointInput] # optional
+  _timestamp: Int # optional because the server can generate it if it's missing
   # the actual payload will be dynamically generated based on the configuration property definitions
+  # pageView
+  # updateProfile
+  # 
 }
+
+input UpdateProfileEventInput {
+  _profileID: ProfileID! 
+  _object: String! #
+  _location: [GeoPointInput] # optional
+  _timestamp: Int # optional because the server can generate it if it's missing
+  firstName : String
+  lastName : String
+  ...
+}
+
+input UpdateConsentEventInput {
+  _profileID: ProfileID! 
+  _object: String! #
+  _location: [GeoPointInput] # optional
+  _timestamp: Int # optional because the server can generate it if it's missing
+} 
 
 #
 # The event input type is dynamically updated to include all the property definitions that were
 # added to the context server. Here is an example of what it could look like after a while:
 #
 # input EventInput {
-#   subject: String! # this must be a client profile ID
-#   object: String! # do we need it ?
-#   location: [GeoPointInput] # optional
-#   timestamp: Int
+#   _profileID: ProfileID!
+#   _object: String! # do we need it ?
+#   _location: [GeoPointInput] # optional
+#   _timestamp: Int
 #   updateProfile : UpdateProfileInput,
 #   pageView : PageViewInput,
 #   saleForcesLeadUpdate : SalesForceLeadUpdateInput
@@ -412,7 +541,7 @@ input EventInput {
 # 
 # input PageViewInput {
 #   pagePath : String
-#   pageId : String,
+#   pageID : String,
 #   referrer : String
 # }
 #
@@ -427,13 +556,10 @@ input EventInput {
 # PROFILE TYPES
 # ----------------------------------------------------------------------------
 
-# Wwe update profiles always through
-# events and use property mappings to push or pull data between the CXS server and external
-# systems such as a CRM. The history of external or internal profile modifications is 
+# We update profiles always through events. The history of external or internal profile modifications is 
 # accessible through the profile update events. CXS must also specify a way to provide 
 # subscriptions on profile modifications so that external systems can retrieve the profile 
-# modifications. Mappings could be used to control data flow in relations to Privacy 
-# management. 
+# modifications.
 
 # the flow looks like this : 
 
@@ -450,37 +576,46 @@ type Interest {
   score : Float # 0.0 to 1.0
 }
 
+# dynamically generated from property type definitions
+# 
+# type Location_G {
+#   latitude : Float,
+#   longitude : Float
+# }
+#
+# Ex: 6A
+# type SteetNumberType_G {
+#   streetNumber : Int,
+#   prefix : String,
+#   postfix : String
+# }
+# 
+# type Address_G {
+#   streetName : String,
+#   streetNumber : StreetNumberType_G,
+#   citySubDivisions : [String]
+#   city : String,
+#   postalCode : String,
+#   countrySubvisions : [String]
+#   country : String
+# }
+#
+type ProfileProperties {
+  # properties must be generated dynamically from property type definitions
+  # ex:
+  # location : Location_G
+  # address : Address_G
+}
+
 type Profile {
-  id: ID!
-  clientProfileIDs : [String] # need to be globally unique across clients so we could prefix them with client ID.
-  interests: [Interest]
-  segments : [Segment]
+  profileIDs : [ProfileID] # the CXS server may generated a system profile ID and expose it here
   events(filter : FilterInput, first : Int, last: Int, after : String, before: String) : EventConnection
+  lastEvents(count : Int, profileID : ProfileIDInput) : EventConnection
+  segments : [Segment]
+  interests : [Interest]
   consents : [Consents]
-  # properties must be generated from property type definitions
-}
-
-enum MappingDirection {
-  LEFT_TO_RIGHT,
-  RIGHT_TO_LEFT,
-  BIDIRECTIONAL
-}
-
-type MappedPropertyType {
-  name : String,
-  type : String,
-  readOnly : Boolean,
-  source : String,
-  identifier : Boolean,
-  truthSource : Boolean
-}
-
-type PropertyTypeMapping {
-    direction : MappingDirection
-    leftProperty : MappedPropertyType
-    rightProperty : MappedPropertyType
-    fieldConverterIdentifier : String  
-    differentialObfuscation : Boolean # optional            
+  dynamicSegments(dynamicSegments : [DynamicSegmentInput]) : [DynamicSegmentMatch]
+  properties : ProfileProperties
 }
 
 #
@@ -518,33 +653,6 @@ input ConsentInput {
   revokeDate : Long
 }
 
-
-
-enum ImportStrategy {
-  SKIP,
-  OVERWRITE, 
-  MERGE
-}
-
-input ImportOptionsInput {
-  strategy : ImportStrategy
-}
-
-type Progress {
-  percentage: Float
-  message: String
-}
-
-interface JobStatus {
-  progress: Progress
-}
-
-type ImportJobStatus implements JobStatus {
-  progress: Progress
-  importedProfilesCount : Int
-  skippedProfiles : [Profile]
-}
-
 # CLIENT TYPES
 # ----------------------------------------------------------------------------
 # Application keys are no longer part of the specification, implementations will probably need to use 
@@ -556,32 +664,21 @@ type ImportJobStatus implements JobStatus {
 #  permissions: [String] # "createEvent", "createEventTypes", "fullAccess"
 #}
 
-#input ApplicationKeyInput {
-#  key: ID!
-#}
+# ProfileIDs are always associated with a client as multiple profileIDs are associated with a single profile. CXS 
+# server implementations may generate their own internal system IDs by defining them for a "system" client.
+type ProfileID {
+    client : Client
+    id : ID! # unique profile identifier for the client
+}
+
+type ProfileIDInput {
+    clientID : ID!
+    id : ID! # unique profile identifier for the client
+}
 
 type Client {
-  description: String!
-  id: String!
-  thirdPartySystem : Boolean
-}
-
-# CONTEXT TYPES
-# ----------------------------------------------------------------------------
-
-type ContextQuery {
-  filter : [Filter]
-}
-
-type Context {
-  profile : Profile
-  properties : [KeyValue] # could be computed by querying events, or stored pre-computed (ipAddress=1.2.3.4, location=TGV from Geneva to Paris, Wagon 12, Seat 71)
-  events(filter : FilterInput) : [Event] # e.g. last 5 events the user has sent
-  segments : [Segment]
-  dynamicSegments : [DynamicSegmentMatch]
-  interests : [Interest]
-  initiated : Int
-  terminated : Int  
+    id : ID! # the "system" client ID is reserved for the CXS context server to use for internal IDs.
+    thirdParty : Boolean # optional, indicates that the client is a third party (useful for privacy regulations such as GDPR)
 }
 
 # Dynamic segments are used to evaluate segment definitions stored in other systems (such as a WCM for personalization)
@@ -605,27 +702,26 @@ type Query {
   getEvent(id : String!) : Event
   findEvents(filter : FilterInput, orderBy : [OrderBy], first: Int, after: String, last: Int, before: String) : EventConnection
   
-  getProfile(profileId : String) : Profile
+  getProfile(profileID : ProfileIDInput) : Profile
   findProfiles(filter: FilterInput, orderBy: [OrderBy], first: Int, after: String, last: Int, before: String) : ProfileConnection
   
-  getPersona(personaId : String) : Persona
+  getPersona(personaID : String) : Persona
   findPersonas(filter: FilterInput, orderBy: [OrderBy], first: Int, after: String, last: Int, before: String) : PersonaConnection
   
-  getSegment(segmentId : String) : Segment
+  getSegment(segmentID : String) : Segment
   findSegments(filter: FilterInput, orderBy: [OrderBy], first: Int, after: String, last: Int, before: String) : SegmentConnection
 
-  getList(listId : String) : List
+  getList(listID : String) : List
   findLists(filter: FilterInput, orderBy: [OrderBy], first: Int, after: String, last: Int, before: String) : ListConnection
 
-  getTopic(topicId : String) : Topic
+  getTopic(topicID : String) : Topic
   findTopics(filter: FilterInput, orderBy: [OrderBy], first: Int, after: String, last: Int, before: String) : TopicConnection
 
-  getContext(dynamicSegments : [DynamicSegmentInput], profileId: String) : Context  
-  
+  getPropertyTypes() : PropertyTypeConnection
+  getEventTypes() : EventTypeConnection
+
   # Privacy and consent
-  getConsents() : [Consent]
-  getAllPersonalData()
-  
+  getAllPersonalData()  
   
 }
 
@@ -634,43 +730,38 @@ type Mutation {
   # Events may be used to control common profiles, such as controlling privacy settings, reset interests, but mostly profile
   # changes. Mutations will not be added for this
   
-  logEvents(events: [EventInput]!) : Int  
-  
+  logEvents(events: [EventInput]!) : Int
+   
   createOrUpdateProfile(profile : ProfileInput) : Profile
-  deleteProfile(profileId : String) : Profile
+  deleteProfile(profileID : ProfileIDInput) : Profile
   
   createOrUpdatePersona(persona : PersonaInput) : Persona
-  deletePersona(personaId : String) : Persona
+  deletePersona(personaID : String) : Persona
   
   createOrUpdateSegment(segment : SegmentInput) : Segment
-  deleteSegment(segmentId : String) : Segment
+  deleteSegment(segmentID : String) : Segment
   
   createOrUpdateList(list : ListInput) : List
-  deleteList(listId : String) : List
+  deleteList(listID : String) : List
   
   createOrUpdateTopic(topic : TopicInput) : Topic
-  deleteTopic(topicId : String) : Topic
-      
-  updateContext(events: [EventInput], dynamicSegments : [DynamicSegmentInput], profileId: String!) : Context
+  deleteTopic(topicID : String) : Topic
   
-  startProfileImportJob(profiles : [ProfileInput], importOptions: ImportOptionsInput) : String!
-  
-  # Consent mutations, see http://ec.europa.eu/ipg/basics/legal/cookies/index_en.htm
-  # todo : maybe this should be done through authorized events
-  grantConsent(scope : String, permissions : [String], fromDate : Long, toDate : Long)
-  revokeConsent(scope : String, permissions : [String])
-  
+  # todo these are not yet properly defined, especially the arguments
+  createOrUpdatePropertyType()
+  deletePropertyType()
+              
   # Privacy 
   deleteAllPersonalData()
   
 }
 
 type Subscription {
-  eventListener(profileId : String, filter: FilterInput) : Event!
+  eventListener(profileID : ProfileIDInput, filter: FilterInput) : Event!
   
-  contextListener(dynamicSegments : [DynamicSegmentInput], profileId: String) : Context
+  profileListener(profileID: ProfileIDInput) : Profile
   
-  jobListener(jobId: String) : JobStatus
+  jobListener(jobID: String) : JobStatus
 }
 
 `);
@@ -724,7 +815,7 @@ var fakeEvents = {
         id: "0",
         type: pageViewEventType,
         subject: fakeProfiles['0'],
-        object: "objectId",
+        object: "objectID",
         location: {
             latitude: 10.0,
             longitude: 3.0
