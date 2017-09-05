@@ -4,6 +4,36 @@ var { GraphQLSchema } = require('graphql'); // CommonJS
 // Construct a schema, using GraphQL schema language
 exports.schema = buildSchema(`
 
+#
+# Recommended deployment architecture
+# -----------------------------------
+#
+# Browser -> CXS (or custom) Web Client -> Public methods (getProfile, logEvents) Unomi will probably provide a built-in web client
+# Browser -> Authentication Proxy Client -> Self-management APIs (updateProfile)   
+# Browser -> Backend Proxy Client -> Management APIs (all)
+#
+# Pre-defined security roles:
+# ---------------------------
+#
+# Roles : administrator, authenticated, public 
+#
+# Securing queries, mutations and subscriptions:
+# ----------------------------------------------
+# Client are recognized using tokens. Client have roles that have associated permissions on CXS GraphQL methods. 
+# The CXS server must reject any methods that are not authorized for a client.
+# CXS server implementations may also control access to profile properties based on the client.
+# 
+# Recommended default permissions for roles:
+#
+# public - getProfile, logEvents
+# authenticated - updateProfile
+# administrator - all 
+#
+# Securing properties :
+# ----------------------
+#
+# Create/Read/Update/Delete for each property types for each role  
+
 # QUERY AND FILTER TYPES
 # ----------------------------------------------------------------------------
 enum SortOrder {
@@ -143,35 +173,13 @@ type EventConnection {
 }
 
 type ProfileEdge {
-  node : Profile
+  node : ProfileInterface
   cursor : String!
 }
 
 type ProfileConnection {
   totalCount: Int
   edges : [ProfileEdge]
-  pageInfo : PageInfo
-}
-
-type CommonProfileEdge {
-  node : CommonProfile
-  cursor : String!
-}
-
-type CommonProfileConnection {
-  totalCount: Int
-  edges : [CommonProfileEdge]
-  pageInfo : PageInfo
-}
-
-type PersonaEdge {
-  node: Persona
-  cursor: String!
-}
-
-type PersonaConnection {
-  totalCount: Int
-  edges : [PersonaEdge]
   pageInfo : PageInfo
 }
 
@@ -243,19 +251,50 @@ type TopicConnection {
 # } 
 # 
 
+# Roles are predefined in the CXS server implementation, no API is provided to manipulate them.
+# system-admin, system-public, system-authenticated, acme-admin, test-admin
+type Role {
+  name : String!
+  displayName : String
+  scope : Scope! # may include a system scope
+}
+
+enum Permission {
+    CREATE,
+    READ,
+    UPDATE,
+    DELETE
+}
+
+type AccessControl {
+  role : Role
+  permissions : [Permission]
+}
+
+# Multi-valued properties are controlled using the minOccurrences and maxOccurrences fields. The order of the values 
+# must be preserved. Mandatory properties may be defined by setting minOccurrences to > 0
 interface PropertyType {
   name : String!
-  multivalued : Boolean # must maintain order
-  mandatory : Boolean
-  identifier : Boolean,
-  tags : [String] # profile property type, event property type, etc.. 
+  minOccurrences : Int # default = 0
+  maxOccurrences : Int # default = 1
+  personalData : Boolean # default to true, identifiers are always personalData
+  acl : [AccessControl] # support for acls is optional   
+}
+
+# The identifier property type is basically a string that is used as an identifier property
+type IdentifierPropertyType {
+  name : String!
+  minOccurrences : Int
+  maxOccurrences : Int
+  tags : [String] # profile property type, event property type, etc..
+  regexp : String 
+  defaultValue : String
 }
 
 type StringPropertyType {
   name : String!
-  multivalued : Boolean # must maintain order
-  mandatory : Boolean
-  identifier : Boolean,
+  minOccurrences : Int
+  maxOccurrences : Int
   tags : [String] # profile property type, event property type, etc..
   regexp : String 
   defaultValue : String
@@ -263,9 +302,8 @@ type StringPropertyType {
 
 type IntPropertyType {
   name : String!
-  multivalued : Boolean # must maintain order
-  mandatory : Boolean
-  identifier : Boolean,
+  minOccurrences : Int
+  maxOccurrences : Int
   tags : [String] # profile property type, event property type, etc..
   minValue : Int
   maxValue : Int 
@@ -274,9 +312,8 @@ type IntPropertyType {
 
 type FloatPropertyType {
   name : String!
-  multivalued : Boolean # must maintain order
-  mandatory : Boolean
-  identifier : Boolean,
+  minOccurrences : Int
+  maxOccurrences : Int
   tags : [String] # profile property type, event property type, etc..
   minValue : Float
   maxValue : Float
@@ -286,18 +323,16 @@ type FloatPropertyType {
 # Date are in ISO-8601 format equivalent to Java 8 Instant format.
 type DatePropertyType {
   name : String!
-  multivalued : Boolean # must maintain order
-  mandatory : Boolean
-  identifier : Boolean,
+  minOccurrences : Int
+  maxOccurrences : Int
   tags : [String] # profile property type, event property type, etc..
   defaultValue : String
 }
 
 type BooleanPropertyType {
   name : String!
-  multivalued : Boolean # must maintain order
-  mandatory : Boolean
-  identifier : Boolean,
+  minOccurrences : Int
+  maxOccurrences : Int
   tags : [String] # profile property type, event property type, etc..
   defaultValue : Boolean
 }
@@ -305,18 +340,16 @@ type BooleanPropertyType {
 # Maps to a String with a lat,lon format
 type GeoPointPropertyType {
   name : String!
-  multivalued : Boolean # must maintain order
-  mandatory : Boolean
-  identifier : Boolean,
+  minOccurrences : Int
+  maxOccurrences : Int
   tags : [String] # profile property type, event property type, etc..
   defaultValue : String
 }
 
 type SetPropertyType {
   name : String!
-  multivalued : Boolean # must maintain order
-  mandatory : Boolean
-  identifier : Boolean,
+  minOccurrences : Int
+  maxOccurrences : Int
   tags : [String] # profile property type, event property type, etc..
   properties : [PropertyType] 
 }
@@ -326,22 +359,29 @@ type SetPropertyType {
 
 # Management objects are associated with a scope
 type Scope {
-  id: ID!
+  name: ID!
 }
 
-type Persona {
+input ScopeInput {
+  name: ID!
+}
+
+type Persona implements ProfileInterface {
   scope : Scope!
-  id : ID!
+  profileIDs : [ProfileID] # the CXS server may generated a system profile ID and expose it here
   segments : [Segment]
   interests : [Interest]
+  consents : [Consents]
   properties : ProfileProperties
 }
 
 input PersonaInput {
-  id : ID
-  properties : ProfilePropertiesInput
+  scope : ScopeInput!
+  profileIDs : [ProfileID] # the CXS server may generated a system profile ID and expose it here
   segments : [String]
   interests : [InterestInput]
+  consents : [ConsentsInput]
+  properties : ProfilePropertiesInput  
 }
 
 type Segment {
@@ -364,11 +404,12 @@ type List {
   scope: Scope!
   name : ID! # this can be generated from displayname, but never changed
   displayName : String
-  # TODO TBD
+  
+  active(first: Int, after: String, last: Int, before: String) : ProfileConnection
+  inactive(first: Int, after: String, last: Int, before: String) : ProfileConnection 
 }
 
 input ListInput {
-  # TODO TBD
   scope: String!
   name : ID! # this can be generated from displayname, but never changed
   displayName : String
@@ -391,9 +432,8 @@ input TopicInput {
 # ----------------------------------------------------------------------------
 # 
 # Predefined event types include : 
-# - updating profile properties
+# - updating profile properties, needs to match the profile properties definitions
 # - updating consent ( see http://ec.europa.eu/ipg/basics/legal/cookies/index_en.htm )
-)
 # - transaction (generic)
 # - like (“user likes a product”)
 # - Dislike (“visitor dislikes a comment”)
@@ -415,14 +455,14 @@ input TopicInput {
 # - Session paused
 # - Session resumed
 # - Session end
+# - Opt-in / opt-out of a list
 
 type EventType {
   name : String
-  propertyType : SetPropertyType 
 }
 
 type EventProperties {
-  # ... properties will be updated based on the defined property types
+  # ... properties will be updated based on the properties defined by CXS server event handlers
 }
 
 type Event {
@@ -485,7 +525,7 @@ input EventInput {
   _object: String! #
   _location: [GeoPointInput] # optional
   _timestamp: Int # optional because the server can generate it if it's missing
-  # the actual payload will be dynamically generated based on the configuration property definitions
+  # the actual payload will be dynamically generated based on the properties defined by the CXS event handlers
   # pageView
   # updateProfile
   # 
@@ -607,14 +647,23 @@ type ProfileProperties {
   # address : Address_G
 }
 
-type Profile {
+interface ProfileInterface {
+  profileIDs : [ProfileID] # the CXS server may generated a system profile ID and expose it here
+  segments(scopes : [ScopeInput], first : Int, last: Int, after : String, before: String) : SegmentConnection
+  interests(scopes : [ScopeInput], first : Int, last: Int, after : String, before: String) : InterestConnection
+  consents : [Consents]
+  lists(scopes : [ScopeInput], first : Int, last: Int, after : String, before: String) : ListConnection
+  properties : ProfileProperties
+}
+
+type Profile implements ProfileInterface {
   profileIDs : [ProfileID] # the CXS server may generated a system profile ID and expose it here
   events(filter : FilterInput, first : Int, last: Int, after : String, before: String) : EventConnection
   lastEvents(count : Int, profileID : ProfileIDInput) : EventConnection
   segments : [Segment]
   interests : [Interest]
   consents : [Consents]
-  dynamicSegments(dynamicSegments : [DynamicSegmentInput]) : [DynamicSegmentMatch]
+  matchesConditions(conditions : [ConditionsInput]) : [ConditionsMatch] # used for personalization requirements
   properties : ProfileProperties
 }
 
@@ -625,25 +674,51 @@ type Profile {
 # Examples:
 # {
 #   scope : "jahia.com",
-#   actions : [
-#     {name:"send-to-salesforce", description:"send profile data to Salesforce CRM"}, 
-#     {name:"location-storage", description:"store my location"}
-#   ],
+#   type: {name:"send-to-salesforce"},
+#   grant: ALLOW
 #   grantDate : 3498734899
 #   # no revoke date means it will not expire or defaults to system or legal standard (GDPR)
 # }
-#
+# {
+#   scope : "jahia.com",
+#   type : {name:"newsletter-subscription"},
+#   grant: DENY
+#   grantDate : 3498734899
+#   parameters : [ "latestNews" ]
+#   # no revoke date means it will not expire or defaults to system or legal standard (GDPR)
+# }
+# 
+# Consent Types may include:
+# - tracking
+# - list membership
+# - newsletter membership
+# - access to camera
+# - access to friends / contacts data
+# - access to medical records
+# - send sms
+# - call you
+# - send personal data to third parties
+# - send anonymous data to third parties
 
-type Action {
+type ConsentType {
     name : ID!
-    description : String
+}
+
+enum Grant {
+    ALLOW,
+    DENY,
 }
 
 type Consent {
-  scope : String
-  actions : [Action]
-  grantDate : Long
-  revokeDate : Long
+  scope : Scope
+  type : ConsentType
+  grant : Grant
+  grantDate : String
+  revokeDate : String
+  parameters : [String] # could be used to store a mailing list name
+  
+  profile : ProfileInterface
+  events : EventConnection
 }
 
 input ConsentInput {
@@ -676,18 +751,23 @@ type ProfileIDInput {
     id : ID! # unique profile identifier for the client
 }
 
+type User {
+    roles : [Role]
+}
+
 type Client {
     id : ID! # the "system" client ID is reserved for the CXS context server to use for internal IDs.
+    defaultUser : User
     thirdParty : Boolean # optional, indicates that the client is a third party (useful for privacy regulations such as GDPR)
 }
 
-# Dynamic segments are used to evaluate segment definitions stored in other systems (such as a WCM for personalization)
-input DynamicSegmentInput {
+# Conditions are used to evaluate conditions stored in other systems (such as a WCM for personalization)
+input ConditionsInput {
   name : String!
   filter: FilterInput
 }
 
-type DynamicSegmentMatch {
+type ConditionsMatch {
   name : String
   matched : Boolean
   executionTimeMillis : Int
@@ -699,6 +779,9 @@ type DynamicSegmentMatch {
 # include resolved locations, resolved client identification (server). Inbound events could be used for real-time personalization
 
 type Query {
+
+  getActiveUser() : User
+
   getEvent(id : String!) : Event
   findEvents(filter : FilterInput, orderBy : [OrderBy], first: Int, after: String, last: Int, before: String) : EventConnection
   
@@ -706,7 +789,7 @@ type Query {
   findProfiles(filter: FilterInput, orderBy: [OrderBy], first: Int, after: String, last: Int, before: String) : ProfileConnection
   
   getPersona(personaID : String) : Persona
-  findPersonas(filter: FilterInput, orderBy: [OrderBy], first: Int, after: String, last: Int, before: String) : PersonaConnection
+  findPersonas(filter: FilterInput, orderBy: [OrderBy], first: Int, after: String, last: Int, before: String) : ProfileConnection
   
   getSegment(segmentID : String) : Segment
   findSegments(filter: FilterInput, orderBy: [OrderBy], first: Int, after: String, last: Int, before: String) : SegmentConnection
@@ -719,8 +802,9 @@ type Query {
 
   getPropertyTypes() : PropertyTypeConnection
   getEventTypes() : EventTypeConnection
-
+  
   # Privacy and consent
+  getConsentTypes() : ConsentConnection
   getAllPersonalData()  
   
 }
@@ -729,9 +813,9 @@ type Mutation {
 
   # Events may be used to control common profiles, such as controlling privacy settings, reset interests, but mostly profile
   # changes. Mutations will not be added for this
-  
+    
   logEvents(events: [EventInput]!) : Int
-   
+    
   createOrUpdateProfile(profile : ProfileInput) : Profile
   deleteProfile(profileID : ProfileIDInput) : Profile
   
@@ -742,14 +826,17 @@ type Mutation {
   deleteSegment(segmentID : String) : Segment
   
   createOrUpdateList(list : ListInput) : List
+  addProfileToList(list : listInput, profileId : ProfileId, active : Boolean) : List
+  removeProfileFromList(list : listInput, profileId : ProfileId) : List
   deleteList(listID : String) : List
   
   createOrUpdateTopic(topic : TopicInput) : Topic
   deleteTopic(topicID : String) : Topic
   
   # todo these are not yet properly defined, especially the arguments
-  createOrUpdatePropertyType()
-  deletePropertyType()
+  createOrUpdateScalarPropertyType(scalarPropertyType : ScalarPropertyTypeInput)
+  createOrUpdateSetPropertyType(setPropertyType : SetPropertyTypeInput)
+  deletePropertyType(propertyTypeId : String)
               
   # Privacy 
   deleteAllPersonalData()
@@ -841,3 +928,30 @@ var MyAppSchema = new GraphQLSchema({
 });
 
 exports.schema = MyAppSchema;
+
+# Karaf/Unomi users.properties Authentication server 1
+# public/public1234
+# authenticated/authenticated1234
+# administrator/administrator1234
+#
+# public -> public role
+# authenticated -> role
+#
+# web client
+# system-configuration
+#   public
+#   authenticated
+#
+# profile-id 789
+#
+# -> authenticates against web client as a REGULAR user on Authentication Server 2
+# -> web client logins into unomi using authenticated user
+#
+# backend client
+# internal configuration
+#   administrator
+# backend client will NOT accept authenticated requests
+#
+# profile-id 789
+# -> authenticates against backend client as a administrator user on Authentication Server 2
+# -> backend client authenticates as the administrator user inside unomi
