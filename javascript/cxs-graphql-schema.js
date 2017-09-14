@@ -42,6 +42,15 @@ enum SortOrder {
   UNSPECIFIED
 }
 
+#
+# Example queries:
+# For segments:
+#   profiles that are between 30 and 50 
+#     and that have viewed 5 pages in the last 10 days
+#   profiles that are between 30 and 50 and that are female 
+#     or that have purchased 3 products in the last pages 
+#     and never logged in 
+#
 # (timestamp > January 1st, 2016 AND timestamp < January 1st, 2017 AND type = 'PageView') OR location is in Geneva Area
 # OR(
 #   AND(
