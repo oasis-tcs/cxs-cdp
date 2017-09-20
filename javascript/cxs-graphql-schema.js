@@ -48,7 +48,7 @@ enum SortOrder {
 #   profiles that are between 30 and 50 
 #     and that have viewed 5 pages in the last 10 days
 #   profiles that are between 30 and 50 and that are female 
-#     or that have purchased 3 products in the last pages 
+#     or that have purchased 3 products in the last 10 days 
 #     and never logged in 
 #
 # (timestamp > January 1st, 2016 AND timestamp < January 1st, 2017 AND type = 'PageView') OR location is in Geneva Area
@@ -155,12 +155,51 @@ input OrderBy {
   order : SortOrder
 }
 
+type AndFilter {
+  arguments : [Filter]
+}
+
+type OrFilter {
+  arguments : [Filter]
+}
+
+enum ProfilePropertyOperator {
+  EQ, 
+  GT,
+  GTE,
+  LT,
+  LTE,
+  BETWEEN
+}
+
+type ProfilePropertyFilter {
+  operator : ProfilePropertyOperator
+  property : String
+  value : Int
+}
+
+type EventOccurenceFilter {
+  eventId : String
+  beforeTime : String
+  afterTime : String
+  betweenTime : String
+  count : Int
+}
+
 type Filter {
-  filterFunction : FilterFunction
+  and : AndFilter
+  or : OrFilter
+  ....
+  profileProperty : ProfilePropertyFilter
+  eventOccurence : EventOccurenceFilter
 }
 
 input FilterInput {
-  filterFunction : FilterFunctionInput
+  and : AndFilterInput
+  or : OrFilterInput
+  ....
+  profileProperty : ProfilePropertyFilter
+  eventOccurence : EventOccurenceFilterInput
 }
 
 # PAGINATION-RELATED TYPES
@@ -398,15 +437,45 @@ type Segment {
   name : ID! # this can be generated from displayname, but never changed
   displayName : String
   # todo should we do this like this or should we create another condition type to do this ?
-  eventFilter : Filter
-  profileFilter: Filter
+  filter : Filter 
 }
 
+#
+#
+# mutation createOrUpdateSegment($segment : SegmentInput) {
+#   createOrUpdateSegment($segment) {
+#   }
+# }
+#
+# variables : 
+# {
+#   "segment": {
+#      "scope": "siteA",
+#      "name" : "over50_3products_last10days",
+#      "displayName": "People that are over 50 and have purchased 3 products in the last 10 days",
+#      "filter": {
+#        "function" : "AND",
+#        "arguments" : [
+#       { 
+#         "appliesOn": "profile",
+#         "function" : "GT",
+#         "arguments" : ["age", "50" ] 
+#       }
+#       {
+#         "appliesOn" : "event"
+#         "function" : "occurences",
+#         "arguments" : [ "transaction", 3, "now-10d"]
+#       },
+#       ]
+#      }
+#   }
+# }
+
 input SegmentInput {
-  # TODO TBD
   scope: String!
   name : ID! # this can be generated from displayname, but never changed
   displayName : String
+  filter : FilterInput
 }
 
 type List {
@@ -938,29 +1007,31 @@ var MyAppSchema = new GraphQLSchema({
 
 exports.schema = MyAppSchema;
 
-# Karaf/Unomi users.properties Authentication server 1
-# public/public1234
-# authenticated/authenticated1234
-# administrator/administrator1234
-#
-# public -> public role
-# authenticated -> role
-#
-# web client
-# system-configuration
-#   public
-#   authenticated
-#
-# profile-id 789
-#
-# -> authenticates against web client as a REGULAR user on Authentication Server 2
-# -> web client logins into unomi using authenticated user
-#
-# backend client
-# internal configuration
-#   administrator
-# backend client will NOT accept authenticated requests
-#
-# profile-id 789
-# -> authenticates against backend client as a administrator user on Authentication Server 2
-# -> backend client authenticates as the administrator user inside unomi
+/*
+ * Karaf/Unomi users.properties Authentication server 1
+ * public/public1234
+ * authenticated/authenticated1234
+ * administrator/administrator1234
+ *
+ * public -> public role
+ * authenticated -> role
+ *
+ * web client
+ * system-configuration
+ *   public
+ *   authenticated
+ *
+ * profile-id 789
+ *
+ * -> authenticates against web client as a REGULAR user on Authentication Server 2
+ * -> web client logins into unomi using authenticated user
+ *
+ * backend client
+ * internal configuration
+ *   administrator
+ * backend client will NOT accept authenticated requests
+ *
+ * profile-id 789
+ * -> authenticates against backend client as a administrator user on Authentication Server 2
+ * -> backend client authenticates as the administrator user inside unomi
+ */
