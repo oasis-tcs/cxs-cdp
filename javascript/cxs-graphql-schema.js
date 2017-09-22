@@ -1008,30 +1008,33 @@ var MyAppSchema = new GraphQLSchema({
 exports.schema = MyAppSchema;
 
 /*
+ * Example of Karaf user configuration
  * Karaf/Unomi users.properties Authentication server 1
  * public/public1234
  * authenticated/authenticated1234
  * administrator/administrator1234
  *
  * public -> public role
- * authenticated -> role
+ * authenticated -> has an authenticated role
  *
  * web client
  * system-configuration
- *   public
- *   authenticated
+ *   public -> mapped to visitors group in web client
+ *   authenticated -> mapped to any group/users in webclient (usually a "logged in users" group)
  *
- * profile-id 789
+ * Example: web user with profile-id 789
  *
  * -> authenticates against web client as a REGULAR user on Authentication Server 2
- * -> web client logins into unomi using authenticated user
+ * -> web client logins into Unomi using authenticated user
  *
  * backend client
  * internal configuration
  *   administrator
  * backend client will NOT accept authenticated requests
  *
- * profile-id 789
+ * Example: backend administrator with profile-id 789
  * -> authenticates against backend client as a administrator user on Authentication Server 2
  * -> backend client authenticates as the administrator user inside unomi
+ *
+ * The mapping configurations are contained in the configuration of each client (not in Apache Unomi but external)
  */
