@@ -61,7 +61,7 @@ enum SortOrder {
 #   GEODISTANCE(location,'Geneva', '30km')
 # )
 
-# query filteredEvents($filter : Filter, $orderBy : [OrderBy]) {
+# query filteredEvents($filter : EventFilter, $orderBy : [OrderBy]) {
 #   events(filter : $filter, orderBy : $orderBy) {
 #     edges {
 #       type
@@ -71,19 +71,16 @@ enum SortOrder {
 # variables:
 # {
 #   "filter": {
-#     "function" : "OR",
-#     "arguments" : [
+#     "or" : [
 #       {
-#         "function" : "AND",
-#         "arguments" : [
-#           { "function" : "GT", "arguments" : [ "timeStamp", "January 1st, 2016" ] },
-#           { "function" : "LT", "arguments" : [ "timeStamp", "January 1st, 2017" ] },
-#           { "function" : "EQUALS", "arguments" : [ "type", "PageView" ] },
+#         "and" : [
+#           { "eventProperty" : { "operator" : "GT", "property" : "timeStamp", "value": "January 1st, 2016" },
+#           { "eventProperty" : { "operator" : "LT", "property" : "timeStamp", "value": "January 1st, 2017" },
+#           { "eventProperty" : { "operator" : "EQUALS", "property" : "type", "value": "PageView" },
 #         ]
 #       },
 #       {
-#         "function" : "GEODISTANCE",
-#         "arguments" : [ "location", "Geneva", "30km" ]
+#         "eventPropertyGeoDistance": { "property": "location", "city": "Geneva", : "radius": "30km" }
 #       }
 #     ]
 #   },
@@ -120,36 +117,6 @@ enum SortOrder {
 #   "orderBy" : [ type_ASC, properties.pageID_DESC ]
 # }
 
-
-# initially wanted to do this but it is not supported by GraphQL :
-# union FilterArgument = Boolean | Int | Float | String | FilterFunction
-
-type FilterArgument {
-  boolean : Boolean
-  int : Int
-  float : Float
-  string : String
-  function : FilterFunction
-}
-
-input FilterArgumentInput {
-  boolean : Boolean
-  int : Int
-  float : Float
-  string : String
-  function : FilterFunctionInput
-}
-
-type FilterFunction {
-  name : String!
-  arguments : [FilterArgument]
-}
-
-input FilterFunctionInput {
-  name : String!
-  arguments : [FilterArgumentInput]
-}
-
 input OrderBy {
   fieldName : String # eg : endTime, properties.location
   order : SortOrder
@@ -159,8 +126,16 @@ type AndFilter {
   arguments : [Filter]
 }
 
+input AndFilterInput {
+  arguments : [FilterInput]
+}
+
 type OrFilter {
   arguments : [Filter]
+}
+
+type OrFilterInput {
+  arguments : [FilterInput]
 }
 
 enum ProfilePropertyOperator {
@@ -175,7 +150,7 @@ enum ProfilePropertyOperator {
 type ProfilePropertyFilter {
   operator : ProfilePropertyOperator
   property : String
-  value : Int
+  value : Object
 }
 
 type EventOccurenceFilter {
@@ -191,7 +166,44 @@ type Filter {
   or : OrFilter
   ....
   profileProperty : ProfilePropertyFilter
+  profilePropertyGeoDistance : ProfilePropertyGeoDistanceFilter
   eventOccurence : EventOccurenceFilter
+  eventProperty : EventPropertyFilter
+  eventPropertyGeoDistance : EventPropertyGeoDistanceFilter
+}
+
+type AndEventFilter {
+  and : [EventFilter]
+}
+
+type OrEventFilter {
+  or : [EventFilter]
+}
+
+type EventFilter {
+  and : AndEventFilter
+  or : OrEventFilter
+
+  ... 
+  eventOccurence : EventOccurrenceFilter
+  eventProperty : EventPropertyFilter
+  eventPropertyGeoDistance : EventPropertyGeoDistanceFilter
+}
+
+type AndProfileFilter {
+  and : [ProfileFilter]
+}
+
+type OrEventFilter {
+  or : [ProfileFilter]
+}
+
+type ProfileFilter {
+  and : AndProfileFilter
+  or : OrProfileFilter
+  
+  profileProperty : ProfilePropertyFilter
+  propfilePropertyGeoDistance : ProfilePropertyGeoDistanceFilter
 }
 
 input FilterInput {
@@ -436,8 +448,9 @@ type Segment {
   scope: Scope!
   name : ID! # this can be generated from displayname, but never changed
   displayName : String
-  # todo should we do this like this or should we create another condition type to do this ?
-  filter : Filter 
+  # todo should we do this like this or should we create another condition type to do this ?  
+  profileFilter : ProfileFilter
+  eventFilter : EventFilter
 }
 
 #
@@ -453,20 +466,15 @@ type Segment {
 #      "scope": "siteA",
 #      "name" : "over50_3products_last10days",
 #      "displayName": "People that are over 50 and have purchased 3 products in the last 10 days",
-#      "filter": {
-#        "function" : "AND",
-#        "arguments" : [
-#       { 
-#         "appliesOn": "profile",
-#         "function" : "GT",
-#         "arguments" : ["age", "50" ] 
-#       }
-#       {
-#         "appliesOn" : "event"
-#         "function" : "occurences",
-#         "arguments" : [ "transaction", 3, "now-10d"]
-#       },
-#       ]
+#      "filter": 
+#          "and" : [
+#          { 
+#            "property" : { "operator" : "GT", "property" : "profile.age", "value" : "50" }
+#          },
+#          {
+#            "occurence": { "eventId" : "transaction", "count" : 3, "timeSpan" : "now-10d" }
+#          }
+#          ]
 #      }
 #   }
 # }
