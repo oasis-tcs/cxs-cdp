@@ -25,14 +25,12 @@ exports.schema = buildSchema(`
 # 
 # Recommended default permissions for roles:
 #
+# role - permissions
 # public - getProfile, logEvents
-# authenticated - updateProfile
+# authenticated - updateProfile, exportAllYourData, forgetMe
 # administrator - all 
 #
-# Securing properties :
-# ----------------------
-#
-# Create/Read/Update/Delete for each property types for each role  
+# Open question : should the administrative user have an associated client Id ? (maybe it shouldn't).
 
 # QUERY AND FILTER TYPES
 # ----------------------------------------------------------------------------
@@ -319,16 +317,10 @@ type Role {
   scope : Scope! # may include a system scope
 }
 
-enum Permission {
-    CREATE,
-    READ,
-    UPDATE,
-    DELETE
-}
-
-type AccessControl {
-  role : Role
-  permissions : [Permission]
+enum AppliesTo {
+  PROFILE,
+  EVENT,
+  ALL 
 }
 
 # Multi-valued properties are controlled using the minOccurrences and maxOccurrences fields. The order of the values 
@@ -337,12 +329,22 @@ interface PropertyType {
   name : String!
   minOccurrences : Int # default = 0
   maxOccurrences : Int # default = 1
+  tags : [String] # user generated tags
+  systemTags : [String] # personalInformation, address, social 
   personalData : Boolean # default to true, identifiers are always personalData
-  acl : [AccessControl] # support for acls is optional   
+  appliesTo : AppliesTo
 }
 
 # The identifier property type is basically a string that is used as an identifier property
-type IdentifierPropertyType {
+type IdentifierPropertyType implements PropertyType {
+  name : String!
+  minOccurrences : Int
+  maxOccurrences : Int
+  regexp : String 
+  defaultValue : String
+}
+
+type StringPropertyType implements PropertyType {
   name : String!
   minOccurrences : Int
   maxOccurrences : Int
@@ -351,16 +353,7 @@ type IdentifierPropertyType {
   defaultValue : String
 }
 
-type StringPropertyType {
-  name : String!
-  minOccurrences : Int
-  maxOccurrences : Int
-  tags : [String] # profile property type, event property type, etc..
-  regexp : String 
-  defaultValue : String
-}
-
-type IntPropertyType {
+type IntPropertyType implements PropertyType {
   name : String!
   minOccurrences : Int
   maxOccurrences : Int
@@ -370,7 +363,7 @@ type IntPropertyType {
   defaultValue : Int
 }
 
-type FloatPropertyType {
+type FloatPropertyType implements PropertyType {
   name : String!
   minOccurrences : Int
   maxOccurrences : Int
@@ -381,7 +374,7 @@ type FloatPropertyType {
 }
 
 # Date are in ISO-8601 format equivalent to Java 8 Instant format.
-type DatePropertyType {
+type DatePropertyType implements PropertyType {
   name : String!
   minOccurrences : Int
   maxOccurrences : Int
@@ -389,7 +382,7 @@ type DatePropertyType {
   defaultValue : String
 }
 
-type BooleanPropertyType {
+type BooleanPropertyType implements PropertyType {
   name : String!
   minOccurrences : Int
   maxOccurrences : Int
@@ -398,7 +391,7 @@ type BooleanPropertyType {
 }
 
 # Maps to a String with a lat,lon format
-type GeoPointPropertyType {
+type GeoPointPropertyType implements PropertyType {
   name : String!
   minOccurrences : Int
   maxOccurrences : Int
@@ -406,7 +399,7 @@ type GeoPointPropertyType {
   defaultValue : String
 }
 
-type SetPropertyType {
+type SetPropertyType implements PropertyType {
   name : String!
   minOccurrences : Int
   maxOccurrences : Int
@@ -757,6 +750,18 @@ type Profile implements ProfileInterface {
 # Consents are given and revoked through events. This means that the CXS specification defines 
 # reserved property types for providing consent grants and revocations.
 #
+# Do Not Track is a special case, because it cannot be handled using the content management since we cannot
+# track the user connect to the context server in any way. In this case, profile ID cookies should never be 
+# generated, and each new request will be treated as a separate visit.
+#
+# Tracking is seperated from cookie identification. For example we could have a form that has an opt-in checkbox
+# to "remember" the user, but NOT tracking his behavior, so that when he fills another form, pre-fill could happen,
+# or a single form submission could be handled.
+#
+# https://onetrust.com/nobody-likes-cookie-pop-ups-browser-based-consent-eprivacy-regulation/
+#
+# Can we leverage OAuth 2 autorization scopes here ? Consent types are very similar to OAuth 2 authorization scopes.
+# 
 # Examples:
 # {
 #   scope : "jahia.com",
@@ -788,6 +793,8 @@ type Profile implements ProfileInterface {
 
 type ConsentType {
     name : ID!
+    tags : [String],
+    systemTags: [String]
 }
 
 enum Grant {
@@ -796,6 +803,7 @@ enum Grant {
 }
 
 type Consent {
+  token : ID! # similar to OAuth 2 authorization tokens, also useful to delete the consent
   scope : Scope
   type : ConsentType
   grant : Grant
@@ -1016,19 +1024,20 @@ var MyAppSchema = new GraphQLSchema({
 exports.schema = MyAppSchema;
 
 /*
- * Example of Karaf user configuration
+ * Example of Context Server (Karaf) user configuration
  * Karaf/Unomi users.properties Authentication server 1
+ * username/password
  * public/public1234
  * authenticated/authenticated1234
  * administrator/administrator1234
  *
+ * Mapping of Context Server users to roles
  * public -> public role
  * authenticated -> has an authenticated role
  *
- * web client
- * system-configuration
- *   public -> mapped to visitors group in web client
- *   authenticated -> mapped to any group/users in webclient (usually a "logged in users" group)
+ * web client system configuration
+ *   visitors group in web client -> public context server user
+ *   any group/users in webclient (usually a "logged in users" group ie authentication) -> mapped to authenticated user
  *
  * Example: web user with profile-id 789
  *
