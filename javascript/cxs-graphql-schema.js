@@ -792,12 +792,13 @@ type Profile implements ProfileInterface {
 # - send anonymous data to third parties
 
 type ConsentType {
+    scope: Scope
     name : ID!
     tags : [String],
     systemTags: [String]
 }
 
-enum Grant {
+enum ConsentGrant {
     ALLOW,
     DENY,
 }
@@ -806,7 +807,7 @@ type Consent {
   token : ID! # similar to OAuth 2 authorization tokens, also useful to delete the consent
   scope : Scope
   type : ConsentType
-  grant : Grant
+  grant : ConsentGrant
   grantDate : String
   revokeDate : String
   parameters : [String] # could be used to store a mailing list name
