@@ -730,7 +730,7 @@ interface ProfileInterface {
   profileIDs : [ProfileID] # the CXS server may generated a system profile ID and expose it here
   segments(scopes : [ScopeInput], first : Int, last: Int, after : String, before: String) : SegmentConnection
   interests(scopes : [ScopeInput], first : Int, last: Int, after : String, before: String) : InterestConnection
-  consents : [Consents]
+  consents : [Consent]
   lists(scopes : [ScopeInput], first : Int, last: Int, after : String, before: String) : ListConnection
   properties : ProfileProperties
 }
@@ -741,7 +741,7 @@ type Profile implements ProfileInterface {
   lastEvents(count : Int, profileID : ProfileIDInput) : EventConnection
   segments : [Segment]
   interests : [Interest]
-  consents : [Consents]
+  consents : [Consent]
   matchesConditions(conditions : [ConditionsInput]) : [ConditionsMatch] # used for personalization requirements
   properties : ProfileProperties
 }
@@ -772,10 +772,9 @@ type Profile implements ProfileInterface {
 # }
 # {
 #   scope : "jahia.com",
-#   type : {name:"newsletter-subscription"},
+#   type : {name:"newsletter-subscription-latestNews"},
 #   grant: DENY
 #   grantDate : 3498734899
-#   parameters : [ "latestNews" ]
 #   # no revoke date means it will not expire or defaults to system or legal standard (GDPR)
 # }
 # 
@@ -791,27 +790,26 @@ type Profile implements ProfileInterface {
 # - send personal data to third parties
 # - send anonymous data to third parties
 
-type ConsentType {
-    scope: Scope
-    name : ID!
-    tags : [String],
-    systemTags: [String]
-}
+# CXS Consent types include:
+# - allow tracking
+# - 
+# (for GDPR controllers / processors ?)
 
 enum ConsentGrant {
     ALLOW,
     DENY,
 }
 
+# Consent types are not defined in the specification, only the format of the type identifier
+# should use a URI convention. Some URIs could actually be URLs and point to real resource that would give the 
+# semantics of the consent type 
 type Consent {
-  token : ID! # similar to OAuth 2 authorization tokens, also useful to delete the consent
+  token : ID! # similar to OAuth 2 authorization tokens to access the consent without the profile, also useful to delete the consent
   scope : Scope
-  type : ConsentType
-  grant : ConsentGrant
+  type : String! # "//mycompany.com/consents/newsletters/weekly", "//crmcompany.com/consents/push-to-crm", "//oasis_open.org/cxs/consents/send-to-third-parties"
+  grant : ConsentGrant!
   grantDate : String
-  revokeDate : String
-  parameters : [String] # could be used to store a mailing list name
-  
+  revokeDate : String  
   profile : ProfileInterface
   events : EventConnection
 }
