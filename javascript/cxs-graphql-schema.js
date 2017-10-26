@@ -556,10 +556,10 @@ input ScopeInput {
 type Persona implements ProfileInterface {
   scope : Scope!
   profileIDs : [ProfileID] # the CXS server may generated a system profile ID and expose it here
-  segments(scopes : [ScopeInput], first : Int, last: Int, after : String, before: String) : SegmentConnection
-  interests(scopes : [ScopeInput], first : Int, last: Int, after : String, before: String) : InterestConnection
+  segments(scopes : [ScopeInput]) : [Segment]
+  interests(scopes : [ScopeInput]) : [Interest]
   consents : [Consent]
-  lists(scopes : [ScopeInput], first : Int, last: Int, after : String, before: String) : ListConnection
+  lists(scopes : [ScopeInput]) : [List]
   properties : ProfileProperties
 }
 
@@ -891,10 +891,10 @@ input ProfilePropertiesInput {
 
 interface ProfileInterface {
   profileIDs : [ProfileID] # the CXS server may generated a system profile ID and expose it here
-  segments(scopes : [ScopeInput], first : Int, last: Int, after : String, before: String) : SegmentConnection
-  interests(scopes : [ScopeInput], first : Int, last: Int, after : String, before: String) : InterestConnection
+  segments(scopes : [ScopeInput]) : [Segment]
+  interests(scopes : [ScopeInput]) : [Interest]
   consents : [Consent]
-  lists(scopes : [ScopeInput], first : Int, last: Int, after : String, before: String) : ListConnection
+  lists(scopes : [ScopeInput]) : [List]
   properties : ProfileProperties
 }
 
@@ -902,10 +902,10 @@ type Profile implements ProfileInterface {
   profileIDs : [ProfileID] # the CXS server may generated a system profile ID and expose it here
   events(filter : EventFilterInput, first : Int, last: Int, after : String, before: String) : EventConnection
   lastEvents(count : Int, profileID : ProfileIDInput) : EventConnection
-  segments(scopes : [ScopeInput], first : Int, last: Int, after : String, before: String) : SegmentConnection
-  interests(scopes : [ScopeInput], first : Int, last: Int, after : String, before: String) : InterestConnection
+  segments(scopes : [ScopeInput]) : [Segment]
+  interests(scopes : [ScopeInput]) : [Interest]
   consents : [Consent]
-  lists(scopes : [ScopeInput], first : Int, last: Int, after : String, before: String) : ListConnection
+  lists(scopes : [ScopeInput]) : [List]
   matchesConditions(conditions : [ConditionsInput]) : [ConditionsMatch] # used for personalization requirements
   properties : ProfileProperties
 }
