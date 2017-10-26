@@ -1,0 +1,59 @@
+query findProfiles($filter: ProfileFilterInput, $orderBy: [OrderByInput]) {
+  findProfiles(filter: $filter, orderBy: $orderBy) {
+    edges {
+      node {
+        profileIDs {
+          id
+        }
+        segments {
+          name
+        }
+        interests {
+          topic {
+            id
+          }
+        	score
+        }
+        consents {
+          type
+          grant
+        }
+        lists {
+          name
+        }
+        properties {
+          firstName
+          lastName
+        }
+      }
+      cursor
+    }
+  }
+}
+
+variables :
+
+{
+  "filter": {
+    "and": [
+      {
+        "profileProperties": {
+          "location_distance": { "center": { "longitude": 10, "latitude": 10 }, "distance": 10 }
+        }
+      },
+      {
+        "eventOccurence": {
+          "eventId": "purchased",
+          "count": 1,
+          "afterTime": "now-30d"
+        }
+      }
+    ]
+  },
+  "orderBy": [
+    {
+      "fieldName": "lastName",
+      "order": "ASC"
+    }
+  ]
+}
