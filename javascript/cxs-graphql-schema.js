@@ -59,7 +59,7 @@ enum SortOrder {
 #   GEODISTANCE(location,'Geneva', '30km')
 # )
 
-# query filteredEvents($filter : EventFilter, $orderBy : [OrderBy]) {
+# query filteredEvents($filter : EventFilter, $orderBy : [OrderByInput]) {
 #   events(filter : $filter, orderBy : $orderBy) {
 #     edges {
 #       type
@@ -88,7 +88,7 @@ enum SortOrder {
 #   ]
 # }
 
-# query filteredEvents($filter : EventFilter, $orderBy : [EventOrderBy]) {
+# query filteredEvents($filter : EventFilter, $orderBy : [EventOrderByInput]) {
 #   events(filter : $filter, orderBy : $orderBy) {
 #     edges {
 #       type
@@ -115,25 +115,9 @@ enum SortOrder {
 #   "orderBy" : [ type_ASC, properties.pageID_DESC ]
 # }
 
-input OrderBy {
+input OrderByInput {
   fieldName : String # eg : endTime, properties.location
   order : SortOrder
-}
-
-type AndFilter {
-  arguments : [Filter]
-}
-
-input AndFilterInput {
-  arguments : [FilterInput]
-}
-
-type OrFilter {
-  arguments : [Filter]
-}
-
-input OrFilterInput {
-  arguments : [FilterInput]
 }
 
 enum ProfilePropertyOperator {
@@ -163,6 +147,12 @@ type BooleanProfilePropertyFilter {
   value : Boolean
 }
 
+input BooleanProfilePropertyFilterInput {
+  operator : ProfilePropertyOperator
+  property : String
+  value : Boolean
+}
+
 type EventOccurrenceFilter {
   eventId : String
   beforeTime : String
@@ -179,33 +169,36 @@ input EventOccurrenceFilterInput {
   count : Int
 }
 
+# A filter is a way of querying for profiles based on profile properties or event properties
 type Filter {
-  and : AndFilter
-  or : OrFilter
+  # Example for asString value : profile.test = 'testValue' AND eventOccurrence('pageView') = 10
+  asString : String # optional ?
+  and : [Filter]
+  or : [Filter]
   # ....
-  profileProperty : StringProfilePropertyFilter
+  stringProfileProperty : StringProfilePropertyFilter
+  booleanProfileProperty : BooleanProfilePropertyFilter
   # profilePropertyGeoDistance : ProfilePropertyGeoDistanceFilter
   eventOccurrence : EventOccurrenceFilter
   # eventProperty : EventPropertyFilter
   # eventPropertyGeoDistance : EventPropertyGeoDistanceFilter
 }
 
-type AndEventFilter {
-  and : [EventFilter]
-}
-
-type OrEventFilter {
-  or : [EventFilter]
-}
-
 type EventFilter {
-  and : AndEventFilter
-  or : OrEventFilter
+  and : [EventFilter]
+  or : [EventFilter]
 
 #  ... 
   eventOccurrence : EventOccurrenceFilter
   # eventProperty : EventPropertyFilter
   # eventPropertyGeoDistance : EventPropertyGeoDistanceFilter
+}
+
+input EventFilterInput {
+  and : [EventFilterInput]
+  or : [EventFilterInput]
+#  ....
+  eventOccurence : EventOccurrenceFilterInput
 }
 
 type AndProfileFilter {
@@ -225,10 +218,12 @@ type ProfileFilter {
 }
 
 input FilterInput {
-  and : AndFilterInput
-  or : OrFilterInput
-#  ....
-  profileProperty : StringProfilePropertyFilterInput
+  # Example for asString value : profile.test = 'testValue' AND eventOccurrence('pageView') = 10
+  asString : String # optional ? 
+  and : [FilterInput]
+  or : [FilterInput]
+  stringProfileProperty : StringProfilePropertyFilterInput
+  booleanProfileProperty : BooleanProfilePropertyFilterInput
   eventOccurence : EventOccurrenceFilterInput
 }
 
@@ -543,9 +538,7 @@ type Segment {
   scope: Scope!
   name : ID! # this can be generated from displayname, but never changed
   displayName : String
-  # todo should we do this like this or should we create another condition type to do this ?  
-  profileFilter : ProfileFilter
-  eventFilter : EventFilter
+  filter : Filter
 }
 
 #
@@ -983,27 +976,29 @@ type ConditionsMatch {
 # Inbound event could be used to push information from the context server back to a client. An example of an inbound event could 
 # include resolved locations, resolved client identification (server). Inbound events could be used for real-time personalization
 
+# Context Server GraphQL queries
 type Query {
 
+  # This will return the user that is connected to the CXS server, allowing to retrieve the roles he participates in.
   getActiveUser : User
 
   getEvent(id : String!) : Event
-  findEvents(filter : FilterInput, orderBy : [OrderBy], first: Int, after: String, last: Int, before: String) : EventConnection
+  findEvents(filter : EventFilterInput, orderBy : [OrderByInput], first: Int, after: String, last: Int, before: String) : EventConnection
   
   getProfile(profileID : ProfileIDInput) : Profile
-  findProfiles(filter: FilterInput, orderBy: [OrderBy], first: Int, after: String, last: Int, before: String) : ProfileConnection
+  findProfiles(filter: FilterInput, orderBy: [OrderByInput], first: Int, after: String, last: Int, before: String) : ProfileConnection
   
   getPersona(personaID : String) : Persona
-  findPersonas(filter: FilterInput, orderBy: [OrderBy], first: Int, after: String, last: Int, before: String) : ProfileConnection
+  findPersonas(filter: FilterInput, orderBy: [OrderByInput], first: Int, after: String, last: Int, before: String) : ProfileConnection
   
   getSegment(segmentID : String) : Segment
-  findSegments(filter: FilterInput, orderBy: [OrderBy], first: Int, after: String, last: Int, before: String) : SegmentConnection
+  findSegments(filter: FilterInput, orderBy: [OrderByInput], first: Int, after: String, last: Int, before: String) : SegmentConnection
 
   getList(listID : String) : List
-  findLists(filter: FilterInput, orderBy: [OrderBy], first: Int, after: String, last: Int, before: String) : ListConnection
+  findLists(filter: FilterInput, orderBy: [OrderByInput], first: Int, after: String, last: Int, before: String) : ListConnection
 
   getTopic(topicID : String) : Topic
-  findTopics(filter: FilterInput, orderBy: [OrderBy], first: Int, after: String, last: Int, before: String) : TopicConnection
+  findTopics(filter: FilterInput, orderBy: [OrderByInput], first: Int, after: String, last: Int, before: String) : TopicConnection
 
   getPropertyTypes : PropertyTypeConnection
   getEventTypes : [String]
@@ -1013,6 +1008,7 @@ type Query {
   
 }
 
+# Context Server GraphQL mutation
 type Mutation {
 
   # Events may be used to control common profiles, such as controlling privacy settings, reset interests, but mostly profile
