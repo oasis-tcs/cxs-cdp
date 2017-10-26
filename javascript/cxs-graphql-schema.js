@@ -120,39 +120,6 @@ input OrderByInput {
   order : SortOrder
 }
 
-enum ProfilePropertyOperator {
-  EQ, 
-  GT,
-  GTE,
-  LT,
-  LTE,
-  BETWEEN
-}
-
-type StringProfilePropertyFilter {
-  operator : ProfilePropertyOperator
-  property : String
-  value : String
-}
-
-input StringProfilePropertyFilterInput {
-  operator : ProfilePropertyOperator
-  property : String
-  value : String
-}
-
-type BooleanProfilePropertyFilter {
-  operator : ProfilePropertyOperator
-  property : String
-  value : Boolean
-}
-
-input BooleanProfilePropertyFilterInput {
-  operator : ProfilePropertyOperator
-  property : String
-  value : Boolean
-}
-
 type EventOccurrenceFilter {
   eventId : String
   beforeTime : String
@@ -169,62 +136,133 @@ input EventOccurrenceFilterInput {
   count : Int
 }
 
-# A filter is a way of querying for profiles based on profile properties or event properties
-type Filter {
+# This filter will contain generated fields that are concatenations of property names and operators. The values 
+# provided here are just examples.
+type ProfilePropertiesFilter {
+  firstName_startsWith : String
+  firstName_contains : String
+  firstName_equals : String
+  
+  location_distance : GeoDistance
+}
+
+# This filter will contain generated fields that are concatenations of property names and operators. The values 
+# provided here are just examples.
+input ProfilePropertiesFilterInput {
+  firstName_startsWith : String
+  firstName_contains : String
+  firstName_equals : String
+  
+  location_distance : GeoDistanceInput
+}
+
+type GeoPoint {
+  longitude : Float
+  latitude : Float
+}
+
+input GeoPointInput {
+  longitude : Float
+  latitude : Float
+}
+
+type GeoDistance {
+  center : GeoPoint
+  distance : Float
+}
+
+input GeoDistanceInput {
+  center : GeoPointInput
+  distance : Float
+}
+
+type EventPropertiesFilter {
+  location_distance : GeoDistance
+}
+
+# A filter is a way of querying for profiles based on profile properties or event properties. The filter list is not 
+# exhaustive and may be extended by any implementation.
+type ProfileFilter {
   # Example for asString value : profile.test = 'testValue' AND eventOccurrence('pageView') = 10
   asString : String # optional ?
-  and : [Filter]
-  or : [Filter]
+  and : [ProfileFilter]
+  or : [ProfileFilter]
   # ....
-  stringProfileProperty : StringProfilePropertyFilter
-  booleanProfileProperty : BooleanProfilePropertyFilter
-  # profilePropertyGeoDistance : ProfilePropertyGeoDistanceFilter
+  profileProperties : ProfilePropertiesFilter
+  eventProperties : EventPropertiesFilter
   eventOccurrence : EventOccurrenceFilter
-  # eventProperty : EventPropertyFilter
-  # eventPropertyGeoDistance : EventPropertyGeoDistanceFilter
 }
 
 type EventFilter {
   and : [EventFilter]
   or : [EventFilter]
 
-#  ... 
+  properties : EventPropertiesFilter
   eventOccurrence : EventOccurrenceFilter
-  # eventProperty : EventPropertyFilter
-  # eventPropertyGeoDistance : EventPropertyGeoDistanceFilter
+}
+
+input EventPropertiesFilterInput {
+  location_distance : GeoDistanceInput
 }
 
 input EventFilterInput {
   and : [EventFilterInput]
   or : [EventFilterInput]
-#  ....
-  eventOccurence : EventOccurrenceFilterInput
+
+  properties : EventPropertiesFilterInput
+  eventOccurrence : EventOccurrenceFilterInput
 }
 
-type AndProfileFilter {
-  and : [ProfileFilter]
+input SegmentMatchFilterInput {
+  segments : [String]!
 }
 
-type OrProfileFilter {
-  or : [ProfileFilter]
-}
-
-type ProfileFilter {
-  and : AndProfileFilter
-  or : OrProfileFilter
-  
-  profileProperty : StringProfilePropertyFilter
-  # profilePropertyGeoDistance : ProfilePropertyGeoDistanceFilter
-}
-
-input FilterInput {
+input ProfileFilterInput {
   # Example for asString value : profile.test = 'testValue' AND eventOccurrence('pageView') = 10
   asString : String # optional ? 
-  and : [FilterInput]
-  or : [FilterInput]
-  stringProfileProperty : StringProfilePropertyFilterInput
-  booleanProfileProperty : BooleanProfilePropertyFilterInput
+  and : [ProfileFilterInput]
+  or : [ProfileFilterInput]
+  
+  profileProperties : ProfilePropertiesFilterInput
+  matchesSegments : SegmentMatchFilterInput
+  eventProperties : EventPropertiesFilterInput
   eventOccurence : EventOccurrenceFilterInput
+}
+
+type ListFilter {
+  and : [ListFilter]
+  or : [ListFilter]
+  
+  scope_equals : String
+  name_equals : String
+  name_regexp : String  
+}
+
+input ListFilterInput {
+  and : [ListFilterInput]
+  or : [ListFilterInput]
+  
+  scope_equals : String
+  name_equals : String
+  name_regexp : String  
+}
+
+type TopicFilter {
+  and : [TopicFilter]
+  or : [TopicFilter]
+  
+  scope_equals : String
+  id_equals : String
+  displayName_regexp : String  
+}
+
+input TopicFilterInput {
+  and : [TopicFilterInput]
+  or : [TopicFilterInput]
+  
+  scope_equals : String
+  id_equals : String
+  displayName_regexp : String  
 }
 
 # PAGINATION-RELATED TYPES
@@ -538,7 +576,40 @@ type Segment {
   scope: Scope!
   name : ID! # this can be generated from displayname, but never changed
   displayName : String
-  filter : Filter
+  filter : SegmentFilter
+}
+
+input SegmentInput {
+  scope : ScopeInput!
+  name : ID!
+  displayName : String
+  filter : SegmentFilterInput
+}
+
+type SegmentPropertiesFilter {
+  scope_equals : String
+  scope_regexp : String
+  name_equals : String
+  name_regexp : String
+}
+
+input SegmentPropertiesFilterInput {
+  scope_equals : String
+  scope_regexp : String
+  name_equals : String
+  name_regexp : String
+}
+
+type SegmentFilter {
+  and : [SegmentFilter]
+  or : [SegmentFilter]
+  properties : [SegmentPropertiesFilter]
+}
+
+input SegmentFilterInput {
+  and : [SegmentFilterInput]
+  or : [SegmentFilterInput]
+  properties : [SegmentPropertiesFilterInput]
 }
 
 #
@@ -566,13 +637,6 @@ type Segment {
 #      }
 #   }
 # }
-
-input SegmentInput {
-  scope: String!
-  name : ID! # this can be generated from displayname, but never changed
-  displayName : String
-  filter : FilterInput
-}
 
 type List {
   scope: Scope!
@@ -683,11 +747,6 @@ type Event {
 #       groupName : "walmart-geneva"
 #   },
 # }   
-
-input GeoPointInput {
-  longitude : Float
-  latitude : Float
-}
 
 input EventInput {
   _profileID: ProfileIDInput! 
@@ -841,7 +900,7 @@ interface ProfileInterface {
 
 type Profile implements ProfileInterface {
   profileIDs : [ProfileID] # the CXS server may generated a system profile ID and expose it here
-  events(filter : FilterInput, first : Int, last: Int, after : String, before: String) : EventConnection
+  events(filter : EventFilterInput, first : Int, last: Int, after : String, before: String) : EventConnection
   lastEvents(count : Int, profileID : ProfileIDInput) : EventConnection
   segments(scopes : [ScopeInput], first : Int, last: Int, after : String, before: String) : SegmentConnection
   interests(scopes : [ScopeInput], first : Int, last: Int, after : String, before: String) : InterestConnection
@@ -962,7 +1021,7 @@ type Client {
 # Conditions are used to evaluate conditions stored in other systems (such as a WCM for personalization)
 input ConditionsInput {
   name : String!
-  filter: FilterInput
+  filter: ProfileFilterInput
 }
 
 type ConditionsMatch {
@@ -986,21 +1045,21 @@ type Query {
   findEvents(filter : EventFilterInput, orderBy : [OrderByInput], first: Int, after: String, last: Int, before: String) : EventConnection
   
   getProfile(profileID : ProfileIDInput) : Profile
-  findProfiles(filter: FilterInput, orderBy: [OrderByInput], first: Int, after: String, last: Int, before: String) : ProfileConnection
+  findProfiles(filter: ProfileFilterInput, orderBy: [OrderByInput], first: Int, after: String, last: Int, before: String) : ProfileConnection
   
   getPersona(personaID : String) : Persona
-  findPersonas(filter: FilterInput, orderBy: [OrderByInput], first: Int, after: String, last: Int, before: String) : ProfileConnection
+  findPersonas(filter: ProfileFilterInput, orderBy: [OrderByInput], first: Int, after: String, last: Int, before: String) : ProfileConnection
   
   getSegment(segmentID : String) : Segment
-  findSegments(filter: FilterInput, orderBy: [OrderByInput], first: Int, after: String, last: Int, before: String) : SegmentConnection
+  findSegments(filter: SegmentFilterInput, orderBy: [OrderByInput], first: Int, after: String, last: Int, before: String) : SegmentConnection
 
   getList(listID : String) : List
-  findLists(filter: FilterInput, orderBy: [OrderByInput], first: Int, after: String, last: Int, before: String) : ListConnection
+  findLists(filter: ListFilterInput, orderBy: [OrderByInput], first: Int, after: String, last: Int, before: String) : ListConnection
 
   getTopic(topicID : String) : Topic
-  findTopics(filter: FilterInput, orderBy: [OrderByInput], first: Int, after: String, last: Int, before: String) : TopicConnection
+  findTopics(filter: TopicFilterInput, orderBy: [OrderByInput], first: Int, after: String, last: Int, before: String) : TopicConnection
 
-  getPropertyTypes : PropertyTypeConnection
+  getPropertyTypes(appliesTo : AppliesTo) : PropertyTypeConnection
   getEventTypes : [String]
   
   # Privacy and consent
@@ -1043,7 +1102,7 @@ type Mutation {
 }
 
 type Subscription {
-  eventListener(profileID : ProfileIDInput, filter: FilterInput) : Event!
+  eventListener(profileID : ProfileIDInput, filter: EventFilterInput) : Event!
   
   profileListener(profileID: ProfileIDInput) : Profile
   
