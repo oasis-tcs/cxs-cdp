@@ -38,7 +38,14 @@ variables :
     "and": [
       {
         "profileProperties": {
-          "location_distance": { "center": { "longitude": 10, "latitude": 10 }, "distance": 10 }
+          "location_distance": {
+            "center": {
+              "longitude": 10,
+              "latitude": 10
+            },
+            "unit": "KILOMETERS",
+            "distance": 10
+          }
         }
       },
       {
@@ -47,6 +54,11 @@ variables :
           "count": 1,
           "afterTime": "now-30d"
         }
+      },
+      {
+        "grantedConsents": [
+          "newsletter-weekly"
+        ]
       }
     ]
   },

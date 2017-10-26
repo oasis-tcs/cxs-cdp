@@ -166,13 +166,22 @@ input GeoPointInput {
   latitude : Float
 }
 
+enum GeoDistanceUnit {
+  METERS,
+  KILOMETERS,
+  MILES
+}
+
 type GeoDistance {
   center : GeoPoint
+  unit : GeoDistanceUnit
   distance : Float
 }
 
+
 input GeoDistanceInput {
   center : GeoPointInput
+  unit : GeoDistanceUnit
   distance : Float
 }
 
@@ -213,10 +222,6 @@ input EventFilterInput {
   eventOccurrence : EventOccurrenceFilterInput
 }
 
-input SegmentMatchFilterInput {
-  segments : [String]!
-}
-
 input ProfileFilterInput {
   # Example for asString value : profile.test = 'testValue' AND eventOccurrence('pageView') = 10
   asString : String # optional ? 
@@ -224,7 +229,8 @@ input ProfileFilterInput {
   or : [ProfileFilterInput]
   
   profileProperties : ProfilePropertiesFilterInput
-  matchesSegments : SegmentMatchFilterInput
+  matchesSegments : [String]
+  grantedConsents : [String]
   eventProperties : EventPropertiesFilterInput
   eventOccurence : EventOccurrenceFilterInput
 }
