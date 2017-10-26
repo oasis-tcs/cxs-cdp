@@ -132,7 +132,7 @@ type OrFilter {
   arguments : [Filter]
 }
 
-type OrFilterInput {
+input OrFilterInput {
   arguments : [FilterInput]
 }
 
@@ -145,13 +145,33 @@ enum ProfilePropertyOperator {
   BETWEEN
 }
 
-type ProfilePropertyFilter {
+type StringProfilePropertyFilter {
   operator : ProfilePropertyOperator
   property : String
-  value : Object
+  value : String
 }
 
-type EventOccurenceFilter {
+input StringProfilePropertyFilterInput {
+  operator : ProfilePropertyOperator
+  property : String
+  value : String
+}
+
+type BooleanProfilePropertyFilter {
+  operator : ProfilePropertyOperator
+  property : String
+  value : Boolean
+}
+
+type EventOccurrenceFilter {
+  eventId : String
+  beforeTime : String
+  afterTime : String
+  betweenTime : String
+  count : Int
+}
+
+input EventOccurrenceFilterInput {
   eventId : String
   beforeTime : String
   afterTime : String
@@ -162,12 +182,12 @@ type EventOccurenceFilter {
 type Filter {
   and : AndFilter
   or : OrFilter
-  ....
-  profileProperty : ProfilePropertyFilter
-  profilePropertyGeoDistance : ProfilePropertyGeoDistanceFilter
-  eventOccurence : EventOccurenceFilter
-  eventProperty : EventPropertyFilter
-  eventPropertyGeoDistance : EventPropertyGeoDistanceFilter
+  # ....
+  profileProperty : StringProfilePropertyFilter
+  # profilePropertyGeoDistance : ProfilePropertyGeoDistanceFilter
+  eventOccurrence : EventOccurrenceFilter
+  # eventProperty : EventPropertyFilter
+  # eventPropertyGeoDistance : EventPropertyGeoDistanceFilter
 }
 
 type AndEventFilter {
@@ -182,17 +202,17 @@ type EventFilter {
   and : AndEventFilter
   or : OrEventFilter
 
-  ... 
-  eventOccurence : EventOccurrenceFilter
-  eventProperty : EventPropertyFilter
-  eventPropertyGeoDistance : EventPropertyGeoDistanceFilter
+#  ... 
+  eventOccurrence : EventOccurrenceFilter
+  # eventProperty : EventPropertyFilter
+  # eventPropertyGeoDistance : EventPropertyGeoDistanceFilter
 }
 
 type AndProfileFilter {
   and : [ProfileFilter]
 }
 
-type OrEventFilter {
+type OrProfileFilter {
   or : [ProfileFilter]
 }
 
@@ -200,16 +220,16 @@ type ProfileFilter {
   and : AndProfileFilter
   or : OrProfileFilter
   
-  profileProperty : ProfilePropertyFilter
-  propfilePropertyGeoDistance : ProfilePropertyGeoDistanceFilter
+  profileProperty : StringProfilePropertyFilter
+  # profilePropertyGeoDistance : ProfilePropertyGeoDistanceFilter
 }
 
 input FilterInput {
   and : AndFilterInput
   or : OrFilterInput
-  ....
-  profileProperty : ProfilePropertyFilter
-  eventOccurence : EventOccurenceFilterInput
+#  ....
+  profileProperty : StringProfilePropertyFilterInput
+  eventOccurence : EventOccurrenceFilterInput
 }
 
 # PAGINATION-RELATED TYPES
@@ -227,6 +247,16 @@ type EventEdge {
 
 type EventConnection {
   edges : [EventEdge]
+  pageInfo : PageInfo
+}
+
+type PropertyTypeEdge {
+  node : PropertyType
+  cursor : String!
+}
+
+type PropertyTypeConnection {
+  edges : [PropertyTypeEdge]
   pageInfo : PageInfo
 }
 
@@ -271,6 +301,17 @@ type TopicEdge {
 type TopicConnection {
   totalCount: Int
   edges : [TopicEdge]
+  pageInfo : PageInfo
+}
+
+type InterestEdge {
+  node : Interest
+  cursor: String!
+}
+
+type InterestConnection {
+  totalCount: Int
+  edges : [InterestEdge]
   pageInfo : PageInfo
 }
 
@@ -326,7 +367,7 @@ enum AppliesTo {
 # Multi-valued properties are controlled using the minOccurrences and maxOccurrences fields. The order of the values 
 # must be preserved. Mandatory properties may be defined by setting minOccurrences to > 0
 interface PropertyType {
-  name : String!
+  name : ID!
   minOccurrences : Int # default = 0
   maxOccurrences : Int # default = 1
   tags : [String] # user generated tags
@@ -337,74 +378,134 @@ interface PropertyType {
 
 # The identifier property type is basically a string that is used as an identifier property
 type IdentifierPropertyType implements PropertyType {
-  name : String!
+  name : ID!
   minOccurrences : Int
   maxOccurrences : Int
   regexp : String 
   defaultValue : String
+  tags : [String] # user generated tags
+  systemTags : [String] # personalInformation, address, social 
+  personalData : Boolean # default to true, identifiers are always personalData
+  appliesTo : AppliesTo
+}
+
+input IdentifierPropertyTypeInput {
+  name : ID!
+  minOccurrences : Int
+  maxOccurrences : Int
+  regexp : String 
+  defaultValue : String
+  tags : [String] # user generated tags
+  systemTags : [String] # personalInformation, address, social 
+  personalData : Boolean # default to true, identifiers are always personalData
+  appliesTo : AppliesTo
 }
 
 type StringPropertyType implements PropertyType {
-  name : String!
+  name : ID!
   minOccurrences : Int
   maxOccurrences : Int
-  tags : [String] # profile property type, event property type, etc..
   regexp : String 
   defaultValue : String
+  tags : [String] # user generated tags
+  systemTags : [String] # personalInformation, address, social 
+  personalData : Boolean # default to true, identifiers are always personalData
+  appliesTo : AppliesTo
 }
 
-type IntPropertyType implements PropertyType {
-  name : String!
+input StringPropertyTypeInput {
+  name : ID!
   minOccurrences : Int
   maxOccurrences : Int
-  tags : [String] # profile property type, event property type, etc..
+  regexp : String 
+  defaultValue : String
+  tags : [String] # user generated tags
+  systemTags : [String] # personalInformation, address, social 
+  personalData : Boolean # default to true, identifiers are always personalData
+  appliesTo : AppliesTo
+} 
+
+type IntPropertyType implements PropertyType {
+  name : ID!
+  minOccurrences : Int
+  maxOccurrences : Int
   minValue : Int
   maxValue : Int 
   defaultValue : Int
+  tags : [String] # user generated tags
+  systemTags : [String] # personalInformation, address, social 
+  personalData : Boolean # default to true, identifiers are always personalData
+  appliesTo : AppliesTo
 }
 
 type FloatPropertyType implements PropertyType {
-  name : String!
+  name : ID!
   minOccurrences : Int
   maxOccurrences : Int
-  tags : [String] # profile property type, event property type, etc..
   minValue : Float
   maxValue : Float
   defaultValue : Float
+  tags : [String] # user generated tags
+  systemTags : [String] # personalInformation, address, social 
+  personalData : Boolean # default to true, identifiers are always personalData
+  appliesTo : AppliesTo
 }
 
 # Date are in ISO-8601 format equivalent to Java 8 Instant format.
 type DatePropertyType implements PropertyType {
-  name : String!
+  name : ID!
   minOccurrences : Int
   maxOccurrences : Int
-  tags : [String] # profile property type, event property type, etc..
   defaultValue : String
+  tags : [String] # user generated tags
+  systemTags : [String] # personalInformation, address, social 
+  personalData : Boolean # default to true, identifiers are always personalData
+  appliesTo : AppliesTo
 }
 
 type BooleanPropertyType implements PropertyType {
-  name : String!
+  name : ID!
   minOccurrences : Int
   maxOccurrences : Int
-  tags : [String] # profile property type, event property type, etc..
   defaultValue : Boolean
+  tags : [String] # user generated tags
+  systemTags : [String] # personalInformation, address, social 
+  personalData : Boolean # default to true, identifiers are always personalData
+  appliesTo : AppliesTo
 }
 
 # Maps to a String with a lat,lon format
 type GeoPointPropertyType implements PropertyType {
-  name : String!
+  name : ID!
   minOccurrences : Int
   maxOccurrences : Int
-  tags : [String] # profile property type, event property type, etc..
   defaultValue : String
+  tags : [String] # user generated tags
+  systemTags : [String] # personalInformation, address, social 
+  personalData : Boolean # default to true, identifiers are always personalData
+  appliesTo : AppliesTo
 }
 
 type SetPropertyType implements PropertyType {
-  name : String!
+  name : ID!
   minOccurrences : Int
   maxOccurrences : Int
-  tags : [String] # profile property type, event property type, etc..
+  tags : [String] # user generated tags
+  systemTags : [String] # personalInformation, address, social 
+  personalData : Boolean # default to true, identifiers are always personalData
+  appliesTo : AppliesTo
   properties : [PropertyType] 
+}
+
+input SetPropertyTypeInput {
+  name : ID!
+  minOccurrences : Int
+  maxOccurrences : Int
+  tags : [String] # user generated tags
+  systemTags : [String] # personalInformation, address, social 
+  personalData : Boolean # default to true, identifiers are always personalData
+  appliesTo : AppliesTo
+  properties : [String] 
 }
 
 # MANAGEMENT OBJECTS
@@ -422,18 +523,19 @@ input ScopeInput {
 type Persona implements ProfileInterface {
   scope : Scope!
   profileIDs : [ProfileID] # the CXS server may generated a system profile ID and expose it here
-  segments : [Segment]
-  interests : [Interest]
-  consents : [Consents]
+  segments(scopes : [ScopeInput], first : Int, last: Int, after : String, before: String) : SegmentConnection
+  interests(scopes : [ScopeInput], first : Int, last: Int, after : String, before: String) : InterestConnection
+  consents : [Consent]
+  lists(scopes : [ScopeInput], first : Int, last: Int, after : String, before: String) : ListConnection
   properties : ProfileProperties
 }
 
 input PersonaInput {
   scope : ScopeInput!
-  profileIDs : [ProfileID] # the CXS server may generated a system profile ID and expose it here
+  profileIDs : [ProfileIDInput] # the CXS server may generated a system profile ID and expose it here
   segments : [String]
   interests : [InterestInput]
-  consents : [ConsentsInput]
+  consents : [ConsentInput]
   properties : ProfilePropertiesInput  
 }
 
@@ -536,31 +638,21 @@ input TopicInput {
 # - Session end
 # - Opt-in / opt-out of a list
 
-type EventType {
-  name : String
-}
-
 type EventProperties {
   # ... properties will be updated based on the properties defined by CXS server event handlers
+  # we provide some samples properties here because GraphQL doesn't allow empty types, but these are not mandatory
+  like : String
 }
 
 type Event {
   id: ID!
-  eventType: EventType!
+  eventType: String!
   profileID: ProfileID!
   profile : Profile!
   object: String!
   location: String
   timestamp: String # ISO-8601 format Java 8 Instant equivalent
   properties : EventProperties 
-}
-
-type EventFilter {
-  id_EQ : ID!
-  id_NEQ : ID!
-  eventTypeID_EQ : String!
-  eventTypeID_CONTAINS : String!
-  subjectID_EQ : String!
 }
 
 # Example event input : 
@@ -599,8 +691,13 @@ type EventFilter {
 #   },
 # }   
 
+input GeoPointInput {
+  longitude : Float
+  latitude : Float
+}
+
 input EventInput {
-  _profileID: ProfileID! 
+  _profileID: ProfileIDInput! 
   _object: String! #
   _location: [GeoPointInput] # optional
   _timestamp: Int # optional because the server can generate it if it's missing
@@ -611,17 +708,17 @@ input EventInput {
 }
 
 input UpdateProfileEventInput {
-  _profileID: ProfileID! 
+  _profileID: ProfileIDInput! 
   _object: String! #
   _location: [GeoPointInput] # optional
   _timestamp: Int # optional because the server can generate it if it's missing
   firstName : String
   lastName : String
-  ...
+#  ...
 }
 
 input UpdateConsentEventInput {
-  _profileID: ProfileID! 
+  _profileID: ProfileIDInput! 
   _object: String! #
   _location: [GeoPointInput] # optional
   _timestamp: Int # optional because the server can generate it if it's missing
@@ -632,7 +729,7 @@ input UpdateConsentEventInput {
 # added to the context server. Here is an example of what it could look like after a while:
 #
 # input EventInput {
-#   _profileID: ProfileID!
+#   _profileID: ProfileIDInput!
 #   _object: String! # do we need it ?
 #   _location: [GeoPointInput] # optional
 #   _timestamp: Int
@@ -695,6 +792,11 @@ type Interest {
   score : Float # 0.0 to 1.0
 }
 
+input InterestInput {
+  topic : TopicInput!
+  score : Float
+}
+
 # dynamically generated from property type definitions
 # 
 # type Location_G {
@@ -724,6 +826,15 @@ type ProfileProperties {
   # ex:
   # location : Location_G
   # address : Address_G
+  # the following are just examples to make GraphQL JS schema parser happy otherwise we have an empty type
+  firstName : String
+  lastName : String
+}
+
+input ProfilePropertiesInput {
+  # the following are just examples to make GraphQL JS schema parser happy otherwise we have an empty type
+  firstName : String
+  lastName : String
 }
 
 interface ProfileInterface {
@@ -739,9 +850,10 @@ type Profile implements ProfileInterface {
   profileIDs : [ProfileID] # the CXS server may generated a system profile ID and expose it here
   events(filter : FilterInput, first : Int, last: Int, after : String, before: String) : EventConnection
   lastEvents(count : Int, profileID : ProfileIDInput) : EventConnection
-  segments : [Segment]
-  interests : [Interest]
+  segments(scopes : [ScopeInput], first : Int, last: Int, after : String, before: String) : SegmentConnection
+  interests(scopes : [ScopeInput], first : Int, last: Int, after : String, before: String) : InterestConnection
   consents : [Consent]
+  lists(scopes : [ScopeInput], first : Int, last: Int, after : String, before: String) : ListConnection
   matchesConditions(conditions : [ConditionsInput]) : [ConditionsMatch] # used for personalization requirements
   properties : ProfileProperties
 }
@@ -817,8 +929,8 @@ type Consent {
 input ConsentInput {
   scope: String,
   actions : [String],
-  grantDate : Long,
-  revokeDate : Long
+  grantDate : String,
+  revokeDate : String
 }
 
 # CLIENT TYPES
@@ -839,7 +951,7 @@ type ProfileID {
     id : ID! # unique profile identifier for the client
 }
 
-type ProfileIDInput {
+input ProfileIDInput {
     clientID : ID!
     id : ID! # unique profile identifier for the client
 }
@@ -873,7 +985,7 @@ type ConditionsMatch {
 
 type Query {
 
-  getActiveUser() : User
+  getActiveUser : User
 
   getEvent(id : String!) : Event
   findEvents(filter : FilterInput, orderBy : [OrderBy], first: Int, after: String, last: Int, before: String) : EventConnection
@@ -893,12 +1005,11 @@ type Query {
   getTopic(topicID : String) : Topic
   findTopics(filter: FilterInput, orderBy: [OrderBy], first: Int, after: String, last: Int, before: String) : TopicConnection
 
-  getPropertyTypes() : PropertyTypeConnection
-  getEventTypes() : EventTypeConnection
+  getPropertyTypes : PropertyTypeConnection
+  getEventTypes : [String]
   
   # Privacy and consent
-  getConsentTypes() : ConsentConnection
-  getAllPersonalData()  
+  # getAllPersonalData :   
   
 }
 
@@ -909,7 +1020,6 @@ type Mutation {
     
   logEvents(events: [EventInput]!) : Int
     
-  createOrUpdateProfile(profile : ProfileInput) : Profile
   deleteProfile(profileID : ProfileIDInput) : Profile
   
   createOrUpdatePersona(persona : PersonaInput) : Persona
@@ -919,21 +1029,21 @@ type Mutation {
   deleteSegment(segmentID : String) : Segment
   
   createOrUpdateList(list : ListInput) : List
-  addProfileToList(list : listInput, profileId : ProfileId, active : Boolean) : List
-  removeProfileFromList(list : listInput, profileId : ProfileId) : List
+  addProfileToList(list : ListInput, profileId : ProfileIDInput, active : Boolean) : List
+  removeProfileFromList(list : ListInput, profileId : ProfileIDInput) : List
   deleteList(listID : String) : List
   
   createOrUpdateTopic(topic : TopicInput) : Topic
   deleteTopic(topicID : String) : Topic
   
   # todo these are not yet properly defined, especially the arguments
-  createOrUpdateScalarPropertyType(scalarPropertyType : ScalarPropertyTypeInput)
-  createOrUpdateSetPropertyType(setPropertyType : SetPropertyTypeInput)
-  deletePropertyType(propertyTypeId : String)
+  createOrUpdateIdentifierPropertyType(identifierPropertyType : IdentifierPropertyTypeInput) : PropertyType
+  createOrUpdateStringPropertyType(stringPropertyType : StringPropertyTypeInput) : PropertyType
+  createOrUpdateSetPropertyType(setPropertyType : SetPropertyTypeInput) : PropertyType
+  deletePropertyType(propertyTypeId : String) : Boolean
               
   # Privacy 
-  deleteAllPersonalData()
-  
+  deleteAllPersonalData : Boolean
 }
 
 type Subscription {
@@ -941,7 +1051,7 @@ type Subscription {
   
   profileListener(profileID: ProfileIDInput) : Profile
   
-  jobListener(jobID: String) : JobStatus
+  # jobListener(jobID: String) : JobStatus
 }
 
 `);
@@ -1014,13 +1124,14 @@ exports.root = {
     }
 };
 
-
+/*
 var MyAppSchema = new GraphQLSchema({
     query: MyAppQueryRootType,
     mutation: MyAppMutationRootType
 });
 
 exports.schema = MyAppSchema;
+*/
 
 /*
  * Example of Context Server (Karaf) user configuration
