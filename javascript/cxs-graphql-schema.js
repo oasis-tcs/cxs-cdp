@@ -718,8 +718,14 @@ type Event {
   properties : EventProperties 
 }
 
-# Example event input : 
+# The actual payload will be dynamically generated based on the root properties defined by the CXS event 
+# property types or predefined property types. These root properties will usually be set property types, 
+# allowing for complex event payloads
+#
+# Example event inputs
+# 
 # Update profile example
+#
 # { 
 #   _profileID : {clientID : "salesforce", id: "12345"},
 #   _timestamp : "1970-01-01T00:00:00Z",
@@ -729,7 +735,9 @@ type Event {
 #       lastName : "Huber
 #   }
 # }
+#
 # Page view example
+#
 # { 
 #   _profileID : {clientID : "web", id: "12345"},
 #   _timestamp : "1970-01-01T00:00:00Z",
@@ -752,35 +760,43 @@ type Event {
 #       type : "enter" / "exit"
 #       groupName : "walmart-geneva"
 #   },
-# }   
-
+# }  
+# 
 input EventInput {
   _profileID: ProfileIDInput! 
   _object: String! #
   _location: [GeoPointInput] # optional
   _timestamp: Int # optional because the server can generate it if it's missing
-  # the actual payload will be dynamically generated based on the properties defined by the CXS event handlers
-  # pageView
-  # updateProfile
-  # 
+  updateProfile : UpdateProfileInput
+  updateConsent : UpdateConsentInput
 }
 
-input UpdateProfileEventInput {
-  _profileID: ProfileIDInput! 
-  _object: String! #
-  _location: [GeoPointInput] # optional
-  _timestamp: Int # optional because the server can generate it if it's missing
-  firstName : String
-  lastName : String
-#  ...
+type EventType {
+  name : ID!
+  properties : [PropertyType]
 }
 
-input UpdateConsentEventInput {
-  _profileID: ProfileIDInput! 
-  _object: String! #
-  _location: [GeoPointInput] # optional
-  _timestamp: Int # optional because the server can generate it if it's missing
+input EventTypeInput {
+  name : ID!
+  properties : [ID] 
+}
+
+# This pre-defined property type is used to update profile properties
+input UpdateProfileInput {
+  updateProperties : ProfilePropertiesInput
+  removeProperties : [String]
+}
+
+# This pre-defined property type is used to update profile consents
+input UpdateConsentInput {
+  grantConsents : [ConsentInput]
+  denyConsents : [ConsentInput]
+  revokeConsents : [String]
 } 
+
+input UpdateInterestsPropertySetInput {
+  
+}
 
 #
 # The event input type is dynamically updated to include all the property definitions that were
@@ -855,38 +871,37 @@ input InterestInput {
   score : Float
 }
 
-# dynamically generated from property type definitions
-# 
-# type Location_G {
-#   latitude : Float,
-#   longitude : Float
-# }
-#
-# Ex: 6A
-# type SteetNumberType_G {
-#   streetNumber : Int,
-#   prefix : String,
-#   postfix : String
-# }
-# 
-# type Address_G {
-#   streetName : String,
-#   streetNumber : StreetNumberType_G,
-#   citySubDivisions : [String]
-#   city : String,
-#   postalCode : String,
-#   countrySubvisions : [String]
-#   country : String
-# }
-#
+# Sample generated property type
+type SampleLocation_PropType {
+  latitude : Float,
+  longitude : Float
+}
+
+# Sample generated property type
+type SampleStreetNumber_PropType {
+  streetNumber : Int,
+  prefix : String,
+  postfix : String
+}
+
+# Sample generated property type
+type SampleAddress_PropType {
+  streetName : String,
+  streetNumber : SampleStreetNumber_PropType,
+  citySubDivisions : [String]
+  city : String,
+  postalCode : String,
+  countrySubvisions : [String]
+  country : String
+}
+
+# Profile properties are dynamically generated from all declared profile property types.
 type ProfileProperties {
-  # properties must be generated dynamically from property type definitions
-  # ex:
-  # location : Location_G
-  # address : Address_G
   # the following are just examples to make GraphQL JS schema parser happy otherwise we have an empty type
   firstName : String
   lastName : String
+  location : SampleLocation_PropType
+  address : SampleAddress_PropType
 }
 
 input ProfilePropertiesInput {
@@ -912,7 +927,7 @@ type Profile implements ProfileInterface {
   interests(scopes : [ScopeInput]) : [Interest]
   consents : [Consent]
   lists(scopes : [ScopeInput]) : [List]
-  matchesConditions(conditions : [ConditionsInput]) : [ConditionsMatch] # used for personalization requirements
+  matches(conditions : [ConditionsInput]) : [ConditionsMatch] # used for personalization requirements
   properties : ProfileProperties
 }
 
@@ -1036,11 +1051,6 @@ type ConditionsMatch {
   executionTimeMillis : Int
 }
 
-# INBOUND EVENT TYPES
-# ----------------------------------------------------------------------------
-# Inbound event could be used to push information from the context server back to a client. An example of an inbound event could 
-# include resolved locations, resolved client identification (server). Inbound events could be used for real-time personalization
-
 # Context Server GraphQL queries
 type Query {
 
@@ -1050,7 +1060,7 @@ type Query {
   getEvent(id : String!) : Event
   findEvents(filter : EventFilterInput, orderBy : [OrderByInput], first: Int, after: String, last: Int, before: String) : EventConnection
   
-  getProfile(profileID : ProfileIDInput) : Profile
+  getProfile(profileID : ProfileIDInput, createIfMissing: Boolean) : Profile
   findProfiles(filter: ProfileFilterInput, orderBy: [OrderByInput], first: Int, after: String, last: Int, before: String) : ProfileConnection
   
   getPersona(personaID : String) : Persona
@@ -1066,20 +1076,18 @@ type Query {
   findTopics(filter: TopicFilterInput, orderBy: [OrderByInput], first: Int, after: String, last: Int, before: String) : TopicConnection
 
   getPropertyTypes(appliesTo : AppliesTo) : PropertyTypeConnection
-  getEventTypes : [String]
   
   # Privacy and consent
   # getAllPersonalData :   
   
 }
 
-# Context Server GraphQL mutation
+# Context Server GraphQL mutations
 type Mutation {
 
-  # Events may be used to control common profiles, such as controlling privacy settings, reset interests, but mostly profile
-  # changes. Mutations will not be added for this
-    
-  logEvents(events: [EventInput]!) : Int
+  # Events may trigger different types of operations within the context server, such as updating consents, 
+  # reset interests, or profile updates.   
+  processEvents(events: [EventInput]!) : Int
     
   deleteProfile(profileID : ProfileIDInput) : Profile
   
