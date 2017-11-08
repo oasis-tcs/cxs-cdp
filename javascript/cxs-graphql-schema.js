@@ -397,12 +397,6 @@ type Role {
   scope : Scope! # may include a system scope
 }
 
-enum AppliesTo {
-  PROFILE,
-  EVENT,
-  ALL 
-}
-
 # Multi-valued properties are controlled using the minOccurrences and maxOccurrences fields. The order of the values 
 # must be preserved. Mandatory properties may be defined by setting minOccurrences to > 0
 interface PropertyType {
@@ -412,7 +406,18 @@ interface PropertyType {
   tags : [String] # user generated tags
   systemTags : [String] # personalInformation, address, social 
   personalData : Boolean # default to true, identifiers are always personalData
-  appliesTo : AppliesTo
+}
+
+# Only one field is allowed at a time
+input PropertyTypeInput {
+  identifier : IdentifierPropertyTypeInput
+  string : StringPropertyTypeInput
+  int : IntPropertyTypeInput
+  float : FloatPropertyTypeInput
+  date : DatePropertyTypeInput
+  boolean : BooleanPropertyTypeInput
+  geopoint : GeoPointPropertyTypeInput
+  set : SetPropertyTypeInput
 }
 
 # The identifier property type is basically a string that is used as an identifier property
@@ -420,74 +425,92 @@ type IdentifierPropertyType implements PropertyType {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int
-  regexp : String 
-  defaultValue : String
   tags : [String] # user generated tags
   systemTags : [String] # personalInformation, address, social 
   personalData : Boolean # default to true, identifiers are always personalData
-  appliesTo : AppliesTo
+  regexp : String 
+  defaultValue : String
 }
 
 input IdentifierPropertyTypeInput {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int
-  regexp : String 
-  defaultValue : String
   tags : [String] # user generated tags
   systemTags : [String] # personalInformation, address, social 
   personalData : Boolean # default to true, identifiers are always personalData
-  appliesTo : AppliesTo
+  regexp : String 
+  defaultValue : String
 }
 
 type StringPropertyType implements PropertyType {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int
-  regexp : String 
-  defaultValue : String
   tags : [String] # user generated tags
   systemTags : [String] # personalInformation, address, social 
   personalData : Boolean # default to true, identifiers are always personalData
-  appliesTo : AppliesTo
+  regexp : String 
+  defaultValue : String
 }
 
 input StringPropertyTypeInput {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int
-  regexp : String 
-  defaultValue : String
   tags : [String] # user generated tags
   systemTags : [String] # personalInformation, address, social 
   personalData : Boolean # default to true, identifiers are always personalData
-  appliesTo : AppliesTo
+  regexp : String 
+  defaultValue : String
 } 
 
 type IntPropertyType implements PropertyType {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int
-  minValue : Int
-  maxValue : Int 
-  defaultValue : Int
   tags : [String] # user generated tags
   systemTags : [String] # personalInformation, address, social 
   personalData : Boolean # default to true, identifiers are always personalData
-  appliesTo : AppliesTo
+  minValue : Int
+  maxValue : Int 
+  defaultValue : Int
+}
+
+input IntPropertyTypeInput {
+  name : ID!
+  minOccurrences : Int
+  maxOccurrences : Int
+  tags : [String] # user generated tags
+  systemTags : [String] # personalInformation, address, social 
+  personalData : Boolean # default to true, identifiers are always personalData
+  minValue : Int
+  maxValue : Int 
+  defaultValue : Int
 }
 
 type FloatPropertyType implements PropertyType {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int
-  minValue : Float
-  maxValue : Float
-  defaultValue : Float
   tags : [String] # user generated tags
   systemTags : [String] # personalInformation, address, social 
   personalData : Boolean # default to true, identifiers are always personalData
-  appliesTo : AppliesTo
+  minValue : Float
+  maxValue : Float
+  defaultValue : Float
+}
+
+input FloatPropertyTypeInput {
+  name : ID!
+  minOccurrences : Int
+  maxOccurrences : Int
+  tags : [String] # user generated tags
+  systemTags : [String] # personalInformation, address, social 
+  personalData : Boolean # default to true, identifiers are always personalData
+  minValue : Float
+  maxValue : Float
+  defaultValue : Float
 }
 
 # Date are in ISO-8601 format equivalent to Java 8 Instant format.
@@ -495,22 +518,40 @@ type DatePropertyType implements PropertyType {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int
-  defaultValue : String
   tags : [String] # user generated tags
   systemTags : [String] # personalInformation, address, social 
   personalData : Boolean # default to true, identifiers are always personalData
-  appliesTo : AppliesTo
+  defaultValue : String
+}
+
+input DatePropertyTypeInput {
+  name : ID!
+  minOccurrences : Int
+  maxOccurrences : Int
+  tags : [String] # user generated tags
+  systemTags : [String] # personalInformation, address, social 
+  personalData : Boolean # default to true, identifiers are always personalData
+  defaultValue : String
 }
 
 type BooleanPropertyType implements PropertyType {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int
-  defaultValue : Boolean
   tags : [String] # user generated tags
   systemTags : [String] # personalInformation, address, social 
   personalData : Boolean # default to true, identifiers are always personalData
-  appliesTo : AppliesTo
+  defaultValue : Boolean
+}
+
+input BooleanPropertyTypeInput {
+  name : ID!
+  minOccurrences : Int
+  maxOccurrences : Int
+  tags : [String] # user generated tags
+  systemTags : [String] # personalInformation, address, social 
+  personalData : Boolean # default to true, identifiers are always personalData
+  defaultValue : Boolean
 }
 
 # Maps to a String with a lat,lon format
@@ -518,11 +559,20 @@ type GeoPointPropertyType implements PropertyType {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int
-  defaultValue : String
   tags : [String] # user generated tags
   systemTags : [String] # personalInformation, address, social 
   personalData : Boolean # default to true, identifiers are always personalData
-  appliesTo : AppliesTo
+  defaultValue : String
+}
+
+input GeoPointPropertyTypeInput {
+  name : ID!
+  minOccurrences : Int
+  maxOccurrences : Int
+  tags : [String] # user generated tags
+  systemTags : [String] # personalInformation, address, social 
+  personalData : Boolean # default to true, identifiers are always personalData
+  defaultValue : String
 }
 
 type SetPropertyType implements PropertyType {
@@ -532,7 +582,6 @@ type SetPropertyType implements PropertyType {
   tags : [String] # user generated tags
   systemTags : [String] # personalInformation, address, social 
   personalData : Boolean # default to true, identifiers are always personalData
-  appliesTo : AppliesTo
   properties : [PropertyType] 
 }
 
@@ -543,8 +592,7 @@ input SetPropertyTypeInput {
   tags : [String] # user generated tags
   systemTags : [String] # personalInformation, address, social 
   personalData : Boolean # default to true, identifiers are always personalData
-  appliesTo : AppliesTo
-  properties : [String] 
+  properties : [PropertyTypeInput]
 }
 
 # MANAGEMENT OBJECTS
@@ -567,6 +615,7 @@ type Persona implements ProfileInterface {
   consents : [Consent]
   lists(scopes : [ScopeInput]) : [List]
   properties : ProfileProperties
+  propertyTypes : [PropertyType]
 }
 
 input PersonaInput {
@@ -648,8 +697,10 @@ type List {
   scope: Scope!
   name : ID! # this can be generated from displayname, but never changed
   displayName : String
-  
+
+  # Active members have opted in the list
   active(first: Int, after: String, last: Int, before: String) : ProfileConnection
+  # Inactive users have opted out of the list
   inactive(first: Int, after: String, last: Int, before: String) : ProfileConnection 
 }
 
@@ -675,11 +726,11 @@ input TopicInput {
 # EVENT-RELATED TYPES
 # ----------------------------------------------------------------------------
 # 
-# Predefined event types include : 
-# - updating profile properties, needs to match the profile properties definitions
-# - updating consent ( see http://ec.europa.eu/ipg/basics/legal/cookies/index_en.htm )
-# - transaction (generic)
-# - like (“user likes a product”)
+# Example event types include : 
+# - Updating profile properties, needs to match the profile properties definitions
+# - Updating consent ( see http://ec.europa.eu/ipg/basics/legal/cookies/index_en.htm )
+# - Transaction (generic)
+# - Like (“user likes a product”)
 # - Dislike (“visitor dislikes a comment”)
 # - Abuse, “user reports abuse on a page”
 # - Rate (score in percent) “user rates product 4 out of 5 stars”
@@ -768,17 +819,19 @@ input EventInput {
   _location: [GeoPointInput] # optional
   _timestamp: Int # optional because the server can generate it if it's missing
   updateProfile : UpdateProfileInput
-  updateConsent : UpdateConsentInput
+  updateConsents : UpdateConsentsInput
+  updateLists : UpdateListInput
+  updateSessionState : UpdateSessionStateInput
 }
 
 type EventType {
-  name : ID!
+  typeName : ID!
   properties : [PropertyType]
 }
 
 input EventTypeInput {
   name : ID!
-  properties : [ID] 
+  properties : [PropertyTypeInput]
 }
 
 # This pre-defined property type is used to update profile properties
@@ -788,14 +841,27 @@ input UpdateProfileInput {
 }
 
 # This pre-defined property type is used to update profile consents
-input UpdateConsentInput {
+input UpdateConsentsInput {
   grantConsents : [ConsentInput]
   denyConsents : [ConsentInput]
   revokeConsents : [String]
 } 
 
-input UpdateInterestsPropertySetInput {
-  
+# This pre-defined property type is used to update profile list membership
+input UpdateListInput {
+  joinLists : [String]
+  leaveLists : [String]
+}
+
+enum SessionState {
+  START,
+  STOP,
+  PAUSE,
+  RESUME
+}
+
+input UpdateSessionStateInput {
+  newState : SessionState
 }
 
 #
@@ -1057,6 +1123,7 @@ type Query {
   # This will return the user that is connected to the CXS server, allowing to retrieve the roles he participates in.
   getActiveUser : User
 
+  getEventTypes : [EventType]
   getEvent(id : String!) : Event
   findEvents(filter : EventFilterInput, orderBy : [OrderByInput], first: Int, after: String, last: Int, before: String) : EventConnection
   
@@ -1075,11 +1142,8 @@ type Query {
   getTopic(topicID : String) : Topic
   findTopics(filter: TopicFilterInput, orderBy: [OrderByInput], first: Int, after: String, last: Int, before: String) : TopicConnection
 
-  getPropertyTypes(appliesTo : AppliesTo) : PropertyTypeConnection
-  
-  # Privacy and consent
-  # getAllPersonalData :   
-  
+  getProfilePropertyTypes : PropertyTypeConnection
+    
 }
 
 # Context Server GraphQL mutations
@@ -1105,11 +1169,11 @@ type Mutation {
   createOrUpdateTopic(topic : TopicInput) : Topic
   deleteTopic(topicID : String) : Topic
   
-  # todo these are not yet properly defined, especially the arguments
-  createOrUpdateIdentifierPropertyType(identifierPropertyType : IdentifierPropertyTypeInput) : PropertyType
-  createOrUpdateStringPropertyType(stringPropertyType : StringPropertyTypeInput) : PropertyType
-  createOrUpdateSetPropertyType(setPropertyType : SetPropertyTypeInput) : PropertyType
-  deletePropertyType(propertyTypeId : String) : Boolean
+  addPropertiesToProfile(propertyTypes : [PropertyTypeInput]) : Boolean
+  removePropertyFromProfile(propertyTypeId : String) : Boolean
+  
+  createOrUpdateEventType(eventType : EventTypeInput) : Boolean
+  removeEventType(eventTypeId : String) : Boolean
               
   # Privacy 
   deleteAllPersonalData : Boolean
