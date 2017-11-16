@@ -34,7 +34,7 @@ exports.schema = buildSchema(`
 
 # QUERY AND FILTER TYPES
 # ----------------------------------------------------------------------------
-enum SortOrder {
+enum CXS_SortOrder {
   ASC,
   DESC,
   UNSPECIFIED
@@ -115,12 +115,12 @@ enum SortOrder {
 #   "orderBy" : [ type_ASC, properties.pageID_DESC ]
 # }
 
-input OrderByInput {
+input CXS_OrderByInput {
   fieldName : String # eg : endTime, properties.location
-  order : SortOrder
+  order : CXS_SortOrder
 }
 
-type EventOccurrenceFilter {
+type CXS_EventOccurrenceFilter {
   eventId : String
   beforeTime : String
   afterTime : String
@@ -128,7 +128,7 @@ type EventOccurrenceFilter {
   count : Int
 }
 
-input EventOccurrenceFilterInput {
+input CXS_EventOccurrenceFilterInput {
   eventId : String
   beforeTime : String
   afterTime : String
@@ -138,133 +138,133 @@ input EventOccurrenceFilterInput {
 
 # This filter will contain generated fields that are concatenations of property names and operators. The values 
 # provided here are just examples.
-type ProfilePropertiesFilter {
+type CXS_ProfilePropertiesFilter {
   firstName_startsWith : String
   firstName_contains : String
   firstName_equals : String
   
-  location_distance : GeoDistance
+  location_distance : CXS_GeoDistance
 }
 
 # This filter will contain generated fields that are concatenations of property names and operators. The values 
 # provided here are just examples.
-input ProfilePropertiesFilterInput {
+input CXS_ProfilePropertiesFilterInput {
   firstName_startsWith : String
   firstName_contains : String
   firstName_equals : String
   
-  location_distance : GeoDistanceInput
+  location_distance : CXS_GeoDistanceInput
 }
 
-type GeoPoint {
+type CXS_GeoPoint {
   longitude : Float
   latitude : Float
 }
 
-input GeoPointInput {
+input CXS_GeoPointInput {
   longitude : Float
   latitude : Float
 }
 
-enum GeoDistanceUnit {
+enum CXS_GeoDistanceUnit {
   METERS,
   KILOMETERS,
   MILES
 }
 
-type GeoDistance {
-  center : GeoPoint
-  unit : GeoDistanceUnit
+type CXS_GeoDistance {
+  center : CXS_GeoPoint
+  unit : CXS_GeoDistanceUnit
   distance : Float
 }
 
 
-input GeoDistanceInput {
-  center : GeoPointInput
-  unit : GeoDistanceUnit
+input CXS_GeoDistanceInput {
+  center : CXS_GeoPointInput
+  unit : CXS_GeoDistanceUnit
   distance : Float
 }
 
-type EventPropertiesFilter {
-  location_distance : GeoDistance
+type CXS_EventPropertiesFilter {
+  location_distance : CXS_GeoDistance
 }
 
 # A filter is a way of querying for profiles based on profile properties or event properties. The filter list is not 
 # exhaustive and may be extended by any implementation.
-type ProfileFilter {
+type CXS_ProfileFilter {
   # Example for asString value : profile.test = 'testValue' AND eventOccurrence('pageView') = 10
   asString : String # optional ?
-  and : [ProfileFilter]
-  or : [ProfileFilter]
+  and : [CXS_ProfileFilter]
+  or : [CXS_ProfileFilter]
   # ....
-  profileProperties : ProfilePropertiesFilter
-  eventProperties : EventPropertiesFilter
-  eventOccurrence : EventOccurrenceFilter
+  profileProperties : CXS_ProfilePropertiesFilter
+  eventProperties : CXS_EventPropertiesFilter
+  eventOccurrence : CXS_EventOccurrenceFilter
 }
 
-type EventFilter {
-  and : [EventFilter]
-  or : [EventFilter]
+type CXS_EventFilter {
+  and : [CXS_EventFilter]
+  or : [CXS_EventFilter]
 
-  properties : EventPropertiesFilter
-  eventOccurrence : EventOccurrenceFilter
+  properties : CXS_EventPropertiesFilter
+  eventOccurrence : CXS_EventOccurrenceFilter
 }
 
-input EventPropertiesFilterInput {
-  location_distance : GeoDistanceInput
+input CXS_EventPropertiesFilterInput {
+  location_distance : CXS_GeoDistanceInput
 }
 
-input EventFilterInput {
-  and : [EventFilterInput]
-  or : [EventFilterInput]
+input CXS_EventFilterInput {
+  and : [CXS_EventFilterInput]
+  or : [CXS_EventFilterInput]
 
-  properties : EventPropertiesFilterInput
-  eventOccurrence : EventOccurrenceFilterInput
+  properties : CXS_EventPropertiesFilterInput
+  eventOccurrence : CXS_EventOccurrenceFilterInput
 }
 
-input ProfileFilterInput {
+input CXS_ProfileFilterInput {
   # Example for asString value : profile.test = 'testValue' AND eventOccurrence('pageView') = 10
   asString : String # optional ? 
-  and : [ProfileFilterInput]
-  or : [ProfileFilterInput]
+  and : [CXS_ProfileFilterInput]
+  or : [CXS_ProfileFilterInput]
   
-  profileProperties : ProfilePropertiesFilterInput
+  profileProperties : CXS_ProfilePropertiesFilterInput
   matchesSegments : [String]
   grantedConsents : [String]
-  eventProperties : EventPropertiesFilterInput
-  eventOccurence : EventOccurrenceFilterInput
+  eventProperties : CXS_EventPropertiesFilterInput
+  eventOccurence : CXS_EventOccurrenceFilterInput
 }
 
-type ListFilter {
-  and : [ListFilter]
-  or : [ListFilter]
+type CXS_ListFilter {
+  and : [CXS_ListFilter]
+  or : [CXS_ListFilter]
   
   scope_equals : String
   name_equals : String
   name_regexp : String  
 }
 
-input ListFilterInput {
-  and : [ListFilterInput]
-  or : [ListFilterInput]
+input CXS_ListFilterInput {
+  and : [CXS_ListFilterInput]
+  or : [CXS_ListFilterInput]
   
   scope_equals : String
   name_equals : String
   name_regexp : String  
 }
 
-type TopicFilter {
-  and : [TopicFilter]
-  or : [TopicFilter]
+type CXS_TopicFilter {
+  and : [CXS_TopicFilter]
+  or : [CXS_TopicFilter]
   
   scope_equals : String
   id_equals : String
   displayName_regexp : String  
 }
 
-input TopicFilterInput {
-  and : [TopicFilterInput]
-  or : [TopicFilterInput]
+input CXS_TopicFilterInput {
+  and : [CXS_TopicFilterInput]
+  or : [CXS_TopicFilterInput]
   
   scope_equals : String
   id_equals : String
@@ -279,78 +279,78 @@ type PageInfo {
   hasNextPage : Boolean!
 }
 
-type EventEdge {
-  node : Event
+type CXS_EventEdge {
+  node : CXS_Event
   cursor : String!
 }
 
-type EventConnection {
-  edges : [EventEdge]
+type CXS_EventConnection {
+  edges : [CXS_EventEdge]
   pageInfo : PageInfo
 }
 
-type PropertyTypeEdge {
-  node : PropertyType
+type CXS_PropertyTypeEdge {
+  node : CXS_PropertyType
   cursor : String!
 }
 
-type PropertyTypeConnection {
-  edges : [PropertyTypeEdge]
+type CXS_PropertyTypeConnection {
+  edges : [CXS_PropertyTypeEdge]
   pageInfo : PageInfo
 }
 
-type ProfileEdge {
-  node : ProfileInterface
+type CXS_ProfileEdge {
+  node : CXS_ProfileInterface
   cursor : String!
 }
 
-type ProfileConnection {
+type CXS_ProfileConnection {
   totalCount: Int
-  edges : [ProfileEdge]
+  edges : [CXS_ProfileEdge]
   pageInfo : PageInfo
 }
 
-type SegmentEdge {
-  node: Segment
+type CXS_SegmentEdge {
+  node: CXS_Segment
   cursor: String!
 }
 
-type SegmentConnection {
+type CXS_SegmentConnection {
   totalCount: Int
-  edges : [SegmentEdge]
+  edges : [CXS_SegmentEdge]
   pageInfo : PageInfo
 }
 
-type ListEdge {
-  node: List
+type CXS_ListEdge {
+  node: CXS_List
   cursor: String!
 }
 
-type ListConnection {
+type CXS_ListConnection {
   totalCount: Int
-  edges : [ListEdge]
+  edges : [CXS_ListEdge]
   pageInfo : PageInfo
 }
 
-type TopicEdge {
-  node: Topic
+type CXS_TopicEdge {
+  node: CXS_Topic
   cursor: String!
 }
 
-type TopicConnection {
+type CXS_TopicConnection {
   totalCount: Int
-  edges : [TopicEdge]
+  edges : [CXS_TopicEdge]
   pageInfo : PageInfo
 }
 
-type InterestEdge {
-  node : Interest
+type CXS_InterestEdge {
+  node : CXS_Interest
   cursor: String!
 }
 
-type InterestConnection {
+type CXS_InterestConnection {
   totalCount: Int
-  edges : [InterestEdge]
+  edges : [CXS_InterestEdge]
   pageInfo : PageInfo
 }
 
@@ -391,15 +391,15 @@ type InterestConnection {
 
 # Roles are predefined in the CXS server implementation, no API is provided to manipulate them.
 # system-admin, system-public, system-authenticated, acme-admin, test-admin
-type Role {
+type CXS_Role {
   name : String!
   displayName : String
-  scope : Scope! # may include a system scope
+  scope : CXS_Scope! # may include a system scope
 }
 
 # Multi-valued properties are controlled using the minOccurrences and maxOccurrences fields. The order of the values 
 # must be preserved. Mandatory properties may be defined by setting minOccurrences to > 0
-interface PropertyType {
+interface CXS_PropertyType {
   name : ID!
   minOccurrences : Int # default = 0
   maxOccurrences : Int # default = 1
@@ -409,19 +409,19 @@ interface PropertyType {
 }
 
 # Only one field is allowed at a time
-input PropertyTypeInput {
-  identifier : IdentifierPropertyTypeInput
-  string : StringPropertyTypeInput
-  int : IntPropertyTypeInput
-  float : FloatPropertyTypeInput
-  date : DatePropertyTypeInput
-  boolean : BooleanPropertyTypeInput
-  geopoint : GeoPointPropertyTypeInput
-  set : SetPropertyTypeInput
+input CXS_PropertyTypeInput {
+  identifier : CXS_IdentifierPropertyTypeInput
+  string : CXS_StringPropertyTypeInput
+  int : CXS_IntPropertyTypeInput
+  float : CXS_FloatPropertyTypeInput
+  date : CXS_DatePropertyTypeInput
+  boolean : CXS_BooleanPropertyTypeInput
+  geopoint : CXS_GeoPointPropertyTypeInput
+  set : CXS_SetPropertyTypeInput
 }
 
 # The identifier property type is basically a string that is used as an identifier property
-type IdentifierPropertyType implements PropertyType {
+type CXS_IdentifierPropertyType implements CXS_PropertyType {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int
@@ -432,7 +432,7 @@ type IdentifierPropertyType implements PropertyType {
   defaultValue : String
 }
 
-input IdentifierPropertyTypeInput {
+input CXS_IdentifierPropertyTypeInput {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int
@@ -443,7 +443,7 @@ input IdentifierPropertyTypeInput {
   defaultValue : String
 }
 
-type StringPropertyType implements PropertyType {
+type CXS_StringPropertyType implements CXS_PropertyType {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int
@@ -454,7 +454,7 @@ type StringPropertyType implements PropertyType {
   defaultValue : String
 }
 
-input StringPropertyTypeInput {
+input CXS_StringPropertyTypeInput {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int
@@ -465,7 +465,7 @@ input StringPropertyTypeInput {
   defaultValue : String
 } 
 
-type IntPropertyType implements PropertyType {
+type CXS_IntPropertyType implements CXS_PropertyType {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int
@@ -477,7 +477,7 @@ type IntPropertyType implements PropertyType {
   defaultValue : Int
 }
 
-input IntPropertyTypeInput {
+input CXS_IntPropertyTypeInput {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int
@@ -489,7 +489,7 @@ input IntPropertyTypeInput {
   defaultValue : Int
 }
 
-type FloatPropertyType implements PropertyType {
+type CXS_FloatPropertyType implements CXS_PropertyType {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int
@@ -501,7 +501,7 @@ type FloatPropertyType implements PropertyType {
   defaultValue : Float
 }
 
-input FloatPropertyTypeInput {
+input CXS_FloatPropertyTypeInput {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int
@@ -514,7 +514,7 @@ input FloatPropertyTypeInput {
 }
 
 # Date are in ISO-8601 format equivalent to Java 8 Instant format.
-type DatePropertyType implements PropertyType {
+type CXS_DatePropertyType implements CXS_PropertyType {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int
@@ -524,7 +524,7 @@ type DatePropertyType implements PropertyType {
   defaultValue : String
 }
 
-input DatePropertyTypeInput {
+input CXS_DatePropertyTypeInput {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int
@@ -534,7 +534,7 @@ input DatePropertyTypeInput {
   defaultValue : String
 }
 
-type BooleanPropertyType implements PropertyType {
+type CXS_BooleanPropertyType implements CXS_PropertyType {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int
@@ -544,7 +544,7 @@ type BooleanPropertyType implements PropertyType {
   defaultValue : Boolean
 }
 
-input BooleanPropertyTypeInput {
+input CXS_BooleanPropertyTypeInput {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int
@@ -555,7 +555,7 @@ input BooleanPropertyTypeInput {
 }
 
 # Maps to a String with a lat,lon format
-type GeoPointPropertyType implements PropertyType {
+type CXS_GeoPointPropertyType implements CXS_PropertyType {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int
@@ -565,7 +565,7 @@ type GeoPointPropertyType implements PropertyType {
   defaultValue : String
 }
 
-input GeoPointPropertyTypeInput {
+input CXS_GeoPointPropertyTypeInput {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int
@@ -575,96 +575,96 @@ input GeoPointPropertyTypeInput {
   defaultValue : String
 }
 
-type SetPropertyType implements PropertyType {
+type CXS_SetPropertyType implements CXS_PropertyType {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String] # user generated tags
   systemTags : [String] # personalInformation, address, social 
   personalData : Boolean # default to true, identifiers are always personalData
-  properties : [PropertyType] 
+  properties : [CXS_PropertyType] 
 }
 
-input SetPropertyTypeInput {
+input CXS_SetPropertyTypeInput {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String] # user generated tags
   systemTags : [String] # personalInformation, address, social 
   personalData : Boolean # default to true, identifiers are always personalData
-  properties : [PropertyTypeInput]
+  properties : [CXS_PropertyTypeInput]
 }
 
 # MANAGEMENT OBJECTS
 # ----------------------------------------------------------------------------
 
 # Management objects are associated with a scope
-type Scope {
+type CXS_Scope {
   name: ID!
 }
 
-input ScopeInput {
+input CXS_ScopeInput {
   name: ID!
 }
 
-type Persona implements ProfileInterface {
-  scope : Scope!
-  profileIDs : [ProfileID] # the CXS server may generated a system profile ID and expose it here
-  segments(scopes : [ScopeInput]) : [Segment]
-  interests(scopes : [ScopeInput]) : [Interest]
-  consents : [Consent]
-  lists(scopes : [ScopeInput]) : [List]
-  properties : ProfileProperties
-  propertyTypes : [PropertyType]
+type CXS_Persona implements CXS_ProfileInterface {
+  scope : CXS_Scope!
+  profileIDs : [CXS_ProfileID] # the CXS server may generated a system profile ID and expose it here
+  segments(scopes : [CXS_ScopeInput]) : [CXS_Segment]
+  interests(scopes : [CXS_ScopeInput]) : [CXS_Interest]
+  consents : [CXS_Consent]
+  lists(scopes : [CXS_ScopeInput]) : [CXS_List]
+  properties : CXS_ProfileProperties
+  propertyTypes : [CXS_PropertyType]
 }
 
-input PersonaInput {
-  scope : ScopeInput!
-  profileIDs : [ProfileIDInput] # the CXS server may generated a system profile ID and expose it here
+input CXS_PersonaInput {
+  scope : CXS_ScopeInput!
+  profileIDs : [CXS_ProfileIDInput] # the CXS server may generated a system profile ID and expose it here
   segments : [String]
-  interests : [InterestInput]
-  consents : [ConsentInput]
-  properties : ProfilePropertiesInput  
+  interests : [CXS_InterestInput]
+  consents : [CXS_ConsentInput]
+  properties : CXS_ProfilePropertiesInput  
 }
 
-type Segment {
-  scope: Scope!
+type CXS_Segment {
+  scope: CXS_Scope!
   name : ID! # this can be generated from displayname, but never changed
   displayName : String
-  filter : SegmentFilter
+  filter : CXS_SegmentFilter
 }
 
-input SegmentInput {
-  scope : ScopeInput!
+input CXS_SegmentInput {
+  scope : CXS_ScopeInput!
   name : ID!
   displayName : String
-  filter : SegmentFilterInput
+  filter : CXS_SegmentFilterInput
 }
 
-type SegmentPropertiesFilter {
+type CXS_SegmentPropertiesFilter {
   scope_equals : String
   scope_regexp : String
   name_equals : String
   name_regexp : String
 }
 
-input SegmentPropertiesFilterInput {
+input CXS_SegmentPropertiesFilterInput {
   scope_equals : String
   scope_regexp : String
   name_equals : String
   name_regexp : String
 }
 
-type SegmentFilter {
-  and : [SegmentFilter]
-  or : [SegmentFilter]
-  properties : [SegmentPropertiesFilter]
+type CXS_SegmentFilter {
+  and : [CXS_SegmentFilter]
+  or : [CXS_SegmentFilter]
+  properties : [CXS_SegmentPropertiesFilter]
 }
 
-input SegmentFilterInput {
-  and : [SegmentFilterInput]
-  or : [SegmentFilterInput]
-  properties : [SegmentPropertiesFilterInput]
+input CXS_SegmentFilterInput {
+  and : [CXS_SegmentFilterInput]
+  or : [CXS_SegmentFilterInput]
+  properties : [CXS_SegmentPropertiesFilterInput]
 }
 
 #
@@ -693,30 +693,30 @@ input SegmentFilterInput {
 #   }
 # }
 
-type List {
-  scope: Scope!
+type CXS_List {
+  scope: CXS_Scope!
   name : ID! # this can be generated from displayname, but never changed
   displayName : String
 
   # Active members have opted in the list
-  active(first: Int, after: String, last: Int, before: String) : ProfileConnection
+  active(first: Int, after: String, last: Int, before: String) : CXS_ProfileConnection
   # Inactive users have opted out of the list
-  inactive(first: Int, after: String, last: Int, before: String) : ProfileConnection 
+  inactive(first: Int, after: String, last: Int, before: String) : CXS_ProfileConnection 
 }
 
-input ListInput {
+input CXS_ListInput {
   scope: String!
   name : ID! # this can be generated from displayname, but never changed
   displayName : String
 }
 
-type Topic {
-  scope : Scope!
+type CXS_Topic {
+  scope : CXS_Scope!
   id: ID! # cannot change
   displayName : String
 }
 
-input TopicInput {
+input CXS_TopicInput {
   # TODO TBD
   scope : String!
   id: ID! # cannot change
@@ -752,21 +752,21 @@ input TopicInput {
 # - Session end
 # - Opt-in / opt-out of a list
 
-type EventProperties {
+type CXS_EventProperties {
   # ... properties will be updated based on the properties defined by CXS server event handlers
   # we provide some samples properties here because GraphQL doesn't allow empty types, but these are not mandatory
   like : String
 }
 
-type Event {
+type CXS_Event {
   id: ID!
   eventType: String!
-  profileID: ProfileID!
-  profile : Profile!
+  profileID: CXS_ProfileID!
+  profile : CXS_Profile!
   object: String!
   location: String
   timestamp: String # ISO-8601 format Java 8 Instant equivalent
-  properties : EventProperties 
+  properties : CXS_EventProperties 
 }
 
 # The actual payload will be dynamically generated based on the root properties defined by the CXS event 
@@ -813,37 +813,39 @@ type Event {
 #   },
 # }  
 # 
-input EventInput {
-  _profileID: ProfileIDInput! 
-  _object: String! #
-  _location: [GeoPointInput] # optional
-  _timestamp: Int # optional because the server can generate it if it's missing
+input CXS_EventInput {
+  cxs_ProfileID: CXS_ProfileIDInput! 
+  cxs_Object: String! #
+  cxs_Location: [CXS_GeoPointInput] # optional
+  cxs_Timestamp: Int # optional because the server can generate it if it's missing
   updateProfile : UpdateProfileInput
   updateConsents : UpdateConsentsInput
   updateLists : UpdateListInput
   updateSessionState : UpdateSessionStateInput
+  # Example of a generated event type
+  pageView : PageViewInput
 }
 
-type EventType {
+type CXS_EventType {
   typeName : ID!
-  properties : [PropertyType]
+  properties : [CXS_PropertyType]
 }
 
-input EventTypeInput {
+input CXS_EventTypeInput {
   name : ID!
-  properties : [PropertyTypeInput]
+  properties : [CXS_PropertyTypeInput]
 }
 
 # This pre-defined property type is used to update profile properties
 input UpdateProfileInput {
-  updateProperties : ProfilePropertiesInput
+  updateProperties : CXS_ProfilePropertiesInput
   removeProperties : [String]
 }
 
 # This pre-defined property type is used to update profile consents
 input UpdateConsentsInput {
-  grantConsents : [ConsentInput]
-  denyConsents : [ConsentInput]
+  grantConsents : [CXS_ConsentInput]
+  denyConsents : [CXS_ConsentInput]
   revokeConsents : [String]
 } 
 
@@ -862,6 +864,14 @@ enum SessionState {
 
 input UpdateSessionStateInput {
   newState : SessionState
+}
+
+# Example of a generated type for an event type
+input PageViewInput {
+  pageId : String,
+  pageUrl : String,
+  referrer : String,
+  userAgent : String
 }
 
 #
@@ -927,33 +937,33 @@ input UpdateSessionStateInput {
 # as well as the merged profile data. The original profiles that were merged may be flagged or deleted, 
 # this is implementation specific. 
 
-type Interest {
-  topic: Topic!
+type CXS_Interest {
+  topic: CXS_Topic!
   score : Float # 0.0 to 1.0
 }
 
-input InterestInput {
-  topic : TopicInput!
+input CXS_InterestInput {
+  topic : CXS_TopicInput!
   score : Float
 }
 
-# Sample generated property type
-type SampleLocation_PropType {
+# Sample generated property value
+type _SampleLocation {
   latitude : Float,
   longitude : Float
 }
 
-# Sample generated property type
-type SampleStreetNumber_PropType {
+# Sample generated property value
+type _SampleStreetNumber {
   streetNumber : Int,
   prefix : String,
   postfix : String
 }
 
-# Sample generated property type
-type SampleAddress_PropType {
+# Sample generated property value
+type _SampleAddress {
   streetName : String,
-  streetNumber : SampleStreetNumber_PropType,
+  streetNumber : _SampleStreetNumber,
   citySubDivisions : [String]
   city : String,
   postalCode : String,
@@ -962,39 +972,41 @@ type SampleAddress_PropType {
 }
 
 # Profile properties are dynamically generated from all declared profile property types.
-type ProfileProperties {
+type CXS_ProfileProperties {
   # the following are just examples to make GraphQL JS schema parser happy otherwise we have an empty type
   firstName : String
   lastName : String
-  location : SampleLocation_PropType
-  address : SampleAddress_PropType
+  location : _SampleLocation
+  address : _SampleAddress
 }
 
-input ProfilePropertiesInput {
+input CXS_ProfilePropertiesInput {
   # the following are just examples to make GraphQL JS schema parser happy otherwise we have an empty type
   firstName : String
   lastName : String
 }
 
-interface ProfileInterface {
-  profileIDs : [ProfileID] # the CXS server may generated a system profile ID and expose it here
-  segments(scopes : [ScopeInput]) : [Segment]
-  interests(scopes : [ScopeInput]) : [Interest]
-  consents : [Consent]
-  lists(scopes : [ScopeInput]) : [List]
-  properties : ProfileProperties
+interface CXS_ProfileInterface {
+  profileIDs : [CXS_ProfileID] # the CXS server may generated a system profile ID and expose it here
+  segments(scopes : [CXS_ScopeInput]) : [CXS_Segment]
+  interests(scopes : [CXS_ScopeInput]) : [CXS_Interest]
+  consents : [CXS_Consent]
+  lists(scopes : [CXS_ScopeInput]) : [CXS_List]
+  properties : CXS_ProfileProperties
+  propertyTypes : [CXS_PropertyType]  
 }
 
-type Profile implements ProfileInterface {
-  profileIDs : [ProfileID] # the CXS server may generated a system profile ID and expose it here
-  events(filter : EventFilterInput, first : Int, last: Int, after : String, before: String) : EventConnection
-  lastEvents(count : Int, profileID : ProfileIDInput) : EventConnection
-  segments(scopes : [ScopeInput]) : [Segment]
-  interests(scopes : [ScopeInput]) : [Interest]
-  consents : [Consent]
-  lists(scopes : [ScopeInput]) : [List]
-  matches(conditions : [ConditionsInput]) : [ConditionsMatch] # used for personalization requirements
-  properties : ProfileProperties
+type CXS_Profile implements CXS_ProfileInterface {
+  profileIDs : [CXS_ProfileID] # the CXS server may generated a system profile ID and expose it here
+  events(filter : CXS_EventFilterInput, first : Int, last: Int, after : String, before: String) : CXS_EventConnection
+  lastEvents(count : Int, profileID : CXS_ProfileIDInput) : CXS_EventConnection
+  segments(scopes : [CXS_ScopeInput]) : [CXS_Segment]
+  interests(scopes : [CXS_ScopeInput]) : [CXS_Interest]
+  consents : [CXS_Consent]
+  lists(scopes : [CXS_ScopeInput]) : [CXS_List]
+  matches(conditions : [CXS_ConditionsInput]) : [CXS_ConditionsMatch] # used for personalization requirements
+  properties : CXS_ProfileProperties
+  propertyTypes : [CXS_PropertyType]  
 }
 
 #
@@ -1046,7 +1058,7 @@ type Profile implements ProfileInterface {
 # - 
 # (for GDPR controllers / processors ?)
 
-enum ConsentGrant {
+enum CXS_ConsentGrant {
     ALLOW,
     DENY,
 }
@@ -1054,18 +1066,18 @@ enum ConsentGrant {
 # Consent types are not defined in the specification, only the format of the type identifier
 # should use a URI convention. Some URIs could actually be URLs and point to real resource that would give the 
 # semantics of the consent type 
-type Consent {
+type CXS_Consent {
   token : ID! # similar to OAuth 2 authorization tokens to access the consent without the profile, also useful to delete the consent
-  scope : Scope
+  scope : CXS_Scope
   type : String! # "//mycompany.com/consents/newsletters/weekly", "//crmcompany.com/consents/push-to-crm", "//oasis_open.org/cxs/consents/send-to-third-parties"
-  grant : ConsentGrant!
+  grant : CXS_ConsentGrant!
   grantDate : String
   revokeDate : String  
-  profile : ProfileInterface
-  events : EventConnection
+  profile : CXS_ProfileInterface
+  events : CXS_EventConnection
 }
 
-input ConsentInput {
+input CXS_ConsentInput {
   scope: String,
   actions : [String],
   grantDate : String,
@@ -1085,106 +1097,120 @@ input ConsentInput {
 
 # ProfileIDs are always associated with a client as multiple profileIDs are associated with a single profile. CXS 
 # server implementations may generate their own internal system IDs by defining them for a "system" client.
-type ProfileID {
-    client : Client
+type CXS_ProfileID {
+    client : CXS_Client
     id : ID! # unique profile identifier for the client
 }
 
-input ProfileIDInput {
+input CXS_ProfileIDInput {
     clientID : ID!
     id : ID! # unique profile identifier for the client
 }
 
-type User {
-    roles : [Role]
+type CXS_User {
+    roles : [CXS_Role]
 }
 
-type Client {
+type CXS_Client {
     id : ID! # the "system" client ID is reserved for the CXS context server to use for internal IDs.
-    defaultUser : User
+    defaultUser : CXS_User
     thirdParty : Boolean # optional, indicates that the client is a third party (useful for privacy regulations such as GDPR)
 }
 
 # Conditions are used to evaluate conditions stored in other systems (such as a WCM for personalization)
-input ConditionsInput {
+input CXS_ConditionsInput {
   name : String!
-  filter: ProfileFilterInput
+  filter: CXS_ProfileFilterInput
 }
 
-type ConditionsMatch {
+type CXS_ConditionsMatch {
   name : String
   matched : Boolean
   executionTimeMillis : Int
 }
 
+type CXS_Query {
+  # This will return the user that is connected to the CXS server, allowing to retrieve the roles he participates in.
+  getActiveUser : CXS_User
+
+  getEventTypes : [CXS_EventType]
+  getEvent(id : String!) : CXS_Event
+  findEvents(filter : CXS_EventFilterInput, orderBy : [CXS_OrderByInput], first: Int, after: String, last: Int, before: String) : CXS_EventConnection
+  
+  getProfile(profileID : CXS_ProfileIDInput, createIfMissing: Boolean) : CXS_Profile
+  findProfiles(filter: CXS_ProfileFilterInput, orderBy: [CXS_OrderByInput], first: Int, after: String, last: Int, before: String) : CXS_ProfileConnection
+  
+  getPersona(personaID : String) : CXS_Persona
+  findPersonas(filter: CXS_ProfileFilterInput, orderBy: [CXS_OrderByInput], first: Int, after: String, last: Int, before: String) : CXS_ProfileConnection
+  
+  getSegment(segmentID : String) : CXS_Segment
+  findSegments(filter: CXS_SegmentFilterInput, orderBy: [CXS_OrderByInput], first: Int, after: String, last: Int, before: String) : CXS_SegmentConnection
+
+  getList(listID : String) : CXS_List
+  findLists(filter: CXS_ListFilterInput, orderBy: [CXS_OrderByInput], first: Int, after: String, last: Int, before: String) : CXS_ListConnection
+
+  getTopic(topicID : String) : CXS_Topic
+  findTopics(filter: CXS_TopicFilterInput, orderBy: [CXS_OrderByInput], first: Int, after: String, last: Int, before: String) : CXS_TopicConnection
+
+  getProfilePropertyTypes : CXS_PropertyTypeConnection
+}
+
 # Context Server GraphQL queries
 type Query {
 
-  # This will return the user that is connected to the CXS server, allowing to retrieve the roles he participates in.
-  getActiveUser : User
-
-  getEventTypes : [EventType]
-  getEvent(id : String!) : Event
-  findEvents(filter : EventFilterInput, orderBy : [OrderByInput], first: Int, after: String, last: Int, before: String) : EventConnection
-  
-  getProfile(profileID : ProfileIDInput, createIfMissing: Boolean) : Profile
-  findProfiles(filter: ProfileFilterInput, orderBy: [OrderByInput], first: Int, after: String, last: Int, before: String) : ProfileConnection
-  
-  getPersona(personaID : String) : Persona
-  findPersonas(filter: ProfileFilterInput, orderBy: [OrderByInput], first: Int, after: String, last: Int, before: String) : ProfileConnection
-  
-  getSegment(segmentID : String) : Segment
-  findSegments(filter: SegmentFilterInput, orderBy: [OrderByInput], first: Int, after: String, last: Int, before: String) : SegmentConnection
-
-  getList(listID : String) : List
-  findLists(filter: ListFilterInput, orderBy: [OrderByInput], first: Int, after: String, last: Int, before: String) : ListConnection
-
-  getTopic(topicID : String) : Topic
-  findTopics(filter: TopicFilterInput, orderBy: [OrderByInput], first: Int, after: String, last: Int, before: String) : TopicConnection
-
-  getProfilePropertyTypes : PropertyTypeConnection
+  cxs : CXS_Query
     
 }
 
-# Context Server GraphQL mutations
-type Mutation {
-
+type CXS_Mutation {
   # Events may trigger different types of operations within the context server, such as updating consents, 
   # reset interests, or profile updates.   
-  processEvents(events: [EventInput]!) : Int
+  processEvents(events: [CXS_EventInput]!) : Int
     
-  deleteProfile(profileID : ProfileIDInput) : Profile
+  deleteProfile(profileID : CXS_ProfileIDInput) : CXS_Profile
   
-  createOrUpdatePersona(persona : PersonaInput) : Persona
-  deletePersona(personaID : String) : Persona
+  createOrUpdatePersona(persona : CXS_PersonaInput) : CXS_Persona
+  deletePersona(personaID : String) : CXS_Persona
   
-  createOrUpdateSegment(segment : SegmentInput) : Segment
-  deleteSegment(segmentID : String) : Segment
+  createOrUpdateSegment(segment : CXS_SegmentInput) : CXS_Segment
+  deleteSegment(segmentID : String) : CXS_Segment
   
-  createOrUpdateList(list : ListInput) : List
-  addProfileToList(list : ListInput, profileId : ProfileIDInput, active : Boolean) : List
-  removeProfileFromList(list : ListInput, profileId : ProfileIDInput) : List
-  deleteList(listID : String) : List
+  createOrUpdateList(list : CXS_ListInput) : CXS_List
+  addProfileToList(list : CXS_ListInput, profileId : CXS_ProfileIDInput, active : Boolean) : CXS_List
+  removeProfileFromList(list : CXS_ListInput, profileId : CXS_ProfileIDInput) : CXS_List
+  deleteList(listID : String) : CXS_List
   
-  createOrUpdateTopic(topic : TopicInput) : Topic
-  deleteTopic(topicID : String) : Topic
+  createOrUpdateTopic(topic : CXS_TopicInput) : CXS_Topic
+  deleteTopic(topicID : String) : CXS_Topic
   
-  addPropertiesToProfile(propertyTypes : [PropertyTypeInput]) : Boolean
-  removePropertyFromProfile(propertyTypeId : String) : Boolean
+  addProfilePropertyTypes(propertyTypes : [CXS_PropertyTypeInput]) : Boolean
+  removeProfilePropertyType(propertyTypeId : String) : Boolean
   
-  createOrUpdateEventType(eventType : EventTypeInput) : Boolean
+  createOrUpdateEventType(eventType : CXS_EventTypeInput) : Boolean
   removeEventType(eventTypeId : String) : Boolean
               
   # Privacy 
   deleteAllPersonalData : Boolean
 }
 
-type Subscription {
-  eventListener(profileID : ProfileIDInput, filter: EventFilterInput) : Event!
+# Context Server GraphQL mutations
+type Mutation {
+
+  cxs : CXS_Mutation
+
+}
+
+type CXS_Subscription {
+  eventListener(profileID : CXS_ProfileIDInput, filter: CXS_EventFilterInput) : CXS_Event!
   
-  profileListener(profileID: ProfileIDInput) : Profile
+  profileListener(profileID: CXS_ProfileIDInput) : CXS_Profile
   
   # jobListener(jobID: String) : JobStatus
+}
+
+type Subscription {
+
+  cxs : CXS_Subscription
 }
 
 `);
