@@ -218,6 +218,8 @@ input CXS_EventFilterInput {
   and : [CXS_EventFilterInput]
   or : [CXS_EventFilterInput]
 
+  # An event filter input will contain only one of the following fields (this is a workaround GraphQL polymorphism limitations)
+
   properties : CXS_EventPropertiesFilterInput
   eventOccurrence : CXS_EventOccurrenceFilterInput
 }
@@ -815,15 +817,20 @@ type CXS_Event {
 # 
 input CXS_EventInput {
   cxs_ProfileID: CXS_ProfileIDInput! 
-  cxs_Object: String! #
+  cxs_Object: CXS_ObjectInput!
   cxs_Location: [CXS_GeoPointInput] # optional
   cxs_Timestamp: Int # optional because the server can generate it if it's missing
   updateProfile : UpdateProfileInput
-  updateConsents : UpdateConsentsInput
+  updateConsent : UpdateConsentInput
   updateLists : UpdateListInput
   updateSessionState : UpdateSessionStateInput
   # Example of a generated event type
   pageView : PageViewInput
+}
+
+input CXS_ObjectInput {
+  id : ID!
+  tags : [String] # a way of classifying objects : page, product, article
 }
 
 type CXS_EventType {
@@ -842,11 +849,9 @@ input UpdateProfileInput {
   removeProperties : [String]
 }
 
-# This pre-defined property type is used to update profile consents
-input UpdateConsentsInput {
-  grantConsents : [CXS_ConsentInput]
-  denyConsents : [CXS_ConsentInput]
-  revokeConsents : [String]
+# This pre-defined property type is used to update a single profile consent
+input UpdateConsentInput {
+  consent : CXS_ConsentInput
 } 
 
 # This pre-defined property type is used to update profile list membership
@@ -1004,9 +1009,38 @@ type CXS_Profile implements CXS_ProfileInterface {
   interests(scopes : [CXS_ScopeInput]) : [CXS_Interest]
   consents : [CXS_Consent]
   lists(scopes : [CXS_ScopeInput]) : [CXS_List]
-  matches(conditions : [CXS_ConditionsInput]) : [CXS_ConditionsMatch] # used for personalization requirements
+  matches(namedFilters : [CXS_NamedFilterInput]) : [CXS_FilterMatch] # used for personalization requirements
+  optimize(input : CXS_OptimizationInput) : CXS_OptimizationResult
   properties : CXS_ProfileProperties
   propertyTypes : [CXS_PropertyType]  
+}
+
+type CXS_OptimizationResult {
+    results : [CXS_ObjectOptimizationResult]
+}
+
+type CXS_ObjectOptimizationResult {
+    objectId : ID!
+    score : Float
+}
+
+# Example : return list of products that the profile has viewed but not bought
+input CXS_OptimizationInput {
+    objects : [CXS_ObjectInput],
+    eventOccurenceBoosts : [CXS_EventOccurenceBoost]    
+    strategy : String
+}
+
+type CXS_EventOccurenceBoost {
+    eventType : String
+    boost : Int # could be negative 
+    fromDate : String
+    toDate : String
+}
+
+type CXS_Object {
+    id : ID!
+    tags : [String]
 }
 
 #
@@ -1058,9 +1092,10 @@ type CXS_Profile implements CXS_ProfileInterface {
 # - 
 # (for GDPR controllers / processors ?)
 
-enum CXS_ConsentGrant {
-    ALLOW,
-    DENY,
+enum CXS_ConsentStatus {
+    ALLOWED,
+    DENIED,
+    REVOKED
 }
 
 # Consent types are not defined in the specification, only the format of the type identifier
@@ -1070,8 +1105,8 @@ type CXS_Consent {
   token : ID! # similar to OAuth 2 authorization tokens to access the consent without the profile, also useful to delete the consent
   scope : CXS_Scope
   type : String! # "//mycompany.com/consents/newsletters/weekly", "//crmcompany.com/consents/push-to-crm", "//oasis_open.org/cxs/consents/send-to-third-parties"
-  grant : CXS_ConsentGrant!
-  grantDate : String
+  status : CXS_ConsentStatus!
+  statusDate : String
   revokeDate : String  
   profile : CXS_ProfileInterface
   events : CXS_EventConnection
@@ -1079,8 +1114,8 @@ type CXS_Consent {
 
 input CXS_ConsentInput {
   scope: String,
-  actions : [String],
-  grantDate : String,
+  status : String,
+  statusDate : String,
   revokeDate : String
 }
 
@@ -1117,13 +1152,16 @@ type CXS_Client {
     thirdParty : Boolean # optional, indicates that the client is a third party (useful for privacy regulations such as GDPR)
 }
 
-# Conditions are used to evaluate conditions stored in other systems (such as a WCM for personalization)
-input CXS_ConditionsInput {
+# Named filters are used to evaluate filters against a profile (for example: is this profile located in the US, 
+# is this profile over 30). This is very useful for example when integrating WCMs for building personalized 
+# experiences.
+input CXS_NamedFilterInput {
   name : String!
   filter: CXS_ProfileFilterInput
 }
 
-type CXS_ConditionsMatch {
+# A result for a named filter match request.
+type CXS_FilterMatch {
   name : String
   matched : Boolean
   executionTimeMillis : Int
