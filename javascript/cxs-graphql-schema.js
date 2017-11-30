@@ -19,14 +19,19 @@ exports.schema = buildSchema(`
 #
 # Securing queries, mutations and subscriptions:
 # ----------------------------------------------
-# Client are recognized using tokens. Client have roles that have associated permissions on CXS GraphQL methods. 
+# Client are recognized using tokens. Client have roles that have associated permissions on CXS 
+# GraphQL methods (queries, mutations and subscriptions), for each method we have an associated permission.
+# Field-level permissions could be optionally controlled by some CXS implementations.
+#
+# There MUST be an authorization to communicate with the CXS server (no public interfaces).
+# 
 # The CXS server must reject any methods that are not authorized for a client.
 # CXS server implementations may also control access to profile properties based on the client.
 # 
-# Recommended default permissions for roles:
+# Suggested default permissions for roles:
 #
-# role - permissions
-# public - getProfile, logEvents
+# ROLE - PERMISSIONS
+# visitor - getProfile, processEvents
 # authenticated - updateProfile, exportAllYourData, forgetMe
 # administrator - all 
 #
@@ -828,11 +833,6 @@ input CXS_EventInput {
   pageView : PageViewInput
 }
 
-input CXS_ObjectInput {
-  id : ID!
-  tags : [String] # a way of classifying objects : page, product, article
-}
-
 type CXS_EventType {
   typeName : ID!
   properties : [CXS_PropertyType]
@@ -1010,37 +1010,61 @@ type CXS_Profile implements CXS_ProfileInterface {
   consents : [CXS_Consent]
   lists(scopes : [CXS_ScopeInput]) : [CXS_List]
   matches(namedFilters : [CXS_NamedFilterInput]) : [CXS_FilterMatch] # used for personalization requirements
-  optimize(input : CXS_OptimizationInput) : CXS_OptimizationResult
+  optimize(parameters : [CXS_OptimizationInput]) : [CXS_OptimizationResult]
+  recommend(parameters : [CXS_RecommendationInput]) : [CXS_RecommendationResult]
   properties : CXS_ProfileProperties
   propertyTypes : [CXS_PropertyType]  
 }
 
 type CXS_OptimizationResult {
-    results : [CXS_ObjectOptimizationResult]
+    name : String!
+    scoredObjects : [CXS_ScoredObject]
 }
 
-type CXS_ObjectOptimizationResult {
-    objectId : ID!
+type CXS_ScoredObject {
+    object : CXS_Object
     score : Float
 }
 
 # Example : return list of products that the profile has viewed but not bought
 input CXS_OptimizationInput {
+    name : String!
     objects : [CXS_ObjectInput],
-    eventOccurenceBoosts : [CXS_EventOccurenceBoost]    
-    strategy : String
+    eventOccurenceBoosts : [CXS_EventOccurenceBoostInput]    
+    strategy : String # unspecified, random, scoring, best first match, worst match, a/b test ?
 }
 
-type CXS_EventOccurenceBoost {
+# Used to boost positively/negatively the algorithm based on event type and time span
+# Example : return a list of products the profile has viewed in the last year 
+input CXS_EventOccurenceBoostInput {
     eventType : String
     boost : Int # could be negative 
     fromDate : String
     toDate : String
 }
 
+# Object is globally unique in its combination of id and collections 
 type CXS_Object {
-    id : ID!
-    tags : [String]
+    id : ID! # unique within each specified collection
+    collections : [String]! # could be URIs, e.g. schema.org (http://schema.org/Product) or reverse domain naming convention (org.acme.Product)
+}
+
+input CXS_ObjectInput {
+  id : ID!
+  collections : [String]! # a way of classifying objects : page, product, article
+}
+
+input CXS_RecommendationInput {
+    name : String!
+    objectId : ID # this is optional since we might just want to use collections to retrieve recommendations
+    collections : [String] # collections we want to use to retrieve recommendations
+    size : Int # maximum number of results to retrieve
+    algorithm : String # similarity, bought-Together, bought-byOthers, viewed-byOthers, trending, related     
+}
+
+type CXS_RecommendationResult {
+    name : String!
+    scoredObjects : [CXS_ScoredObject]
 }
 
 #
