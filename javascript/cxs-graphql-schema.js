@@ -1138,6 +1138,7 @@ type CXS_Consent {
 
 input CXS_ConsentInput {
   scope: String,
+  type : String! # "//mycompany.com/consents/newsletters/weekly", "//crmcompany.com/consents/push-to-crm", "//oasis_open.org/cxs/consents/send-to-third-parties"
   status : String,
   statusDate : String,
   revokeDate : String
