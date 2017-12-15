@@ -1059,7 +1059,8 @@ input CXS_RecommendationInput {
     objectId : ID # this is optional since we might just want to use collections to retrieve recommendations
     collections : [String] # collections we want to use to retrieve recommendations
     size : Int # maximum number of results to retrieve
-    algorithm : String # similarity, bought-Together, bought-byOthers, viewed-byOthers, trending, related     
+    algorithm : String # similarity, bought-Together, bought-byOthers, viewed-byOthers, trending, related
+    # How can we filter the results to for example match only a specific country ?      
 }
 
 type CXS_RecommendationResult {
