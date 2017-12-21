@@ -33,9 +33,16 @@ exports.schema = buildSchema(`
 # ROLE - PERMISSIONS
 # visitor - getProfile, processEvents
 # authenticated - updateProfile, exportAllYourData, forgetMe
-# administrator - all 
+# administrator - all
+#
+# Basic administrative login should be implementation specific, but client authentification JWT/OAuth 2 
+# could be useful. Two layers of JWT could be used to authenticate both end users and clients. 
 #
 # Open question : should the administrative user have an associated client Id ? (maybe it shouldn't).
+
+# CUSTOM SCALAR TYPES
+# ----------------------------------------------------------------------------
+scalar JSON
 
 # QUERY AND FILTER TYPES
 # ----------------------------------------------------------------------------
@@ -399,6 +406,7 @@ type CXS_InterestConnection {
 # Roles are predefined in the CXS server implementation, no API is provided to manipulate them.
 # system-admin, system-public, system-authenticated, acme-admin, test-admin
 type CXS_Role {
+  id : ID!
   name : String!
   displayName : String
   scope : CXS_Scope! # may include a system scope
@@ -407,7 +415,9 @@ type CXS_Role {
 # Multi-valued properties are controlled using the minOccurrences and maxOccurrences fields. The order of the values 
 # must be preserved. Mandatory properties may be defined by setting minOccurrences to > 0
 interface CXS_PropertyType {
-  name : ID!
+  id : ID!
+  scope : CXS_Scope!
+  name : String!
   minOccurrences : Int # default = 0
   maxOccurrences : Int # default = 1
   tags : [String] # user generated tags
@@ -429,7 +439,9 @@ input CXS_PropertyTypeInput {
 
 # The identifier property type is basically a string that is used as an identifier property
 type CXS_IdentifierPropertyType implements CXS_PropertyType {
-  name : ID!
+  id : ID!
+  scope : CXS_Scope!
+  name : String!
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String] # user generated tags
@@ -440,7 +452,9 @@ type CXS_IdentifierPropertyType implements CXS_PropertyType {
 }
 
 input CXS_IdentifierPropertyTypeInput {
-  name : ID!
+  id : ID # optional 
+  scope: String!
+  name : String!
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String] # user generated tags
@@ -451,7 +465,9 @@ input CXS_IdentifierPropertyTypeInput {
 }
 
 type CXS_StringPropertyType implements CXS_PropertyType {
-  name : ID!
+  id : ID!
+  scope : CXS_Scope!
+  name : String!
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String] # user generated tags
@@ -462,7 +478,9 @@ type CXS_StringPropertyType implements CXS_PropertyType {
 }
 
 input CXS_StringPropertyTypeInput {
-  name : ID!
+  id : ID # optional 
+  scope : String!
+  name : String!
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String] # user generated tags
@@ -473,7 +491,9 @@ input CXS_StringPropertyTypeInput {
 } 
 
 type CXS_IntPropertyType implements CXS_PropertyType {
-  name : ID!
+  id : ID!
+  scope : CXS_Scope!
+  name : String!
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String] # user generated tags
@@ -485,7 +505,9 @@ type CXS_IntPropertyType implements CXS_PropertyType {
 }
 
 input CXS_IntPropertyTypeInput {
-  name : ID!
+  id : ID # optional 
+  scope : String!
+  name : String!
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String] # user generated tags
@@ -497,7 +519,9 @@ input CXS_IntPropertyTypeInput {
 }
 
 type CXS_FloatPropertyType implements CXS_PropertyType {
-  name : ID!
+  id : ID!
+  scope : CXS_Scope!
+  name : String!
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String] # user generated tags
@@ -509,7 +533,9 @@ type CXS_FloatPropertyType implements CXS_PropertyType {
 }
 
 input CXS_FloatPropertyTypeInput {
-  name : ID!
+  id : ID # optional 
+  scope : String!
+  name : String!
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String] # user generated tags
@@ -522,7 +548,9 @@ input CXS_FloatPropertyTypeInput {
 
 # Date are in ISO-8601 format equivalent to Java 8 Instant format.
 type CXS_DatePropertyType implements CXS_PropertyType {
-  name : ID!
+  id : ID!
+  scope : CXS_Scope!
+  name : String!
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String] # user generated tags
@@ -532,7 +560,9 @@ type CXS_DatePropertyType implements CXS_PropertyType {
 }
 
 input CXS_DatePropertyTypeInput {
-  name : ID!
+  id : ID # optional 
+  scope : String!
+  name : String!
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String] # user generated tags
@@ -542,7 +572,9 @@ input CXS_DatePropertyTypeInput {
 }
 
 type CXS_BooleanPropertyType implements CXS_PropertyType {
-  name : ID!
+  id : ID!
+  scope : CXS_Scope!
+  name : String!
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String] # user generated tags
@@ -552,7 +584,9 @@ type CXS_BooleanPropertyType implements CXS_PropertyType {
 }
 
 input CXS_BooleanPropertyTypeInput {
-  name : ID!
+  id : ID # optional 
+  scope : String!
+  name : String!
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String] # user generated tags
@@ -563,7 +597,9 @@ input CXS_BooleanPropertyTypeInput {
 
 # Maps to a String with a lat,lon format
 type CXS_GeoPointPropertyType implements CXS_PropertyType {
-  name : ID!
+  id : ID!
+  scope : CXS_Scope!
+  name : String!
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String] # user generated tags
@@ -573,7 +609,9 @@ type CXS_GeoPointPropertyType implements CXS_PropertyType {
 }
 
 input CXS_GeoPointPropertyTypeInput {
-  name : ID!
+  id : ID # optional 
+  scope : String!
+  name : String!
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String] # user generated tags
@@ -583,7 +621,9 @@ input CXS_GeoPointPropertyTypeInput {
 }
 
 type CXS_SetPropertyType implements CXS_PropertyType {
-  name : ID!
+  id : ID!
+  scope : CXS_Scope!
+  name : String!
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String] # user generated tags
@@ -593,7 +633,9 @@ type CXS_SetPropertyType implements CXS_PropertyType {
 }
 
 input CXS_SetPropertyTypeInput {
-  name : ID!
+  id : ID # optional 
+  scope : String!
+  name : String!
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String] # user generated tags
@@ -615,6 +657,8 @@ input CXS_ScopeInput {
 }
 
 type CXS_Persona implements CXS_ProfileInterface {
+  id : ID!
+  name : String!
   scope : CXS_Scope!
   profileIDs : [CXS_ProfileID] # the CXS server may generated a system profile ID and expose it here
   segments(scopes : [CXS_ScopeInput]) : [CXS_Segment]
@@ -626,6 +670,8 @@ type CXS_Persona implements CXS_ProfileInterface {
 }
 
 input CXS_PersonaInput {
+  id : ID #optional, may be server-generated
+  name : String!
   scope : CXS_ScopeInput!
   profileIDs : [CXS_ProfileIDInput] # the CXS server may generated a system profile ID and expose it here
   segments : [String]
@@ -635,16 +681,16 @@ input CXS_PersonaInput {
 }
 
 type CXS_Segment {
+  id : ID!
   scope: CXS_Scope!
-  name : ID! # this can be generated from displayname, but never changed
-  displayName : String
+  name : String!
   filter : CXS_SegmentFilter
 }
 
 input CXS_SegmentInput {
+  id : ID #optional, may be server-generated
   scope : CXS_ScopeInput!
-  name : ID!
-  displayName : String
+  name : String
   filter : CXS_SegmentFilterInput
 }
 
@@ -701,9 +747,9 @@ input CXS_SegmentFilterInput {
 # }
 
 type CXS_List {
+  id : ID! # cannot change and usually server generated
   scope: CXS_Scope!
-  name : ID! # this can be generated from displayname, but never changed
-  displayName : String
+  name : String!
 
   # Active members have opted in the list
   active(first: Int, after: String, last: Int, before: String) : CXS_ProfileConnection
@@ -712,22 +758,21 @@ type CXS_List {
 }
 
 input CXS_ListInput {
+  id : ID # optional and can be server generated
   scope: String!
-  name : ID! # this can be generated from displayname, but never changed
-  displayName : String
+  name : String!
 }
 
 type CXS_Topic {
+  id : ID! # cannot change and usually server generated, although they could be imported
   scope : CXS_Scope!
-  id: ID! # cannot change
-  displayName : String
+  name: String! 
 }
 
 input CXS_TopicInput {
-  # TODO TBD
+  id : ID # optional and can be server generated
   scope : String!
-  id: ID! # cannot change
-  displayName : String
+  name: String!
 }
 
 # EVENT-RELATED TYPES
@@ -767,6 +812,7 @@ type CXS_EventProperties {
 
 type CXS_Event {
   id: ID!
+  scope: CXS_Scope!
   eventType: String!
   profileID: CXS_ProfileID!
   profile : CXS_Profile!
@@ -821,6 +867,8 @@ type CXS_Event {
 # }  
 # 
 input CXS_EventInput {
+  id: ID # optional, usually server-generated but could be interesting to import events
+  cxs_Scope : String!
   cxs_ProfileID: CXS_ProfileIDInput! 
   cxs_Object: CXS_ObjectInput!
   cxs_Location: [CXS_GeoPointInput] # optional
@@ -834,12 +882,16 @@ input CXS_EventInput {
 }
 
 type CXS_EventType {
-  typeName : ID!
+  id: ID!
+  scope : CXS_Scope!
+  typeName : String!
   properties : [CXS_PropertyType]
 }
 
 input CXS_EventTypeInput {
-  name : ID!
+  id : ID # optional 
+  scope : String!
+  typeName : ID!
   properties : [CXS_PropertyTypeInput]
 }
 
@@ -856,8 +908,8 @@ input UpdateConsentInput {
 
 # This pre-defined property type is used to update profile list membership
 input UpdateListInput {
-  joinLists : [String]
-  leaveLists : [String]
+  joinLists : [CXS_ListInput]
+  leaveLists : [CXS_ListInput]
 }
 
 enum SessionState {
@@ -1050,8 +1102,13 @@ type CXS_Object {
 }
 
 input CXS_ObjectInput {
-  id : ID!
+    id : ID! # unique within each specified collection
   collections : [String]! # a way of classifying objects : page, product, article
+}
+
+input CXS_AlgorithmInput {
+    name : String! # similarity, bought-Together, bought-byOthers, viewed-byOthers, trending, related
+    parameters : JSON # parameters can be used to filter the results of the recommendation algorithm or any other custom processing that is supported by the implementation. Parameters are specific to the algorithm.
 }
 
 input CXS_RecommendationInput {
@@ -1059,9 +1116,7 @@ input CXS_RecommendationInput {
     objectId : ID # this is optional since we might just want to use collections to retrieve recommendations
     collections : [String] # collections we want to use to retrieve recommendations
     size : Int # maximum number of results to retrieve
-    algorithm : String # similarity, bought-Together, bought-byOthers, viewed-byOthers, trending, related
-    # How can we filter the results to for example match only a specific country ?
-    # Maybe we also need some parameters for the algorithms, such as a variable on which to optimize ?       
+    algorithm : CXS_AlgorithmInput 
 }
 
 type CXS_RecommendationResult {
@@ -1126,7 +1181,8 @@ enum CXS_ConsentStatus {
 
 # Consent types are not defined in the specification, only the format of the type identifier
 # should use a URI convention. Some URIs could actually be URLs and point to real resource that would give the 
-# semantics of the consent type 
+# semantics of the consent type. Types are not globally unique, a combination of scope and types are globally unique
+# and context server implementations may use "global" or "system" scopes to share types.
 type CXS_Consent {
   token : ID! # similar to OAuth 2 authorization tokens to access the consent without the profile, also useful to delete the consent
   scope : CXS_Scope
@@ -1208,16 +1264,18 @@ type CXS_Query {
   getPersona(personaID : String) : CXS_Persona
   findPersonas(filter: CXS_ProfileFilterInput, orderBy: [CXS_OrderByInput], first: Int, after: String, last: Int, before: String) : CXS_ProfileConnection
   
-  getSegment(segmentID : String) : CXS_Segment
+  getSegment(segmentID : ID) : CXS_Segment
   findSegments(filter: CXS_SegmentFilterInput, orderBy: [CXS_OrderByInput], first: Int, after: String, last: Int, before: String) : CXS_SegmentConnection
 
-  getList(listID : String) : CXS_List
+  getList(listID : ID) : CXS_List
   findLists(filter: CXS_ListFilterInput, orderBy: [CXS_OrderByInput], first: Int, after: String, last: Int, before: String) : CXS_ListConnection
 
-  getTopic(topicID : String) : CXS_Topic
+  getTopic(topicID : ID) : CXS_Topic
   findTopics(filter: CXS_TopicFilterInput, orderBy: [CXS_OrderByInput], first: Int, after: String, last: Int, before: String) : CXS_TopicConnection
 
   getProfilePropertyTypes : CXS_PropertyTypeConnection
+  
+  getScopes : [CXS_Scope]
 }
 
 # Context Server GraphQL queries
