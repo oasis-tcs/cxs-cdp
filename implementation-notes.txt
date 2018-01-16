@@ -1,0 +1,68 @@
+#
+# Recommended deployment architecture
+# -----------------------------------
+#
+# Browser -> CXS (or custom) Web Source -> Public methods (getProfile, logEvents) Unomi will probably provide a built-in web source
+# Browser -> Authentication Proxy Source -> Self-management APIs (updateProfile)
+# Browser -> Backend Proxy Source -> Management APIs (all)
+#
+# Pre-defined security roles:
+# ---------------------------
+#
+# Roles : administrator, authenticated, public
+#
+# Securing queries, mutations and subscriptions:
+# ----------------------------------------------
+# Source are recognized using tokens. Source have roles that have associated permissions on CXS
+# GraphQL methods (queries, mutations and subscriptions), for each method we have an associated permission.
+# Field-level permissions could be optionally controlled by some CXS implementations.
+#
+# There MUST be an authorization to communicate with the CXS server (no public interfaces).
+#
+# The CXS server must reject any methods that are not authorized for a source.
+# CXS server implementations may also control access to profile properties based on the source.
+#
+# Suggested default permissions for roles:
+#
+# ROLE - PERMISSIONS
+# visitor - getProfile, processEvents
+# authenticated - updateProfile, exportAllYourData, forgetMe
+# administrator - all
+#
+# Basic administrative login should be implementation specific, but source authentification JWT/OAuth 2
+# could be useful. Two layers of JWT could be used to authenticate both end users and sources.
+#
+# Open question : should the administrative user have an associated source Id ? (maybe it shouldn't).
+
+/*
+ * Example of Context Server (Karaf) user configuration
+ * Karaf/Unomi users.properties Authentication server 1
+ * username/password
+ * public/public1234
+ * authenticated/authenticated1234
+ * administrator/administrator1234
+ *
+ * Mapping of Context Server users to roles
+ * public -> public role
+ * authenticated -> has an authenticated role
+ *
+ * web source system configuration
+ *   visitors group in web source -> public context server user
+ *   any group/users in websource (usually a "logged in users" group ie authentication) -> mapped to authenticated user
+ *
+ * Example: web user with profile-id 789
+ *
+ * -> authenticates against web source as a REGULAR user on Authentication Server 2
+ * -> web source logins into Unomi using authenticated user
+ *
+ * backend source
+ * internal configuration
+ *   administrator
+ * backend source will NOT accept authenticated requests
+ *
+ * Example: backend administrator with profile-id 789
+ * -> authenticates against backend source as a administrator user on Authentication Server 2
+ * -> backend source authenticates as the administrator user inside unomi
+ *
+ * The mapping configurations are contained in the configuration of each source (not in Apache Unomi but external)
+ */

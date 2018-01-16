@@ -4,42 +4,6 @@ var { GraphQLSchema } = require('graphql'); // CommonJS
 // Construct a schema, using GraphQL schema language
 exports.schema = buildSchema(`
 
-#
-# Recommended deployment architecture
-# -----------------------------------
-#
-# Browser -> CXS (or custom) Web Client -> Public methods (getProfile, logEvents) Unomi will probably provide a built-in web client
-# Browser -> Authentication Proxy Client -> Self-management APIs (updateProfile)   
-# Browser -> Backend Proxy Client -> Management APIs (all)
-#
-# Pre-defined security roles:
-# ---------------------------
-#
-# Roles : administrator, authenticated, public 
-#
-# Securing queries, mutations and subscriptions:
-# ----------------------------------------------
-# Client are recognized using tokens. Client have roles that have associated permissions on CXS 
-# GraphQL methods (queries, mutations and subscriptions), for each method we have an associated permission.
-# Field-level permissions could be optionally controlled by some CXS implementations.
-#
-# There MUST be an authorization to communicate with the CXS server (no public interfaces).
-# 
-# The CXS server must reject any methods that are not authorized for a client.
-# CXS server implementations may also control access to profile properties based on the client.
-# 
-# Suggested default permissions for roles:
-#
-# ROLE - PERMISSIONS
-# visitor - getProfile, processEvents
-# authenticated - updateProfile, exportAllYourData, forgetMe
-# administrator - all
-#
-# Basic administrative login should be implementation specific, but client authentification JWT/OAuth 2 
-# could be useful. Two layers of JWT could be used to authenticate both end users and clients. 
-#
-# Open question : should the administrative user have an associated client Id ? (maybe it shouldn't).
-
 # CUSTOM SCALAR TYPES
 # ----------------------------------------------------------------------------
 scalar JSON
@@ -133,7 +97,7 @@ input CXS_OrderByInput {
 }
 
 type CXS_EventOccurrenceFilter {
-  eventId : String
+  eventID : String
   beforeTime : String
   afterTime : String
   betweenTime : String
@@ -141,7 +105,7 @@ type CXS_EventOccurrenceFilter {
 }
 
 input CXS_EventOccurrenceFilterInput {
-  eventId : String
+  eventID : String
   beforeTime : String
   afterTime : String
   betweenTime : String
@@ -416,7 +380,6 @@ type CXS_Role {
 # must be preserved. Mandatory properties may be defined by setting minOccurrences to > 0
 interface CXS_PropertyType {
   id : ID!
-  scope : CXS_Scope!
   name : String!
   minOccurrences : Int # default = 0
   maxOccurrences : Int # default = 1
@@ -440,7 +403,6 @@ input CXS_PropertyTypeInput {
 # The identifier property type is basically a string that is used as an identifier property
 type CXS_IdentifierPropertyType implements CXS_PropertyType {
   id : ID!
-  scope : CXS_Scope!
   name : String!
   minOccurrences : Int
   maxOccurrences : Int
@@ -453,7 +415,6 @@ type CXS_IdentifierPropertyType implements CXS_PropertyType {
 
 input CXS_IdentifierPropertyTypeInput {
   id : ID # optional 
-  scope: String!
   name : String!
   minOccurrences : Int
   maxOccurrences : Int
@@ -466,7 +427,6 @@ input CXS_IdentifierPropertyTypeInput {
 
 type CXS_StringPropertyType implements CXS_PropertyType {
   id : ID!
-  scope : CXS_Scope!
   name : String!
   minOccurrences : Int
   maxOccurrences : Int
@@ -479,7 +439,6 @@ type CXS_StringPropertyType implements CXS_PropertyType {
 
 input CXS_StringPropertyTypeInput {
   id : ID # optional 
-  scope : String!
   name : String!
   minOccurrences : Int
   maxOccurrences : Int
@@ -492,7 +451,6 @@ input CXS_StringPropertyTypeInput {
 
 type CXS_IntPropertyType implements CXS_PropertyType {
   id : ID!
-  scope : CXS_Scope!
   name : String!
   minOccurrences : Int
   maxOccurrences : Int
@@ -506,7 +464,6 @@ type CXS_IntPropertyType implements CXS_PropertyType {
 
 input CXS_IntPropertyTypeInput {
   id : ID # optional 
-  scope : String!
   name : String!
   minOccurrences : Int
   maxOccurrences : Int
@@ -520,7 +477,6 @@ input CXS_IntPropertyTypeInput {
 
 type CXS_FloatPropertyType implements CXS_PropertyType {
   id : ID!
-  scope : CXS_Scope!
   name : String!
   minOccurrences : Int
   maxOccurrences : Int
@@ -534,7 +490,6 @@ type CXS_FloatPropertyType implements CXS_PropertyType {
 
 input CXS_FloatPropertyTypeInput {
   id : ID # optional 
-  scope : String!
   name : String!
   minOccurrences : Int
   maxOccurrences : Int
@@ -549,7 +504,6 @@ input CXS_FloatPropertyTypeInput {
 # Date are in ISO-8601 format equivalent to Java 8 Instant format.
 type CXS_DatePropertyType implements CXS_PropertyType {
   id : ID!
-  scope : CXS_Scope!
   name : String!
   minOccurrences : Int
   maxOccurrences : Int
@@ -561,7 +515,6 @@ type CXS_DatePropertyType implements CXS_PropertyType {
 
 input CXS_DatePropertyTypeInput {
   id : ID # optional 
-  scope : String!
   name : String!
   minOccurrences : Int
   maxOccurrences : Int
@@ -573,7 +526,6 @@ input CXS_DatePropertyTypeInput {
 
 type CXS_BooleanPropertyType implements CXS_PropertyType {
   id : ID!
-  scope : CXS_Scope!
   name : String!
   minOccurrences : Int
   maxOccurrences : Int
@@ -585,7 +537,6 @@ type CXS_BooleanPropertyType implements CXS_PropertyType {
 
 input CXS_BooleanPropertyTypeInput {
   id : ID # optional 
-  scope : String!
   name : String!
   minOccurrences : Int
   maxOccurrences : Int
@@ -598,7 +549,6 @@ input CXS_BooleanPropertyTypeInput {
 # Maps to a String with a lat,lon format
 type CXS_GeoPointPropertyType implements CXS_PropertyType {
   id : ID!
-  scope : CXS_Scope!
   name : String!
   minOccurrences : Int
   maxOccurrences : Int
@@ -610,7 +560,6 @@ type CXS_GeoPointPropertyType implements CXS_PropertyType {
 
 input CXS_GeoPointPropertyTypeInput {
   id : ID # optional 
-  scope : String!
   name : String!
   minOccurrences : Int
   maxOccurrences : Int
@@ -622,7 +571,6 @@ input CXS_GeoPointPropertyTypeInput {
 
 type CXS_SetPropertyType implements CXS_PropertyType {
   id : ID!
-  scope : CXS_Scope!
   name : String!
   minOccurrences : Int
   maxOccurrences : Int
@@ -634,7 +582,6 @@ type CXS_SetPropertyType implements CXS_PropertyType {
 
 input CXS_SetPropertyTypeInput {
   id : ID # optional 
-  scope : String!
   name : String!
   minOccurrences : Int
   maxOccurrences : Int
@@ -739,7 +686,7 @@ input CXS_SegmentFilterInput {
 #            "property" : { "operator" : "GT", "property" : "profile.age", "value" : "50" }
 #          },
 #          {
-#            "occurence": { "eventId" : "transaction", "count" : 3, "timeSpan" : "now-10d" }
+#            "occurence": { "eventID" : "transaction", "count" : 3, "timeSpan" : "now-10d" }
 #          }
 #          ]
 #      }
@@ -812,7 +759,6 @@ type CXS_EventProperties {
 
 type CXS_Event {
   id: ID!
-  scope: CXS_Scope!
   eventType: String!
   profileID: CXS_ProfileID!
   profile : CXS_Profile!
@@ -831,7 +777,7 @@ type CXS_Event {
 # Update profile example
 #
 # { 
-#   _profileID : {clientID : "salesforce", id: "12345"},
+#   _profileID : {sourceID : "salesforce", id: "12345"},
 #   _timestamp : "1970-01-01T00:00:00Z",
 #   _object: "12345"
 #   profileUpdate : { 
@@ -843,7 +789,7 @@ type CXS_Event {
 # Page view example
 #
 # { 
-#   _profileID : {clientID : "web", id: "12345"},
+#   _profileID : {sourceID : "web", id: "12345"},
 #   _timestamp : "1970-01-01T00:00:00Z",
 #   _object: "pageID"
 #   _location : "41.12,-71.34", 
@@ -856,7 +802,7 @@ type CXS_Event {
 # Location tracking event (for example using beacons)
 #
 # { 
-#   _profileID : {clientID : "walmartApp", id: "12345"},
+#   _profileID : {sourceID : "walmartApp", id: "12345"},
 #   _timestamp : "1970-01-01T00:00:00Z",
 #   _object: "regionID"
 #   _location : "41.12,-71.34", 
@@ -868,7 +814,6 @@ type CXS_Event {
 # 
 input CXS_EventInput {
   id: ID # optional, usually server-generated but could be interesting to import events
-  cxs_Scope : String!
   cxs_ProfileID: CXS_ProfileIDInput! 
   cxs_Object: CXS_ObjectInput!
   cxs_Location: [CXS_GeoPointInput] # optional
@@ -925,7 +870,7 @@ input UpdateSessionStateInput {
 
 # Example of a generated type for an event type
 input PageViewInput {
-  pageId : String,
+  pageID : String,
   pageUrl : String,
   referrer : String,
   userAgent : String
@@ -986,11 +931,11 @@ input PageViewInput {
 
 # the flow looks like this : 
 
-# Browser -- (structured event) --> Client -> Mapping -> Profile 
+# Browser -- (structured event) --> Source -> Mapping -> Profile 
 
 # Profile merges are optional in the CXS specification. They may be supported by using a property
 # defined as an identifier as a merge key (multiple merge keys may of course exist) to merge multiple
-# profiles. The resulting merged profile MUST contain all the client profile IDs of the merged profiles
+# profiles. The resulting merged profile MUST contain all the source profile IDs of the merged profiles
 # as well as the merged profile data. The original profiles that were merged may be flagged or deleted, 
 # this is implementation specific. 
 
@@ -1113,7 +1058,7 @@ input CXS_AlgorithmInput {
 
 input CXS_RecommendationInput {
     name : String!
-    objectId : ID # this is optional since we might just want to use collections to retrieve recommendations
+    objectID : ID # this is optional since we might just want to use collections to retrieve recommendations
     collections : [String] # collections we want to use to retrieve recommendations
     size : Int # maximum number of results to retrieve
     algorithm : CXS_AlgorithmInput 
@@ -1207,32 +1152,32 @@ input CXS_ConsentInput {
 # Application keys are no longer part of the specification, implementations will probably need to use 
 # a concept similar to this so we leave them as example for the time being.
 #type ApplicationKey {
-#  client: Client!
+#  source: Source!
 #  label : String!
 #  key: ID!
 #  permissions: [String] # "createEvent", "createEventTypes", "fullAccess"
 #}
 
-# ProfileIDs are always associated with a client as multiple profileIDs are associated with a single profile. CXS 
-# server implementations may generate their own internal system IDs by defining them for a "system" client.
+# ProfileIDs are always associated with a source as multiple profileIDs are associated with a single profile. CXS 
+# server implementations may generate their own internal system IDs by defining them for a "system" source.
 type CXS_ProfileID {
-    client : CXS_Client
-    id : ID! # unique profile identifier for the client
+    source : CXS_Source
+    id : ID! # unique profile identifier for the source
 }
 
 input CXS_ProfileIDInput {
-    clientID : ID!
-    id : ID! # unique profile identifier for the client
+    sourceID : ID!
+    id : ID! # unique profile identifier for the source
 }
 
-type CXS_User {
-    roles : [CXS_Role]
+type CXS_Source {
+    id : ID! # the "system" source ID is reserved for the CXS context server to use for internal IDs.
+    thirdParty : Boolean # optional, indicates that the source is a third party (useful for privacy regulations such as GDPR)
 }
 
-type CXS_Client {
-    id : ID! # the "system" client ID is reserved for the CXS context server to use for internal IDs.
-    defaultUser : CXS_User
-    thirdParty : Boolean # optional, indicates that the client is a third party (useful for privacy regulations such as GDPR)
+input CXS_SourceInput {
+    id : ID! # the "system" source ID is reserved for the CXS context server to use for internal IDs.
+    thirdParty : Boolean # optional, indicates that the source is a third party (useful for privacy regulations such as GDPR)
 }
 
 # Named filters are used to evaluate filters against a profile (for example: is this profile located in the US, 
@@ -1251,8 +1196,6 @@ type CXS_FilterMatch {
 }
 
 type CXS_Query {
-  # This will return the user that is connected to the CXS server, allowing to retrieve the roles he participates in.
-  getActiveUser : CXS_User
 
   getEventTypes : [CXS_EventType]
   getEvent(id : String!) : CXS_Event
@@ -1276,6 +1219,8 @@ type CXS_Query {
   getProfilePropertyTypes : CXS_PropertyTypeConnection
   
   getScopes : [CXS_Scope]
+  
+  getSources : [CXS_Source]
 }
 
 # Context Server GraphQL queries
@@ -1299,18 +1244,24 @@ type CXS_Mutation {
   deleteSegment(segmentID : String) : CXS_Segment
   
   createOrUpdateList(list : CXS_ListInput) : CXS_List
-  addProfileToList(list : CXS_ListInput, profileId : CXS_ProfileIDInput, active : Boolean) : CXS_List
-  removeProfileFromList(list : CXS_ListInput, profileId : CXS_ProfileIDInput) : CXS_List
+  addProfileToList(list : CXS_ListInput, profileID : CXS_ProfileIDInput, active : Boolean) : CXS_List
+  removeProfileFromList(list : CXS_ListInput, profileID : CXS_ProfileIDInput) : CXS_List
   deleteList(listID : String) : CXS_List
   
   createOrUpdateTopic(topic : CXS_TopicInput) : CXS_Topic
   deleteTopic(topicID : String) : CXS_Topic
   
   addProfilePropertyTypes(propertyTypes : [CXS_PropertyTypeInput]) : Boolean
-  removeProfilePropertyType(propertyTypeId : String) : Boolean
+  deleteProfilePropertyType(propertyTypeID : String) : Boolean
   
-  createOrUpdateEventType(eventType : CXS_EventTypeInput) : Boolean
-  removeEventType(eventTypeId : String) : Boolean
+  createOrUpdateEventType(eventType : CXS_EventTypeInput) : CXS_EventType
+  deleteEventType(eventTypeID : String) : Boolean
+            
+  createOrUpdateScope(scope: CXS_ScopeInput) : CXS_Scope
+  deleteScope(scopeID : ID!) : Boolean
+  
+  createOrUpdateSource(source : CXS_SourceInput) : CXS_Source
+  deleteSource(sourceID : ID!) : Boolean
               
   # Privacy 
   deleteAllPersonalData : Boolean
@@ -1344,9 +1295,9 @@ var pageViewEventType = {
     description: "Page view event",
 };
 
-let fakeClients = {
+let fakeSources = {
     '0': {
-        description: "Salesforce.com CXS client",
+        description: "Salesforce.com CXS source",
         id: "Saleforce",
         thirdPartySystem: true
     }
@@ -1359,7 +1310,7 @@ var fakeCommonProfiles = {
             {
                 key: "prop1",
                 value: "value1",
-                clients: [fakeClients['0']]
+                sources: [fakeSources['0']]
             }
         ],
         profiles: [],
@@ -1373,11 +1324,11 @@ var fakeProfiles = {
         id: '0',
         properties: [
             {
-                key: "clientProp1",
-                value: "clientValue1"
+                key: "sourceProp1",
+                value: "sourceValue1"
             }
         ],
-        client: fakeClients['0'],
+        source: fakeSources['0'],
         commonProfile: fakeCommonProfiles['0'],
     }
 };
@@ -1415,35 +1366,3 @@ var MyAppSchema = new GraphQLSchema({
 exports.schema = MyAppSchema;
 */
 
-/*
- * Example of Context Server (Karaf) user configuration
- * Karaf/Unomi users.properties Authentication server 1
- * username/password
- * public/public1234
- * authenticated/authenticated1234
- * administrator/administrator1234
- *
- * Mapping of Context Server users to roles
- * public -> public role
- * authenticated -> has an authenticated role
- *
- * web client system configuration
- *   visitors group in web client -> public context server user
- *   any group/users in webclient (usually a "logged in users" group ie authentication) -> mapped to authenticated user
- *
- * Example: web user with profile-id 789
- *
- * -> authenticates against web client as a REGULAR user on Authentication Server 2
- * -> web client logins into Unomi using authenticated user
- *
- * backend client
- * internal configuration
- *   administrator
- * backend client will NOT accept authenticated requests
- *
- * Example: backend administrator with profile-id 789
- * -> authenticates against backend client as a administrator user on Authentication Server 2
- * -> backend client authenticates as the administrator user inside unomi
- *
- * The mapping configurations are contained in the configuration of each client (not in Apache Unomi but external)
- */
