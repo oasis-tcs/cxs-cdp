@@ -1,5 +1,5 @@
 {
-  "name": "graphiql",
+  "name": "graphiql-cxs-bundle",
   "version": "1.0.0",
   "description": "Embedded GraphiQL for the Context Server Specification",
   "main": "index.js",
@@ -17,9 +17,10 @@
   },
   "homepage": "https://github.com/Jahia/jahia-web-marketing#readme",
   "dependencies": {
-    "graphiql" : "^0.10.0",
-    "react": "^15.4.2",
-    "react-dom": "^15.4.2"
+    "graphiql": "^0.11.11",
+    "graphql": "^0.11.7",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0"
   },
   "devDependencies": {
     "gulp": "^3.9.1",
