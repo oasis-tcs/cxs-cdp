@@ -1,7 +1,10 @@
-image::images/OASISLogo.jpg["Oasis Open Logo"]
-
 = Context Server 1.0.0
 :toc: macro
+:toclevels: 4
+:sectnums:
+
+image::images/OASISLogo.jpg["Oasis Open Logo"]
+
 
 \[Stage]
 
@@ -80,15 +83,41 @@ The names "OASIS", [insert specific trademarked names, abbreviations, etc. here]
 
 Table of Contents
 
+toc::[]
+
 \[build table of contents here. Should list at least 3 levels (sections numbered x.x.x) which are hyperlinked to the actual section.]
 
-toc::[]
+
 
 
 
 == Introduction
 
-\[All text is normative unless otherwise labeled.]
+Today, virtually all business is at some point digital, and the number of systems involved and the set of data collected is growing rapidly.
+Each new system creates new silos of customer data, spreading sensitive data across both organizational and geographical borders.
+
+Even the digital savvy businesses struggle to control and utilize this information.
+Businesses and users also rely on such data to be accessible in real-time, and at scale - for instance to deliver personalizations.
+Additionally businesses now face severe legal charges if customer data is not treated according to regulatory requirements (ref GDPR).
+
+The Context Server (CXS) specification aims to standardize exchange of customer data across systems and silos.
+This enables centralization of customer data - consequently giving control of the data back to the business, and the customers.
+
+The CXS standard builds upon four core concepts: Profiles, Events, Consents, and Clients
+
+  * Profiles represent each individual "customer". Aggregating and tracking all registered properties, including which system actually collected the data.
+  * Events represent user behavioral data / interactions performed by a customer (aka profile). A purchase, or a simple click on a link represents different events.
+  * Consents are actual permission given by a customer to the organization, with a limited scope and duration
+  * Clients represent the various systems that provide and/or consume data from a Context Server, typical clients are: CRM systems, Analytics, Content Management Systems, E-commerce systems etc.
+
+Alongside the CXS standard, an open source reference implementation called Apache UNOMI has been developed.
+UNOMI provides a high-performance and scalable implementation of CXS that enables deployment in your organization today.
+
+The CXS standard is defined as a web-based API, through the self-documenting and strongly typed GraphQL syntax.
+
+It has been an explicit goal of the CXS committee to allow extensive customization of CXS deployments, in order to fit the need of each different organization.
+As such, the API dynamically evolves as you add custom property-, event-, and consent-types to your deployment.
+
 
 === Terminology
 
@@ -122,7 +151,6 @@ OASIS Standard, "Emergency Data Exchange Language (EDXL) Hospital AVailability E
 http://docs.oasis-open.org/emergency/edxl-have/os/emergency_edxl_have-1.0-spec-os.doc
 
 
-
 === Non-Normative References
 
 \[Reference]
@@ -147,7 +175,6 @@ Participants:
 == Appendix B. Non-Normative Text
 
 [any additional appendices for non-normative text here]
-
 
 == Appendix C. Revision History
 
