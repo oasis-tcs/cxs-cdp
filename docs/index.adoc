@@ -157,13 +157,175 @@ http://docs.oasis-open.org/emergency/edxl-have/os/emergency_edxl_have-1.0-spec-o
 
 \[Full reference citation]
 
-== Section Title
+== Domain Model
+This chapter describes the entities of the CXS domain model, and how they relate
 
-\[body of standard goes here]
+=== Profiles
+Profiles is in many ways what CXS is about. A Context Server dynamically build profiles from events that occur over time.
 
-Conformance
+A Profile can be created from an anonymous visitor on a webpage, or populated from an identity system or maybe a CRM - or the combination of all of them.
 
-\[conformance clauses/statements go here]
+<<Clients>> (or origins?) like a CMS, CRM or Identity system can be setup to feed <<Events>> to the context server.
+The client is responsible for uniqely identifying users, for instance with a cookie in the CMS, a customer ID in the CRM or a user ID in the Identity server.
+The context server will then build profiles based on the provided identifiers.
+
+A profile is made up of the following:
+
+<<Properties>> in the key-value format containing basic data values such as an e-mail, name, date of birth etc.
+What properties are available is configured through a global set of <<Property Types>>.
+
+The following fields are mandatory for any CXS implementation:
+
+* ProfileIDs (list of IDs associated with this profile)
+* Events (access events associated with this profile)
+* Segments (access segment this profile is associated with)
+* Interests (Scored list of topics the profile is interested in)
+* Lists (Lists the profile is active in)
+* Consents (Consents given by the profile)
+* Properties (Stored and searchable data properties for the profile)
+
+TODO: More??
+
+=== ProfilePropertyType
+
+To control what properties can be set for a given instance of a Context Server, a list of property types are globally defined.
+A ProfilePropertyType consists of the following:
+* Name (a Globally unique name for the instance)
+* Type (Identifying the value it stores: Identifier, String, Int, Float, Date, Boolean, GeoPoint or Set. Sets hold a new list of properties)
+
+The objective of ProfilePropertyTypes is to consistently collect data from different sources into profiles. For instance a field called "Date of birth" in one system might be known as "Born" in another.
+In the context server these fields are forced to map to a specific property, or may simply be ignored.
+
+TODO: Mapping from clients?
+
+=== Events
+Events are what drives the Context Server forward.
+A Context Server is specifically only interested in "User behaviour events". This could be anything from someone clicking a link, to performing a transaction or consenting to use of his/hers information.
+Events are delivered from specified <<Clients>> to the Context Server.
+
+TODO
+Imagine an e-commerce site with a client that collect events from site visitors.
+When you are browsing the site with your laptop, the client assigns a cookie to your browser and starts feeding events to the CXS API.
+As you click on some product links, and maybe fill in a form that includes your e-mail. CXS will gradually populate your profile.
+Then later, you pick up your mobile device and go back to the site. A new cookie is generated, and a new profile starts to build up.
+
+At some point, data gathered from the different profiles may intersect, i.e. if the same e-mail is registered for multiple profiles.
+In such cases, a profile merge might occur.
+
+When profiles are merged, one of the existing profile will be selected as master, and any existing information from the "slave" profile merged into the master.
+Both profile ID's are retained, so data can still be collected through the ID stored in the existing cookies.
+
+
+=== Eventttypes
+
+TODO
+
+=== Consents
+
+As new laws regarding use of personal data such as GDPR arrive,
+Consents are inherently more important to ensure you are using and storing data in compliance with policies.
+
+Consents consist of the following fields:
+
+* Token (TODO)
+* Type (TODO)
+* Status
+* StatusDate
+* revokeDate
+* Events
+* Profile
+
+=== Personas
+
+Personas is first and foremost a concept used by marketeers to visualize their target customers.
+
+In CXS, personas are basically "mockup" profiles with the primary purpose of testing or emulating what will happen with a real profile that matches the persona.
+For instance what a personalization in a CMS or a newsletter might look like.
+
+Personas are (as oppose to profiles) can be explicitly defined, where real profiles are dynamically generated.
+
+=== Lists
+
+Lists are explicitly created and named. Profiles may then be added to a list, and opt out if desired.
+Whenever a profile opts out of a list, that information will also be stored - so the profile is never accidentally added back to the list at a later point.
+
+A common use-case for lists is creating a list for a given campaign, and add the target profiles to the list as the campaign starts.
+
+=== Segments
+
+Segments are similar to lists in that profiles may be in the segment or not.
+However, where profiles are explicitly added to lists, they are dynamically added to segments based on events that occur.
+
+Administrative users define segments based on <<Filters>>.
+
+Example segments:
+* Rich europeans: Profiles in Europe with income above €100k
+* Frequent buyer: Profiles that have completed more than 5 transactions in the last 3 months
+* Etc TODO
+
+=== Topics
+
+Topics represent the core entities of the business running the Context Server.
+The Context Server aims to find correlation between profiles and the topics.
+When such correlations are identified, it is called <<Interests>>.
+
+CXS Administrators need to maintain a list of topics in order to obtain profile interests.
+Profile interests is typically a core objective of Marketing activities, and targeting users with better content.
+
+Example Topics for a car manufacturer might for instance be:
+* "Model S"
+* "Model 3"
+* "Model X"
+
+TODO: Topic identifiers?
+
+=== interests
+
+Whenever the Context server registers events that match between a profile and topic, this will boost a profiles interest for the specific Topic.
+A profiles interest in a specific topic is measured in 0-1, where 1 is maximum. As such 0,5 would indicate a higher interest than 0,35.
+
+How a context server identifies interest, and scores it is implementation specific - but for any meaningful implementation interest will automatically decrease with time if no new events occur.
+
+Example interests for products from a car manufacturer might be:
+* Model S = 0.1
+* Model 3 = 0.3
+* Model X = 0.9
+
+=== Filters
+
+TODO
+
+=== Scopes
+
+Scopes provide an efficient way of grouping administrative objects in the context server.
+Profiles and events are stored globally, but marketing activities might often be different from region to region, or in the various branches of a business.
+
+As such <<Lists>>, <<Segments>>, TODO are all placed in scopes to reduce administrative mayhem.
+
+=== Clients
+
+Since the Context Server holds sensitive data, it should not be exposed publicly on the internet.
+
+Clients are "software" components that are allowed to talk to the Context Server.
+A client may both read and write data to the Context Server, but most commonly a client passes events to the Context Server.
+
+Client must be registered and authorized in order to access the context server.
+
+TODO: We probably need to separate client vs source? What happens with web collector client that is running on 10 different sites? Do we have a "sourceID" concept, ala siteID in GA?
+
+== API
+
+CXS defines a standard API through the use of GraphQL.
+
+The CXS GraphQL API should not be made publically available, but only exposed to specific authorized clients.
+The logic behind this is that the CXS API itself does not limit access to data (TODO)
+
+Examples of clients are: An event collector for your website, a client that performs integration with your CRM etc.
+
+
+== Conformance
+
+conformance clauses/statements go here
 
 == Appendix A. Acknowledgements
 
