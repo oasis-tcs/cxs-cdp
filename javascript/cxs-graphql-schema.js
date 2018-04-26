@@ -1147,7 +1147,7 @@ input CXS_ConsentInput {
   revokeDate : String
 }
 
-# CLIENT TYPES
+# SOURCE TYPES
 # ----------------------------------------------------------------------------
 # Application keys are no longer part of the specification, implementations will probably need to use 
 # a concept similar to this so we leave them as example for the time being.
