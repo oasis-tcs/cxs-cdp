@@ -759,7 +759,7 @@ type CXS_EventProperties {
 
 type CXS_Event {
   id: ID!
-  eventType: String!
+  eventType: CXS_EventType!
   profileID: CXS_ProfileID!
   profile : CXS_Profile!
   object: String!
@@ -818,10 +818,12 @@ input CXS_EventInput {
   cxs_Object: CXS_ObjectInput!
   cxs_Location: [CXS_GeoPointInput] # optional
   cxs_Timestamp: Int # optional because the server can generate it if it's missing
-  updateProfile : UpdateProfileInput
-  updateConsent : UpdateConsentInput
-  updateLists : UpdateListInput
-  updateSessionState : UpdateSessionStateInput
+  # Built-in predefined event types
+  cxs_UpdateProfile : CXS_UpdateProfileInput
+  cxs_UpdateConsent : CXS_UpdateConsentInput
+  cxs_UpdateLists : CXS_UpdateListInput
+  cxs_UpdateSessionState : UpdateSessionStateInput
+  # Here below will be the generated event field based on the registered event types
   # Example of a generated event type
   pageView : PageViewInput
 }
@@ -841,18 +843,18 @@ input CXS_EventTypeInput {
 }
 
 # This pre-defined property type is used to update profile properties
-input UpdateProfileInput {
+input CXS_UpdateProfileInput {
   updateProperties : CXS_ProfilePropertiesInput
   removeProperties : [String]
 }
 
 # This pre-defined property type is used to update a single profile consent
-input UpdateConsentInput {
+input CXS_UpdateConsentInput {
   consent : CXS_ConsentInput
 } 
 
 # This pre-defined property type is used to update profile list membership
-input UpdateListInput {
+input CXS_UpdateListInput {
   joinLists : [CXS_ListInput]
   leaveLists : [CXS_ListInput]
 }
@@ -864,7 +866,7 @@ enum SessionState {
   RESUME
 }
 
-input UpdateSessionStateInput {
+input CXS_UpdateSessionStateInput {
   newState : SessionState
 }
 
