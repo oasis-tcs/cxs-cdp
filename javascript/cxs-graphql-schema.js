@@ -379,8 +379,7 @@ type CXS_Role {
 # Multi-valued properties are controlled using the minOccurrences and maxOccurrences fields. The order of the values 
 # must be preserved. Mandatory properties may be defined by setting minOccurrences to > 0
 interface CXS_PropertyType {
-  id : ID!
-  name : String!
+  name : ID! # must be in a format that's acceptable as a GraphQL field name (/[_A-Za-z][_0-9A-Za-z]*/) , and we recommend to prefix it to avoid conflicts, something like acme_pageView, acme_click. The "cxs_" prefix is reserved for built-in CXS event types
   minOccurrences : Int # default = 0
   maxOccurrences : Int # default = 1
   tags : [String] # user generated tags
@@ -402,8 +401,7 @@ input CXS_PropertyTypeInput {
 
 # The identifier property type is basically a string that is used as an identifier property
 type CXS_IdentifierPropertyType implements CXS_PropertyType {
-  id : ID!
-  name : String!
+  name : ID! # must be in a format that's acceptable as a GraphQL field name (/[_A-Za-z][_0-9A-Za-z]*/) , and we recommend to prefix it to avoid conflicts, something like acme_pageView, acme_click. The "cxs_" prefix is reserved for built-in CXS event types
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String] # user generated tags
@@ -414,8 +412,7 @@ type CXS_IdentifierPropertyType implements CXS_PropertyType {
 }
 
 input CXS_IdentifierPropertyTypeInput {
-  id : ID # optional 
-  name : String!
+  name : ID! # must be in a format that's acceptable as a GraphQL field name (/[_A-Za-z][_0-9A-Za-z]*/) , and we recommend to prefix it to avoid conflicts, something like acme_pageView, acme_click. The "cxs_" prefix is reserved for built-in CXS event types
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String] # user generated tags
@@ -426,8 +423,7 @@ input CXS_IdentifierPropertyTypeInput {
 }
 
 type CXS_StringPropertyType implements CXS_PropertyType {
-  id : ID!
-  name : String!
+  name : ID! # must be in a format that's acceptable as a GraphQL field name (/[_A-Za-z][_0-9A-Za-z]*/) , and we recommend to prefix it to avoid conflicts, something like acme_pageView, acme_click. The "cxs_" prefix is reserved for built-in CXS event types
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String] # user generated tags
@@ -438,8 +434,7 @@ type CXS_StringPropertyType implements CXS_PropertyType {
 }
 
 input CXS_StringPropertyTypeInput {
-  id : ID # optional 
-  name : String!
+  name : ID! # must be in a format that's acceptable as a GraphQL field name (/[_A-Za-z][_0-9A-Za-z]*/) , and we recommend to prefix it to avoid conflicts, something like acme_pageView, acme_click. The "cxs_" prefix is reserved for built-in CXS event types
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String] # user generated tags
@@ -450,8 +445,7 @@ input CXS_StringPropertyTypeInput {
 } 
 
 type CXS_IntPropertyType implements CXS_PropertyType {
-  id : ID!
-  name : String!
+  name : ID! # must be in a format that's acceptable as a GraphQL field name (/[_A-Za-z][_0-9A-Za-z]*/) , and we recommend to prefix it to avoid conflicts, something like acme_pageView, acme_click. The "cxs_" prefix is reserved for built-in CXS event types
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String] # user generated tags
@@ -463,8 +457,7 @@ type CXS_IntPropertyType implements CXS_PropertyType {
 }
 
 input CXS_IntPropertyTypeInput {
-  id : ID # optional 
-  name : String!
+  name : ID! # must be in a format that's acceptable as a GraphQL field name (/[_A-Za-z][_0-9A-Za-z]*/) , and we recommend to prefix it to avoid conflicts, something like acme_pageView, acme_click. The "cxs_" prefix is reserved for built-in CXS event types
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String] # user generated tags
@@ -476,8 +469,7 @@ input CXS_IntPropertyTypeInput {
 }
 
 type CXS_FloatPropertyType implements CXS_PropertyType {
-  id : ID!
-  name : String!
+  name : ID! # must be in a format that's acceptable as a GraphQL field name (/[_A-Za-z][_0-9A-Za-z]*/) , and we recommend to prefix it to avoid conflicts, something like acme_pageView, acme_click. The "cxs_" prefix is reserved for built-in CXS event types
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String] # user generated tags
@@ -489,8 +481,7 @@ type CXS_FloatPropertyType implements CXS_PropertyType {
 }
 
 input CXS_FloatPropertyTypeInput {
-  id : ID # optional 
-  name : String!
+  name : ID! # must be in a format that's acceptable as a GraphQL field name (/[_A-Za-z][_0-9A-Za-z]*/) , and we recommend to prefix it to avoid conflicts, something like acme_pageView, acme_click. The "cxs_" prefix is reserved for built-in CXS event types
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String] # user generated tags
@@ -503,8 +494,7 @@ input CXS_FloatPropertyTypeInput {
 
 # Date are in ISO-8601 format equivalent to Java 8 Instant format.
 type CXS_DatePropertyType implements CXS_PropertyType {
-  id : ID!
-  name : String!
+  name : ID! # must be in a format that's acceptable as a GraphQL field name (/[_A-Za-z][_0-9A-Za-z]*/) , and we recommend to prefix it to avoid conflicts, something like acme_pageView, acme_click. The "cxs_" prefix is reserved for built-in CXS event types
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String] # user generated tags
@@ -514,8 +504,7 @@ type CXS_DatePropertyType implements CXS_PropertyType {
 }
 
 input CXS_DatePropertyTypeInput {
-  id : ID # optional 
-  name : String!
+  name : ID! # must be in a format that's acceptable as a GraphQL field name (/[_A-Za-z][_0-9A-Za-z]*/) , and we recommend to prefix it to avoid conflicts, something like acme_pageView, acme_click. The "cxs_" prefix is reserved for built-in CXS event types
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String] # user generated tags
@@ -525,8 +514,7 @@ input CXS_DatePropertyTypeInput {
 }
 
 type CXS_BooleanPropertyType implements CXS_PropertyType {
-  id : ID!
-  name : String!
+  name : ID! # must be in a format that's acceptable as a GraphQL field name (/[_A-Za-z][_0-9A-Za-z]*/) , and we recommend to prefix it to avoid conflicts, something like acme_pageView, acme_click. The "cxs_" prefix is reserved for built-in CXS event types
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String] # user generated tags
@@ -536,8 +524,7 @@ type CXS_BooleanPropertyType implements CXS_PropertyType {
 }
 
 input CXS_BooleanPropertyTypeInput {
-  id : ID # optional 
-  name : String!
+  name : ID! # must be in a format that's acceptable as a GraphQL field name (/[_A-Za-z][_0-9A-Za-z]*/) , and we recommend to prefix it to avoid conflicts, something like acme_pageView, acme_click. The "cxs_" prefix is reserved for built-in CXS event types
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String] # user generated tags
@@ -548,8 +535,7 @@ input CXS_BooleanPropertyTypeInput {
 
 # Maps to a String with a lat,lon format
 type CXS_GeoPointPropertyType implements CXS_PropertyType {
-  id : ID!
-  name : String!
+  name : ID! # must be in a format that's acceptable as a GraphQL field name (/[_A-Za-z][_0-9A-Za-z]*/) , and we recommend to prefix it to avoid conflicts, something like acme_pageView, acme_click. The "cxs_" prefix is reserved for built-in CXS event types
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String] # user generated tags
@@ -559,8 +545,7 @@ type CXS_GeoPointPropertyType implements CXS_PropertyType {
 }
 
 input CXS_GeoPointPropertyTypeInput {
-  id : ID # optional 
-  name : String!
+  name : ID! # must be in a format that's acceptable as a GraphQL field name (/[_A-Za-z][_0-9A-Za-z]*/) , and we recommend to prefix it to avoid conflicts, something like acme_pageView, acme_click. The "cxs_" prefix is reserved for built-in CXS event types
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String] # user generated tags
@@ -570,8 +555,7 @@ input CXS_GeoPointPropertyTypeInput {
 }
 
 type CXS_SetPropertyType implements CXS_PropertyType {
-  id : ID!
-  name : String!
+  name : ID! # must be in a format that's acceptable as a GraphQL field name (/[_A-Za-z][_0-9A-Za-z]*/) , and we recommend to prefix it to avoid conflicts, something like acme_pageView, acme_click. The "cxs_" prefix is reserved for built-in CXS event types
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String] # user generated tags
@@ -581,8 +565,7 @@ type CXS_SetPropertyType implements CXS_PropertyType {
 }
 
 input CXS_SetPropertyTypeInput {
-  id : ID # optional 
-  name : String!
+  name : ID! # must be in a format that's acceptable as a GraphQL field name (/[_A-Za-z][_0-9A-Za-z]*/) , and we recommend to prefix it to avoid conflicts, something like acme_pageView, acme_click. The "cxs_" prefix is reserved for built-in CXS event types
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String] # user generated tags
@@ -759,7 +742,7 @@ type CXS_EventProperties {
 
 type CXS_Event {
   id: ID!
-  eventType: String!
+  eventType: CXS_EventType!
   profileID: CXS_ProfileID!
   profile : CXS_Profile!
   object: String!
@@ -818,41 +801,41 @@ input CXS_EventInput {
   cxs_Object: CXS_ObjectInput!
   cxs_Location: [CXS_GeoPointInput] # optional
   cxs_Timestamp: Int # optional because the server can generate it if it's missing
-  updateProfile : UpdateProfileInput
-  updateConsent : UpdateConsentInput
-  updateLists : UpdateListInput
-  updateSessionState : UpdateSessionStateInput
+  # Built-in predefined event types
+  cxs_UpdateProfile : CXS_UpdateProfileInput
+  cxs_UpdateConsent : CXS_UpdateConsentInput
+  cxs_UpdateLists : CXS_UpdateListInput
+  cxs_UpdateSessionState : UpdateSessionStateInput
+  # Here below will be the generated event field based on the registered event types
   # Example of a generated event type
   pageView : PageViewInput
 }
 
 type CXS_EventType {
-  id: ID!
+  name : String!
   scope : CXS_Scope!
-  typeName : String!
   properties : [CXS_PropertyType]
 }
 
 input CXS_EventTypeInput {
-  id : ID # optional 
+  name : ID! # must be in a format that's acceptable as a GraphQL field name (/[_A-Za-z][_0-9A-Za-z]*/) , and we recommend to prefix it to avoid conflicts, something like acme_pageView, acme_click. The "cxs_" prefix is reserved for built-in CXS event types
   scope : String!
-  typeName : ID!
   properties : [CXS_PropertyTypeInput]
 }
 
 # This pre-defined property type is used to update profile properties
-input UpdateProfileInput {
+input CXS_UpdateProfileInput {
   updateProperties : CXS_ProfilePropertiesInput
   removeProperties : [String]
 }
 
 # This pre-defined property type is used to update a single profile consent
-input UpdateConsentInput {
+input CXS_UpdateConsentInput {
   consent : CXS_ConsentInput
 } 
 
 # This pre-defined property type is used to update profile list membership
-input UpdateListInput {
+input CXS_UpdateListInput {
   joinLists : [CXS_ListInput]
   leaveLists : [CXS_ListInput]
 }
@@ -864,7 +847,7 @@ enum SessionState {
   RESUME
 }
 
-input UpdateSessionStateInput {
+input CXS_UpdateSessionStateInput {
   newState : SessionState
 }
 
@@ -1252,10 +1235,10 @@ type CXS_Mutation {
   deleteTopic(topicID : String) : CXS_Topic
   
   addProfilePropertyTypes(propertyTypes : [CXS_PropertyTypeInput]) : Boolean
-  deleteProfilePropertyType(propertyTypeID : String) : Boolean
+  deleteProfilePropertyType(propertyTypeName : ID!) : Boolean
   
   createOrUpdateEventType(eventType : CXS_EventTypeInput) : CXS_EventType
-  deleteEventType(eventTypeID : String) : Boolean
+  deleteEventType(eventName : ID!) : Boolean
             
   createOrUpdateScope(scope: CXS_ScopeInput) : CXS_Scope
   deleteScope(scopeID : ID!) : Boolean
