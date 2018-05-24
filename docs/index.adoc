@@ -108,12 +108,9 @@ The CXS standard builds upon four core concepts: Profiles, Events, Consents, and
   * Profiles represent each individual "customer". Aggregating and tracking all registered properties, including which system actually collected the data.
   * Events represent user behavioral data / interactions performed by a customer (aka profile). A purchase, or a simple click on a link represents different events.
   * Consents are actual permission given by a customer to the organization, with a limited scope and duration
-  * Clients represent the various systems that provide and/or consume data from a Context Server, typical clients are: CRM systems, Analytics, Content Management Systems, E-commerce systems etc.
+  * Clients represent the various systems that provide and/or consume data from a Context Server, typical clients are: CRM systems, Identity Systems, Content Management Systems, E-commerce etc.
 
-Alongside the CXS standard, an open source reference implementation called Apache UNOMI has been developed.
-UNOMI provides a high-performance, scalable implementation of CXS that enables deployment in your organization today.
-
-The CXS standard is defined as a web-based API, through the self-documenting and strongly typed GraphQL syntax.
+The CXS standard is defined as a web-based API using GraphQL - providing an auto-documented and strongly typed interface.
 
 It has been an explicit goal of the CXS committee to allow extensive customization of CXS deployments, in order to fit the need of each different organization.
 As such, the API dynamically evolves as you add custom property-, event-, and consent-types to your deployment.
@@ -161,7 +158,7 @@ http://docs.oasis-open.org/emergency/edxl-have/os/emergency_edxl_have-1.0-spec-o
 This chapter describes the entities of the CXS domain model, and how they relate
 
 === Profiles
-Profiles are in many ways what CXS is about. A Context Server dynamically build profiles from events that occur over time.
+Profiles are in many ways what CXS is about. A Context Server dynamically builds profiles from events that occur over time.
 
 A Profile can be created from an anonymous visitor on a webpage, or populated from an identity system or maybe a CRM - or the combination of all of them.
 
@@ -171,31 +168,33 @@ The context server is responsible for building profiles based on the provided id
 
 A Profile consists of the following fields:
 
-* <<ProfileIDs>> (list of IDs associated with this profile)
-* <<Events>> (events associated with this profile)
-* <<Segments>> (access segment this profile is active in)
-* <<Interests>> (Scored list of topics the profile is interested in)
-* <<Lists>> (Lists the profile is active in)
-* <<Consents>> (Consents given by the profile)
-* <<Properties>> (In compliance with the <<ProfilePropertyTypes>> schema)
+* <<ProfileIDs>> - list of IDs associated with this profile
+* <<Events>> - events associated with this profile
+* <<Segments>> - access segment this profile is active in
+* <<Interests>> - Scored list of topics the profile is interested in
+* <<Lists>> - Lists the profile is active in
+* <<Consents>> - Consents given by the profile
+* <<Properties>> - In compliance with the <<ProfilePropertyTypes>> schema
 
 === Properties
 
-Properties are dynamically defined data fields stored in key-value format, optionally containing an array of values.
+Properties are dynamically defined data fields that can hold a single value, or an array of values.
+Each property have a specific valueType, such as Identifier, String, Int, Float, Date, Boolean, GeoPoint or Set.
+
 Some example properties:
 
 * someString : "Thomas"
 * someDate : date(1975-10-17)
 * someInteger : 1624
-* location : geoLocation(x,y)
+* location : geoPoint(x,y)
 * arrayOfStrings : ["This", "is", "nice"]
 * setOfProperties : {prompt : "hello", response : "yo"}
 
-Property sets are special, as they allow you to defined nested values.
-Nested values can also be referenced with dot notation in <<Filters>>.
+The valueType Set is special, as it enables nested properties and a document-structure of properties.
+The end result should be considered a flat key-value structure.
 
-From the example above, the value of "setOfProperties.response" would be equal to "yo"
-
+Using <<Filters>>, nested properties can be referenced through the use of dots.
+I.e. from the example above: setOfProperties.response would hold the value "yo"
 
 === PropertyTypes
 
@@ -207,12 +206,12 @@ Since the CXS api is defined using GraphQL, new strongly typed interfaces are al
 A ProfilePropertyType consists of the following fields:
 
 * name (mandatory - unique name within its scope - allowed characters: [_A-Za-z][_0-9A-Za-z]*
-* valueType (Identifying the underlying value it stores: Identifier, String, Int, Float, Date, Boolean, GeoPoint or Set)
+* valueType (Available valueTypes are: Identifier, String, Int, Float, Date, Boolean, GeoPoint or Set)
 * minOccur - Specify the minimum number of values
 * maxOccur - Specify if there is a maximum amount of values
 * tags
 * systemTags
-* personalData - Specify if this property holds data that can identify an individual COMMENT: Do we need this anymore??
+* personalData - Specify if this property holds data that can easily identify an individual. This is useful for handling new and strict privacy policies such as GDPR
 
 
 === ProfilePropertyTypes
@@ -221,10 +220,7 @@ This object defines the schema for allowed properties across all profiles in the
 This allows administrators and developers to build and maintain a consistent data model for profiles across all of their sources.
 Any data imported to the system must be mapped to a corresponding ProfilePropertyType.
 
-A profilePropertyType is itself technically a Set PropertyType allowing an array of propertyTypes to be defined within it.
-
-TODO? What does it look like?
-
+A profilePropertyType is technically a Set PropertyType, holding an array of propertyTypes within it.
 
 
 === ProfileIDs
@@ -241,21 +237,23 @@ A ProfileID consists of the following fields:
 Events are collected from different sources, such as a specific website, or a CRM.
 In order for the Context Server to build profiles consistently, the CXS requires profile identifiers to be unique within a single source.
 
-A single source, might actually have many different profiles for a single individual.
-For instance - when a person uses different devices on a single web page, each device will typically get a unique profile, with a unique profileID.
-As profiles evolve over time, the context server may for discover that two profiles actually represent the same individual i.e. if the same e-mail address is registered in both profiles, or if the user in on both his devices.
-This may then result in a profile merge.
+A single source, might actually produce many different profiles for a "real person".
+For instance - when a visitor uses different devices on a single web page, each device will typically get a unique profile, with a unique profileID.
 
-The profile merge is a special event in the context server to link the until now separate profiles.
-In order to keep event history, the merge process must not affect the existing unique profileIDs.
-As such, if the collector script uses a cookie to set the profile id, it will remain the same even if profiles are merged.
+Context Servers implementations SHOULD support profile merges.
+As profiles evolve over time, the context server may for discover that two profiles actually represent the same individual i.e. if the same e-mail address is registered in both profiles, or if the user in on both his devices. This may then result in a profile merge.
+During a profile merge, the Context Server will link two (or more) separate profiles together.
+In order to keep event history and avoid re-processing of data, the merge process must not affect the existing and unique profileIDs.
+This is why profiles are defined to have multiple profileIDs.
+
+Example: If visitors on a website are tracked, using a cookie (defining the profileID), the cookie will remain the same even if the profile is merged.
 
 NOTE: There are no explicit Queries or Mutations for creating/getting Sources in the CXS specification, as this is considered an implementation-specific feature. For any CXS implementation, a source must be pre-defined in the CXS server before a client can start feeding events to the server.
 
 A Source consist of the following fields:
 
-* ID (Preferably a generated value)
-* Name (TODO)
+* ID (Preferably a generated value??)
+* Title (TODO)
 
 
 === Events
@@ -263,25 +261,16 @@ Events are what drives the Context Server forward.
 
 A Context Server is essentially interested in "User behavioral events".
 An event could be anything from someone clicking a link, to performing a transaction or consenting to use of his/hers information.
-Events are delivered from autorized <<Clients>> to the Context Server.
+Events are delivered from authorized <<Clients>> to the Context Server.
 
 As an example: Imagine an e-commerce site with a client that collect events from its visitors.
 When a visitor browses the site with his laptop, the client assigns a cookie to his/her browser and starts feeding events to the CXS API.
 As the visitor click on some product links, and maybe fills in a form that includes e-mail. CXS will gradually populate a profile, using the cookie value as an ID.
 At a later point, the same visitor picks up a different device and returns to the site. As the client cannot know this is the same individual, a new cookie is generated, and a new profile starts to build up.
 
-At some point, data gathered from the different profiles may intersect, i.e. if the same e-mail is registered for multiple profiles.
-In such cases, profiles may be linked together in the Context Server, in what we call a profile merge.
-
-When profiles are merged, _one_ of the existing profiles will be selected as the master.
-Additional properties or data from the other profile(s) are merged into the master profile.
-Both profile ID's, and all the related events are kept, so data can still be collected through the existing profile ID's.
-
-TODO: What happens to old profile? Deleted?
-
 Events consist of the following fields:
 
-* ID (mandatory) TODO: Generated??
+* ID (mandatory)
 * eventType (mandator)
 * profileID
 * profile
@@ -297,30 +286,31 @@ EventTypes require a unique name, preferably using a namespace to avoid conflict
 
 An EventType consist of the following fields:
 
-* Name (mandatory, system-wide unique name - allowed characters: [_A-Za-z][_0-9A-Za-z]* )
+* Name (mandatory) - system-wide unique name - allowed characters: [_A-Za-z][_0-9A-Za-z]*
 * Scope (mandatory)
-* schema (mandatory, a Set propertyType allowing any number of propertyTypes)
+* schema (mandatory) - a Set propertyType allowing any number of propertyTypes
 
 === Consents
 
 New legislation and stricter rules for use of personal data is already here (i.e. GDPR).
 As such, consents are inherently more important to ensure you are using and storing data in compliance with policies.
 
-TODO: More details on consents
+Consents hold an identifier that uniquely identifies the consent across your systems. The
 
-Consents consist of the following fields:
+A consent consist of the following fields:
 
-* Token (TODO)
-* Type (TODO)
-* Status
-* StatusDate
-* revokeDate
-* Events
-* Profile
+* Type?? (Mandatory) - String that identifies the consent, i.e. a url or a scoped value org.cxs.newsletter
+* Status - one of GRANT, DENY or REVOKED
+* StatusDate - Date when status was last updated
+* revokeDate - Revocation date, SHOULD have a default value like two years if left blank
+* Scope TODO: Why???
+* Source - Identifying the source of this consent? Optionally accessible from Profile?
+* Events - All events related to this consent
+* Profile - The profile this consent applies to
 
 === Personas
 
-Personas is a concept used by marketeers to visualize their target customers, and simplify personalization and targeting of content.
+A persona is a concept used by marketeers to visualize one or more target customers, and simplify personalization and targeting of content.
 
 In CXS, personas are essentially "dummy" profiles with the primary purpose of testing or emulating a real profile.
 A common use-case would be testing personalized content in a CMS or a newsletter.
@@ -330,11 +320,11 @@ Personas and their fields can be explicitly created, where real profiles are bui
 A Persona consist of the following fields:
 
 * <<ProfileIDs>> TODO
-* <<Segments>> (Specifically selected secments)
-* <<Interests>> (Specifically defined interests)
-* <<Lists>> (Specifically defined list memberships)
-* <<Consents>> (Specifically defined consents)
-* <<Properties>> (Specifically defined properties)
+* <<Segments>> - Specifically selected segments
+* <<Interests>> - Specifically defined interests
+* <<Lists>> - Specifically defined list memberships
+* <<Consents>> - Specifically defined consents
+* <<Properties>> - Specifically defined properties
 
 === Lists
 
@@ -346,15 +336,15 @@ A common use-case for lists is creating a list for a campaign, and add the targe
 A List consists of the following fields:
 
 * ID (mandatory)
-* Label (mandatory string)
+* Title (mandatory string)
 * Scope
-* Profiles (All active profiles in the list)
-* Inactive (array of profiles that have been deactivated)
+* Profiles - Active profiles in the list
+* Inactive - Profiles that have been deactivated
 
 === Segments
 
-Segments are similar to lists in that profiles may be in the segment or not.
-However, where profiles are explicitly added to lists, they are dynamically added to segments based on events that occur.
+Segments are similar to lists in that profiles may be in the segment, or not.
+However, where profiles are explicitly added to lists, they are dynamically resolved to segments based on the filter defined in the segment.
 
 Administrative users define segments through <<Filters>>.
 
@@ -366,11 +356,11 @@ Example segments:
 A Segment consist of the following fields:
 
 * ID (mandatory)
-* Label (mandatory string)
+* Title (mandatory string)
 * Scope
-* Filter (mandatory - filter to determine profiles for the segment)
-* Exclude (optional array of profiles to exclude from segment) TODO: TSI thinks this might be a nice idea!
-* Profiles (directly access all profiles in the segment)
+* Filter (mandatory)
+* Exclude - optional array of profiles to exclude from segment (IDea from TSI)
+* Profiles - directly access all profiles in the segment
 
 === Filters
 
@@ -413,8 +403,8 @@ Example Topics for a car manufacturer might for instance be:
 
 A Topic consist of the following fields:
 
-* ID (generated??)
-* Label (representing the topic)
+* ID (generated??) TODO ? Should this be the "key"? I.e. sync/import from external system
+* Title (mandatory??)
 * Scope
 
 
@@ -439,8 +429,8 @@ An Interest consist of the following fields:
 
 === Scopes
 
-Scopes provide an efficient way of grouping administrative objects in the context server.
-<<Profiles>>, <<Events>> and <<Consents>>  are collected and stored globally,
+Scopes provide a way of grouping administrative objects in the context server.
+<<Profiles>>, <<Events>> and <<Consents>> are collected and stored globally,
 but other items are typically handled by administrators or marketeers, and differ from region to region, or through the various branches of a business.
 
 <<Lists>>, <<Segments>>, <<Topics>> and <<Personas>> are all tagged with Scopes.
@@ -456,17 +446,22 @@ An Scope consist of the following fields:
 
 CXS defines a standard API based on GraphQL.
 
-In general, the CXS GraphQL API is not intended to be exposed publicly, but only exposed to specific authorized clients.
-The logic behind this is that the CXS API itself does not limit access to data, and you need to control which clients are given access at any time.
+The CXS GraphQL API is not intended to be exposed publicly, but only made accessible to specific authorized clients.
 
 === Clients
 
-Clients is used as a common name for any software that communicates directly with the Context Server.
+Client is used as a common name for any software that communicates directly with the Context Server.
 As a CXS potentially holds sensitive and personal data, implementers are urged to place strong control over which clients can connect to a context server.
 As such, the context server API should never be accessible for clients without authorization.
 
-Examples of clients are: An event collector for your website, a client that performs integration with your CRM etc.
+Examples of clients are:
 
+* A cookie tracker for your website(s)
+* a client that performs integration with your CRM
+* An integration with your Identity System
+
+A single client, may collect and manage data from multiple <<Sources>>.
+For instance, a single client may be used to track events from a number of different websites, where each website is considered a source.
 
 == Conformance
 
