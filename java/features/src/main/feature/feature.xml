@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<features xmlns="http://karaf.apache.org/xmlns/features/v1.4.0" name="cxs-graphql-api-features">
-    <feature name="cxs-graphql-api-features" description="cxs-graphql-api-features" version="1.0.0.SNAPSHOT">
-        <feature prerequisite="true" dependency="false">scr</feature>
-        <feature prerequisite="true" dependency="false">war</feature>
-    </feature>
-</features>

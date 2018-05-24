@@ -217,7 +217,7 @@ type CXS_ListFilter {
   and : [CXS_ListFilter]
   or : [CXS_ListFilter]
   
-  scope_equals : String
+  view_equals : String
   name_equals : String
   name_regexp : String  
 }
@@ -226,7 +226,7 @@ input CXS_ListFilterInput {
   and : [CXS_ListFilterInput]
   or : [CXS_ListFilterInput]
   
-  scope_equals : String
+  view_equals : String
   name_equals : String
   name_regexp : String  
 }
@@ -235,7 +235,7 @@ type CXS_TopicFilter {
   and : [CXS_TopicFilter]
   or : [CXS_TopicFilter]
   
-  scope_equals : String
+  view_equals : String
   id_equals : String
   displayName_regexp : String  
 }
@@ -244,7 +244,7 @@ input CXS_TopicFilterInput {
   and : [CXS_TopicFilterInput]
   or : [CXS_TopicFilterInput]
   
-  scope_equals : String
+  view_equals : String
   id_equals : String
   displayName_regexp : String  
 }
@@ -373,7 +373,7 @@ type CXS_Role {
   id : ID!
   name : String!
   displayName : String
-  scope : CXS_Scope! # may include a system scope
+  view : CXS_View! # may include a system view
 }
 
 # Multi-valued properties are controlled using the minOccurrences and maxOccurrences fields. The order of the values 
@@ -577,24 +577,24 @@ input CXS_SetPropertyTypeInput {
 # MANAGEMENT OBJECTS
 # ----------------------------------------------------------------------------
 
-# Management objects are associated with a scope
-type CXS_Scope {
+# Management objects are associated with a view
+type CXS_View {
   name: ID!
 }
 
-input CXS_ScopeInput {
+input CXS_ViewInput {
   name: ID!
 }
 
 type CXS_Persona implements CXS_ProfileInterface {
   id : ID!
   name : String!
-  scope : CXS_Scope!
+  view : CXS_View!
   profileIDs : [CXS_ProfileID] # the CXS server may generated a system profile ID and expose it here
-  segments(scopes : [CXS_ScopeInput]) : [CXS_Segment]
-  interests(scopes : [CXS_ScopeInput]) : [CXS_Interest]
+  segments(views : [CXS_ViewInput]) : [CXS_Segment]
+  interests(views : [CXS_ViewInput]) : [CXS_Interest]
   consents : [CXS_Consent]
-  lists(scopes : [CXS_ScopeInput]) : [CXS_List]
+  lists(views : [CXS_ViewInput]) : [CXS_List]
   properties : CXS_ProfileProperties
   propertyTypes : [CXS_PropertyType]
 }
@@ -602,7 +602,7 @@ type CXS_Persona implements CXS_ProfileInterface {
 input CXS_PersonaInput {
   id : ID #optional, may be server-generated
   name : String!
-  scope : CXS_ScopeInput!
+  view : CXS_ViewInput!
   profileIDs : [CXS_ProfileIDInput] # the CXS server may generated a system profile ID and expose it here
   segments : [String]
   interests : [CXS_InterestInput]
@@ -612,28 +612,28 @@ input CXS_PersonaInput {
 
 type CXS_Segment {
   id : ID!
-  scope: CXS_Scope!
+  view: CXS_View!
   name : String!
   filter : CXS_SegmentFilter
 }
 
 input CXS_SegmentInput {
   id : ID #optional, may be server-generated
-  scope : CXS_ScopeInput!
+  view : CXS_ViewInput!
   name : String
   filter : CXS_SegmentFilterInput
 }
 
 type CXS_SegmentPropertiesFilter {
-  scope_equals : String
-  scope_regexp : String
+  view_equals : String
+  view_regexp : String
   name_equals : String
   name_regexp : String
 }
 
 input CXS_SegmentPropertiesFilterInput {
-  scope_equals : String
-  scope_regexp : String
+  view_equals : String
+  view_regexp : String
   name_equals : String
   name_regexp : String
 }
@@ -660,7 +660,7 @@ input CXS_SegmentFilterInput {
 # variables : 
 # {
 #   "segment": {
-#      "scope": "siteA",
+#      "view": "siteA",
 #      "name" : "over50_3products_last10days",
 #      "displayName": "People that are over 50 and have purchased 3 products in the last 10 days",
 #      "filter": 
@@ -678,7 +678,7 @@ input CXS_SegmentFilterInput {
 
 type CXS_List {
   id : ID! # cannot change and usually server generated
-  scope: CXS_Scope!
+  view: CXS_View!
   name : String!
 
   # Active members have opted in the list
@@ -689,19 +689,19 @@ type CXS_List {
 
 input CXS_ListInput {
   id : ID # optional and can be server generated
-  scope: String!
+  view: String!
   name : String!
 }
 
 type CXS_Topic {
   id : ID! # cannot change and usually server generated, although they could be imported
-  scope : CXS_Scope!
+  view : CXS_View!
   name: String! 
 }
 
 input CXS_TopicInput {
   id : ID # optional and can be server generated
-  scope : String!
+  view : String!
   name: String!
 }
 
@@ -742,6 +742,8 @@ type CXS_EventProperties {
 
 type CXS_Event {
   id: ID!
+  source : CXS_Source
+  client : CXS_Client
   eventType: CXS_EventType!
   profileID: CXS_ProfileID!
   profile : CXS_Profile!
@@ -797,6 +799,8 @@ type CXS_Event {
 # 
 input CXS_EventInput {
   id: ID # optional, usually server-generated but could be interesting to import events
+  cxs_ClientID : String
+  cxs_SourceID : String
   cxs_ProfileID: CXS_ProfileIDInput! 
   cxs_Object: CXS_ObjectInput!
   cxs_Location: [CXS_GeoPointInput] # optional
@@ -805,7 +809,7 @@ input CXS_EventInput {
   cxs_UpdateProfile : CXS_UpdateProfileInput
   cxs_UpdateConsent : CXS_UpdateConsentInput
   cxs_UpdateLists : CXS_UpdateListInput
-  cxs_UpdateSessionState : UpdateSessionStateInput
+  cxs_UpdateSessionState : CXS_UpdateSessionStateInput
   # Here below will be the generated event field based on the registered event types
   # Example of a generated event type
   pageView : PageViewInput
@@ -813,13 +817,11 @@ input CXS_EventInput {
 
 type CXS_EventType {
   name : String!
-  scope : CXS_Scope!
   properties : [CXS_PropertyType]
 }
 
 input CXS_EventTypeInput {
   name : ID! # must be in a format that's acceptable as a GraphQL field name (/[_A-Za-z][_0-9A-Za-z]*/) , and we recommend to prefix it to avoid conflicts, something like acme_pageView, acme_click. The "cxs_" prefix is reserved for built-in CXS event types
-  scope : String!
   properties : [CXS_PropertyTypeInput]
 }
 
@@ -973,10 +975,10 @@ input CXS_ProfilePropertiesInput {
 
 interface CXS_ProfileInterface {
   profileIDs : [CXS_ProfileID] # the CXS server may generated a system profile ID and expose it here
-  segments(scopes : [CXS_ScopeInput]) : [CXS_Segment]
-  interests(scopes : [CXS_ScopeInput]) : [CXS_Interest]
+  segments(views : [CXS_ViewInput]) : [CXS_Segment]
+  interests(views : [CXS_ViewInput]) : [CXS_Interest]
   consents : [CXS_Consent]
-  lists(scopes : [CXS_ScopeInput]) : [CXS_List]
+  lists(views : [CXS_ViewInput]) : [CXS_List]
   properties : CXS_ProfileProperties
   propertyTypes : [CXS_PropertyType]  
 }
@@ -985,10 +987,10 @@ type CXS_Profile implements CXS_ProfileInterface {
   profileIDs : [CXS_ProfileID] # the CXS server may generated a system profile ID and expose it here
   events(filter : CXS_EventFilterInput, first : Int, last: Int, after : String, before: String) : CXS_EventConnection
   lastEvents(count : Int, profileID : CXS_ProfileIDInput) : CXS_EventConnection
-  segments(scopes : [CXS_ScopeInput]) : [CXS_Segment]
-  interests(scopes : [CXS_ScopeInput]) : [CXS_Interest]
+  segments(views : [CXS_ViewInput]) : [CXS_Segment]
+  interests(views : [CXS_ViewInput]) : [CXS_Interest]
   consents : [CXS_Consent]
-  lists(scopes : [CXS_ScopeInput]) : [CXS_List]
+  lists(views : [CXS_ViewInput]) : [CXS_List]
   matches(namedFilters : [CXS_NamedFilterInput]) : [CXS_FilterMatch] # used for personalization requirements
   optimize(parameters : [CXS_OptimizationInput]) : [CXS_OptimizationResult]
   recommend(parameters : [CXS_RecommendationInput]) : [CXS_RecommendationResult]
@@ -1070,14 +1072,14 @@ type CXS_RecommendationResult {
 # 
 # Examples:
 # {
-#   scope : "jahia.com",
+#   sourceId : "jahia.com",
 #   type: {name:"send-to-salesforce"},
 #   grant: ALLOW
 #   grantDate : 3498734899
 #   # no revoke date means it will not expire or defaults to system or legal standard (GDPR)
 # }
 # {
-#   scope : "jahia.com",
+#   sourceId : "jahia.com",
 #   type : {name:"newsletter-subscription-latestNews"},
 #   grant: DENY
 #   grantDate : 3498734899
@@ -1109,11 +1111,12 @@ enum CXS_ConsentStatus {
 
 # Consent types are not defined in the specification, only the format of the type identifier
 # should use a URI convention. Some URIs could actually be URLs and point to real resource that would give the 
-# semantics of the consent type. Types are not globally unique, a combination of scope and types are globally unique
-# and context server implementations may use "global" or "system" scopes to share types.
+# semantics of the consent type. Types are not globally unique, a combination of view and types are globally unique
+# and context server implementations may use "global" or "system" views to share types.
 type CXS_Consent {
   token : ID! # similar to OAuth 2 authorization tokens to access the consent without the profile, also useful to delete the consent
-  scope : CXS_Scope
+  source : CXS_Source
+  client : CXS_Client
   type : String! # "//mycompany.com/consents/newsletters/weekly", "//crmcompany.com/consents/push-to-crm", "//oasis_open.org/cxs/consents/send-to-third-parties"
   status : CXS_ConsentStatus!
   statusDate : String
@@ -1123,7 +1126,8 @@ type CXS_Consent {
 }
 
 input CXS_ConsentInput {
-  scope: String,
+  sourceId : String
+  clientId : String
   type : String! # "//mycompany.com/consents/newsletters/weekly", "//crmcompany.com/consents/push-to-crm", "//oasis_open.org/cxs/consents/send-to-third-parties"
   status : String,
   statusDate : String,
@@ -1141,15 +1145,26 @@ input CXS_ConsentInput {
 #  permissions: [String] # "createEvent", "createEventTypes", "fullAccess"
 #}
 
+type CXS_Client {
+    id : ID!
+    title : String
+    sources : [CXS_Source] # optional
+}
+
+input CXS_ClientInput {
+    id : ID!
+    title : String
+}
+
 # ProfileIDs are always associated with a source as multiple profileIDs are associated with a single profile. CXS 
 # server implementations may generate their own internal system IDs by defining them for a "system" source.
 type CXS_ProfileID {
-    source : CXS_Source
+    source : CXS_Client
     id : ID! # unique profile identifier for the source
 }
 
 input CXS_ProfileIDInput {
-    sourceID : ID!
+    clientId : ID!
     id : ID! # unique profile identifier for the source
 }
 
@@ -1201,7 +1216,7 @@ type CXS_Query {
 
   getProfilePropertyTypes : CXS_PropertyTypeConnection
   
-  getScopes : [CXS_Scope]
+  getViews : [CXS_View]
   
   getSources : [CXS_Source]
 }
@@ -1240,8 +1255,8 @@ type CXS_Mutation {
   createOrUpdateEventType(eventType : CXS_EventTypeInput) : CXS_EventType
   deleteEventType(eventName : ID!) : Boolean
             
-  createOrUpdateScope(scope: CXS_ScopeInput) : CXS_Scope
-  deleteScope(scopeID : ID!) : Boolean
+  createOrUpdateView(view: CXS_ViewInput) : CXS_View
+  deleteView(viewID : ID!) : Boolean
   
   createOrUpdateSource(source : CXS_SourceInput) : CXS_Source
   deleteSource(sourceID : ID!) : Boolean
