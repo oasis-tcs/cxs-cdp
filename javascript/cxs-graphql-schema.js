@@ -115,21 +115,21 @@ input CXS_EventOccurrenceFilterInput {
 # This filter will contain generated fields that are concatenations of property names and operators. The values 
 # provided here are just examples.
 type CXS_ProfilePropertiesFilter {
-  firstName_startsWith : String
-  firstName_contains : String
-  firstName_equals : String
+
+  and : [CXS_ProfilePropertiesFilter]
+  or : [CXS_ProfilePropertiesFilter]
   
-  location_distance : CXS_GeoDistance
+  properties : CXS_ProfileProperties
 }
 
 # This filter will contain generated fields that are concatenations of property names and operators. The values 
 # provided here are just examples.
 input CXS_ProfilePropertiesFilterInput {
-  firstName_startsWith : String
-  firstName_contains : String
-  firstName_equals : String
+
+  and : [CXS_ProfilePropertiesFilterInput]
+  or : CXS_ProfilePropertiesFilterInput
   
-  location_distance : CXS_GeoDistanceInput
+  properties : CXS_ProfilePropertiesInput
 }
 
 type CXS_GeoPoint {
@@ -154,12 +154,19 @@ type CXS_GeoDistance {
   distance : Float
 }
 
-
 input CXS_GeoDistanceInput {
   center : CXS_GeoPointInput
   unit : CXS_GeoDistanceUnit
   distance : Float
 }
+
+input CXS_DateFilterInput {
+  after : Int
+  before : Int
+  includeAfter : Boolean
+  includeBefore : Boolean
+}
+
 
 type CXS_EventPropertiesFilter {
   location_distance : CXS_GeoDistance
@@ -167,27 +174,25 @@ type CXS_EventPropertiesFilter {
 
 # A filter is a way of querying for profiles based on profile properties or event properties. The filter list is not 
 # exhaustive and may be extended by any implementation.
-type CXS_ProfileFilter {
-  # Example for asString value : profile.test = 'testValue' AND eventOccurrence('pageView') = 10
-  asString : String # optional ?
-  and : [CXS_ProfileFilter]
-  or : [CXS_ProfileFilter]
-  # ....
-  profileProperties : CXS_ProfilePropertiesFilter
-  eventProperties : CXS_EventPropertiesFilter
-  eventOccurrence : CXS_EventOccurrenceFilter
+
+input CXS_EventPropertiesFilterInput {
+  id_equals : String
+  sourceId_equals : String
+  clientId_equals: String
+  profileId_equals : String
+  location_distance : CXS_GeoDistanceInput
+  timestamp_between : CXS_DateFilterInput
+  
+  # generate event types will be listed here
+  
 }
 
 type CXS_EventFilter {
   and : [CXS_EventFilter]
   or : [CXS_EventFilter]
-
+  
   properties : CXS_EventPropertiesFilter
   eventOccurrence : CXS_EventOccurrenceFilter
-}
-
-input CXS_EventPropertiesFilterInput {
-  location_distance : CXS_GeoDistanceInput
 }
 
 input CXS_EventFilterInput {
@@ -196,21 +201,18 @@ input CXS_EventFilterInput {
 
   # An event filter input will contain only one of the following fields (this is a workaround GraphQL polymorphism limitations)
 
-  properties : CXS_EventPropertiesFilterInput
+  properties : CXS_EventPropertiesFilterInput # should we rename this to eventTypes ?
   eventOccurrence : CXS_EventOccurrenceFilterInput
 }
 
 input CXS_ProfileFilterInput {
   # Example for asString value : profile.test = 'testValue' AND eventOccurrence('pageView') = 10
   asString : String # optional ? 
-  and : [CXS_ProfileFilterInput]
-  or : [CXS_ProfileFilterInput]
   
   profileProperties : CXS_ProfilePropertiesFilterInput
   matchesSegments : [String]
   grantedConsents : [String]
-  eventProperties : CXS_EventPropertiesFilterInput
-  eventOccurence : CXS_EventOccurrenceFilterInput
+  eventFilter : CXS_EventFilterInput
 }
 
 type CXS_ListFilter {
@@ -614,14 +616,14 @@ type CXS_Segment {
   id : ID!
   view: CXS_View!
   name : String!
-  filter : CXS_SegmentFilter
+  condition : CXS_SegmentCondition
 }
 
 input CXS_SegmentInput {
   id : ID #optional, may be server-generated
   view : CXS_ViewInput!
   name : String
-  filter : CXS_SegmentFilterInput
+  condition : CXS_SegmentConditionInput
 }
 
 type CXS_SegmentPropertiesFilter {
@@ -638,16 +640,22 @@ input CXS_SegmentPropertiesFilterInput {
   name_regexp : String
 }
 
-type CXS_SegmentFilter {
-  and : [CXS_SegmentFilter]
-  or : [CXS_SegmentFilter]
-  properties : [CXS_SegmentPropertiesFilter]
+type CXS_SegmentCondition {
+  profileProperties : CXS_ProfilePropertiesFilter
+  grantedConsents : [String]
+  eventFilter : CXS_EventFilter
+}
+
+input CXS_SegmentConditionInput {  
+  profileProperties : CXS_ProfilePropertiesFilterInput
+  grantedConsents : [String]
+  eventFilter : CXS_EventFilterInput
 }
 
 input CXS_SegmentFilterInput {
   and : [CXS_SegmentFilterInput]
   or : [CXS_SegmentFilterInput]
-  properties : [CXS_SegmentPropertiesFilterInput]
+  properties : CXS_SegmentPropertiesFilterInput
 }
 
 #
