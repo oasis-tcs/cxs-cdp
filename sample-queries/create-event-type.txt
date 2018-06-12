@@ -1,0 +1,73 @@
+query:
+
+mutation createEventType($eventType: InputCXSEventTypeInput) {
+  cxs {
+    createOrUpdateEventType(eventType: $eventType) {
+      id
+      typeName
+      properties {
+        name
+      }
+    }
+  }
+}
+
+variables:
+
+{
+  "eventType": {
+    "typeName": "pageView",
+    "properties": [
+      {
+        "identifier": {
+          "name": "pageId"
+        }
+      },
+      {
+        "string": {
+          "name": "pageUrl"
+        }
+      },
+      {
+        "set": {
+          "name": "pageProperties",
+          "properties": [
+            {
+              "string": {
+                "name": "pageUri"
+              }
+            },
+            {
+              "string": {
+                "name": "pageTitle"
+              }
+            },
+            {
+              "string": {
+                "name": "pageCategories",
+                "maxOccurrences": 20
+              }
+            },
+            {
+              "string": {
+                "name": "sergeDemo"
+              }
+            },
+            {
+              "set": {
+                "name": "cheese",
+                "properties": [
+                  {
+                    "string": {
+                      "name": "fondue"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

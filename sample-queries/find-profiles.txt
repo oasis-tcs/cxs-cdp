@@ -1,3 +1,5 @@
+query:
+
 query findProfiles($filter: ProfileFilterInput, $orderBy: [OrderByInput]) {
   findProfiles(filter: $filter, orderBy: $orderBy) {
     edges {
