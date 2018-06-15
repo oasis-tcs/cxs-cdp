@@ -1,4 +1,4 @@
-query:
+mutation:
 
 mutation createEventType($eventType: InputCXSEventTypeInput) {
   cxs {

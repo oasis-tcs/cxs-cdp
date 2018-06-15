@@ -641,13 +641,13 @@ input CXS_SegmentPropertiesFilterInput {
 }
 
 type CXS_SegmentCondition {
-  profileProperties : CXS_ProfilePropertiesFilter
+  profilePropertiesFilter : CXS_ProfilePropertiesFilter
   grantedConsents : [String]
   eventFilter : CXS_EventFilter
 }
 
 input CXS_SegmentConditionInput {  
-  profileProperties : CXS_ProfilePropertiesFilterInput
+  profilePropertiesFilter : CXS_ProfilePropertiesFilterInput
   grantedConsents : [String]
   eventFilter : CXS_EventFilterInput
 }
