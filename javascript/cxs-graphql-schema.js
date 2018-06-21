@@ -209,10 +209,10 @@ input CXS_ProfileFilterInput {
   # Example for asString value : profile.test = 'testValue' AND eventOccurrence('pageView') = 10
   asString : String # optional ? 
   
-  profileProperties : CXS_ProfilePropertiesFilterInput
+  properties : CXS_ProfilePropertiesFilterInput
   matchesSegments : [String]
   grantedConsents : [String]
-  eventFilter : CXS_EventFilterInput
+  events : CXS_EventFilterInput
 }
 
 type CXS_ListFilter {

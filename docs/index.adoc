@@ -355,7 +355,62 @@ Filters are essentially queries that operate on properties.
 Basic expressions can be chained with the boolean operators "AND" or "OR".
 TODO: List all operators
 
-A propertyFilter might be
+A propertyFilter might be is composed of the propertyName concatenated with a property operator. The available operators
+depend on the property value type. For example for a string value type the following operators will be applied:
+
+    - equals
+    - startsWith / endsWith
+    - contains
+    - regexp (optional)
+
+So in this example, if we have a property named "firstName" of value type string, the following property filters will
+be generated in the GraphQL schema:
+
+    firstName_equals
+    firstName_startsWith
+    firstName_endsWith
+    firstName_contains
+    firstName_regexp
+
+In this case, the value of the GraphQL field will be a simple string value, but in some more complex value types such
+as a geopoint, the value might be more complex, as in the following example:
+
+    { "location_distance" : { "center" : { "longitude" : 59.91273, "latitude": 10.74609 }, "unit" : "KILOMETERS", "distance" : 5 }
+
+
+profile
+    {
+      "filter": {
+            "properties": {
+              "location_distance": {
+                "center": {
+                  "longitude": 10,
+                  "latitude": 10
+                },
+                "unit": "KILOMETERS",
+                "distance": 10
+              }
+            }
+          },
+          "events" :
+          {
+            "eventOccurence": {
+              "eventId": "purchased",
+              "count": 1,
+              "afterTime": "now-30d"
+            }
+          },
+            "grantedConsents": [
+              "newsletter-weekly"
+            ]
+      },
+      "orderBy": [
+        {
+          "fieldName": "lastName",
+          "order": "ASC"
+        }
+      ]
+    }
 
 (TODO)
 firstName_startsWith
