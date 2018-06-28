@@ -351,16 +351,24 @@ Filters are designed to be easy to use for administrators and marketeers in visu
 Filters are essentially composed from basic property comparison expressions, and may be chained with the operators AND and OR, where AND is used by default.
 The following comparison operators are available:
 
-* equals
-* lessThan
-* greaterThan
-* startsWith
-* endsWith
-* contains
-* regexp (optional)
-* distance (for geoPoint only)
+.Operator availability for property value types
+[options="header"]
+|=============================================================
+|Operators |Identifier|String|Int|Float|Date|Boolean|GeoPoint|
+|equals    |x         |x     |x  |x    |x   |x      |x       |
+|startsWith|          |x     |   |     |    |       |        |
+|endsWith  |          |x     |   |     |    |       |        |
+|contains  |          |x     |   |     |    |       |        |
+|regexp*   |          |x     |   |     |    |       |        |
+|lt        |          |      |x  |x    |x   |       |        |
+|lte       |          |      |x  |x    |x   |       |        |
+|gt        |          |      |x  |x    |x   |       |        |
+|gte       |          |      |x  |x    |x   |       |        |
+|distance  |          |      |   |     |    |       |x       |
+|between*  |          |      |x  |x    |x   |       |        |
+|=============================================================
 
-Available operators vary based on the property's valueType, i.e. "distance" is only supported for GeoPoints.
+* optional operators
 
 As we are expressing filters through GraphQL, filters will always be strongly typed.
 I.e. if the property "firstName" with valueType string is available, the following options can be used:
@@ -369,7 +377,7 @@ I.e. if the property "firstName" with valueType string is available, the followi
   firstName_startsWith
   firstName_endsWith
   firstName_contains
-  firstName_regexp
+  firstName_regexp (optional)
 
 Below are some basic filter examples:
 
@@ -384,7 +392,6 @@ Below are some basic filter examples:
     }
   }
 
-
 === OrderBy
 
 OrderBy is used in combination with filters and lets you sort the result based on properties available for the returned objects.
@@ -392,7 +399,7 @@ OrderBy is used in combination with filters and lets you sort the result based o
 Example:
 
   "orderBy": [{
-    "fieldName???": "lastName",
+    "property": "firstName",
     "order": "ASC"
     }
   ]
@@ -403,7 +410,18 @@ EventFilters allow drilling into events based both on event occurences and prope
 
 Example: Filter for identifying events of type `transaction` within the last 30 days.
 
-  { "eventOccurance": { "eventId": "transaction",   "count": 1,  "afterTime": "now-30d" }}
+  {
+    "properties" : {
+        "timestamp_between" : { "after" : "2018-06-28T05:25:28+00:00", "before" : "2018-06-28T06:25:28+00:00", includeBefore : false, includeAfter : true },
+        "cxs_UpdateProfile" : {
+          "updateProperties": {
+            "firstName_startsWith" : "T"
+            "lastName_endsWith" : "d"
+          }
+        }
+    },
+    "eventOccurrence": { "eventId": "transaction",   "count": 1,  "afterTime": "now-30d" }}
+  }
 
 
 === ProfileFilters
