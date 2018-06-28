@@ -363,25 +363,29 @@ The following comparison operators are available:
 * regexp (optional)
 * distance (for geoPoint only)
 
-Which operators that are vary based on the property's valueType, i.e. "distance" is only supported for GeoPoints.
+Available operators vary based on the property's valueType, i.e. "distance" is only supported for GeoPoints.
 
-As we are expressing filters through GraphQL, they will always be strongly typed, based on the standard, and schema defined properties available.
-
+As we are expressing filters through GraphQL, filters will always be strongly typed.
 I.e. if the property "firstName" with valueType string is available, the following options can be used:
 
-firstName_equals
-firstName_startsWith
-firstName_endsWith
-firstName_contains
-firstName_regexp
+  firstName_equals
+  firstName_startsWith
+  firstName_endsWith
+  firstName_contains
+  firstName_regexp
 
 Below are some basic filter examples:
 
-  { "firstName_equals" : "Serge"}
+  { "firstName_equals" : "Serge" }
 
-  { "birthDate_greaterThan" : "1970-01-01"}
+  { "birthDate_greaterThan" : "1970-01-01" }
 
-  { "location_distance" : { "center" : { "longitude" : 59.91273, "latitude": 10.74609 }, "unit" : "KILOMETERS", "distance" : 5 }
+  { "location_distance" : {
+    "center" : { "longitude" : 59.91273, "latitude": 10.74609 },
+    "unit" : "KILOMETERS",
+    "distance" : 5
+    }
+  }
 
 
 === OrderBy
@@ -389,12 +393,12 @@ Below are some basic filter examples:
 OrderBy is used in combination with filters and lets you sort the result based on properties available for the returned objects.
 
 Example:
-"orderBy": [
-  {
+
+  "orderBy": [{
     "fieldName???": "lastName",
     "order": "ASC"
-  }
-]
+    }
+  ]
 
 === EventFilters
 
@@ -402,7 +406,7 @@ EventFilters allow drilling into events based both on event occurences and prope
 
 Example: Filter for identifying events of type `transaction` within the last 30 days.
 
-{ "eventOccurance": { "eventId": "transaction",   "count": 1,  "afterTime": "now-30d" }}
+  { "eventOccurance": { "eventId": "transaction",   "count": 1,  "afterTime": "now-30d" }}
 
 
 === ProfileFilters
@@ -416,7 +420,6 @@ As profileFilter are composed from the following:
 * Consents - granted by the profile
 
 ProfileFilters only return profiles that match the combined filter expressions.
-
 
 TODO
 
