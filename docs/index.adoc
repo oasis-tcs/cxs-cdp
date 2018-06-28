@@ -348,100 +348,77 @@ An Interest consist of the following fields:
 
 === Filters
 
-Filters are used in the Context Server to drill down into profiles and events.
-Filters were designed to be flexible to implement, but also easy to use for administrators and marketeers in a visual user interfaces.
+Filters are used to drill down into profiles, events, and other CXS objects.
+Filters are designed to be easy to use for administrators and marketeers in visual user interfaces, but also in terms of technical implementation.
 
-Filters are essentially queries that operate on properties.
-Basic expressions can be chained with the boolean operators "AND" or "OR".
-TODO: List all operators
+Filters are essentially composed from basic property comparison expressions, and may be chained with the operators AND and OR, where AND is used by default.
+The following comparison operators are available:
 
-A propertyFilter might be is composed of the propertyName concatenated with a property operator. The available operators
-depend on the property value type. For example for a string value type the following operators will be applied:
+* equals
+* lessThan
+* greaterThan
+* startsWith
+* endsWith
+* contains
+* regexp (optional)
+* distance (for geoPoint only)
 
-    - equals
-    - startsWith / endsWith
-    - contains
-    - regexp (optional)
+Which operators that are vary based on the property's valueType, i.e. "distance" is only supported for GeoPoints.
 
-So in this example, if we have a property named "firstName" of value type string, the following property filters will
-be generated in the GraphQL schema:
+As we are expressing filters through GraphQL, they will always be strongly typed, based on the standard, and schema defined properties available.
 
-    firstName_equals
-    firstName_startsWith
-    firstName_endsWith
-    firstName_contains
-    firstName_regexp
+I.e. if the property "firstName" with valueType string is available, the following options can be used:
 
-In this case, the value of the GraphQL field will be a simple string value, but in some more complex value types such
-as a geopoint, the value might be more complex, as in the following example:
-
-    { "location_distance" : { "center" : { "longitude" : 59.91273, "latitude": 10.74609 }, "unit" : "KILOMETERS", "distance" : 5 }
-
-
-profile
-    {
-      "filter": {
-            "properties": {
-              "location_distance": {
-                "center": {
-                  "longitude": 10,
-                  "latitude": 10
-                },
-                "unit": "KILOMETERS",
-                "distance": 10
-              }
-            }
-          },
-          "events" :
-          {
-            "eventOccurence": {
-              "eventId": "purchased",
-              "count": 1,
-              "afterTime": "now-30d"
-            }
-          },
-            "grantedConsents": [
-              "newsletter-weekly"
-            ]
-      },
-      "orderBy": [
-        {
-          "fieldName": "lastName",
-          "order": "ASC"
-        }
-      ]
-    }
-
-(TODO)
-firstName_startsWith
-firstName_contains
 firstName_equals
-location_distance
+firstName_startsWith
+firstName_endsWith
+firstName_contains
+firstName_regexp
 
+Below are some basic filter examples:
+
+  { "firstName_equals" : "Serge"}
+
+  { "birthDate_greaterThan" : "1970-01-01"}
+
+  { "location_distance" : { "center" : { "longitude" : 59.91273, "latitude": 10.74609 }, "unit" : "KILOMETERS", "distance" : 5 }
+
+
+=== OrderBy
+
+OrderBy is used in combination with filters and lets you sort the result based on properties available for the returned objects.
+
+Example:
+"orderBy": [
+  {
+    "fieldName???": "lastName",
+    "order": "ASC"
+  }
+]
 
 === EventFilters
 
-Use EventFilters to search for specific events registered in the CXS.
-EventFilters let your query based on the following:
+EventFilters allow drilling into events based both on event occurences and properties?? TODO
 
-* Event Properties
-* Event metadata
+Example: Filter for identifying events of type `transaction` within the last 30 days.
 
-TODO sample Filter
+{ "eventOccurance": { "eventId": "transaction",   "count": 1,  "afterTime": "now-30d" }}
 
 
 === ProfileFilters
 
-Profile Filters are more complex than <<EventFilters>>.
-A profileFilter enables you to query based on the following:
+Profile Filters are slightly more complex than <<EventFilters>>.
+As profileFilter are composed from the following:
 
 * Profile properties
-* Segments that the profile matches
-* Consents granted by the profile
-* Events - though an eventFilter
+* Events - expressed as an eventFilter
+* Segments - that the profile must match
+* Consents - granted by the profile
 
-TODO sample Filter
+ProfileFilters only return profiles that match the combined filter expressions.
 
+
+TODO
 
 === Views
 
