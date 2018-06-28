@@ -276,13 +276,9 @@ When a visitor browses the site with his laptop, the client assigns a cookie to 
 As the visitor click on some product links, and maybe fills in a form that includes e-mail. CXS will gradually populate a profile, using the cookie value as an ID.
 At a later point, the same visitor picks up a different device and returns to the site. As the client cannot know this is the same individual, a new cookie is generated, and a new profile starts to build up.
 
-
-TODO: Move this section?
-Clients, may collect <<Events>> from different sources.
-For instance, a single client may be used to track events from a number of different websites, where each website is considered a source.
+A single client may be used to track <<Events>> from a number of different websites, where each website can be tagged with a source.
 Sources provide a way to identify the exact origin of the events beyond the client.
-As such, sources can be compared to siteID's in Google Analytics.
-
+As such, sources are comparable to siteID's in Google Analytics.
 
 Events consist of the following fields:
 
@@ -335,9 +331,10 @@ The algorithm for how a context server scores and interest is implementation spe
 - but implementations should also take care of automatically decreasing interest over time, unless new and relevant events occur.
 
 Example interests for products from a car manufacturer might be:
-* Model S = 0.1
-* Model 3 = 0.3
-* Model X = 0.9
+
+  Model S = 0.1
+  Model 3 = 0.3
+  Model X = 0.9
 
 An Interest consist of the following fields:
 
