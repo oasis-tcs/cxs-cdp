@@ -97,19 +97,23 @@ input CXS_OrderByInput {
 }
 
 type CXS_EventOccurrenceFilter {
-  eventID : String
+  eventType : String
   beforeTime : String
   afterTime : String
   betweenTime : String
   count : Int
+  
+  eventFilter : CXS_EventFilter
 }
 
 input CXS_EventOccurrenceFilterInput {
-  eventID : String
+  eventType : String
   beforeTime : String
   afterTime : String
   betweenTime : String
   count : Int
+  
+  eventFilter : CXS_EventFilterInput
 }
 
 # This filter will contain generated fields that are concatenations of property names and operators. The values 
@@ -118,8 +122,8 @@ type CXS_ProfilePropertiesFilter {
 
   and : [CXS_ProfilePropertiesFilter]
   or : [CXS_ProfilePropertiesFilter]
-  
-  properties : CXS_ProfileProperties
+
+  # generated profile properties filters will be listed below  
 }
 
 # This filter will contain generated fields that are concatenations of property names and operators. The values 
@@ -129,7 +133,8 @@ input CXS_ProfilePropertiesFilterInput {
   and : [CXS_ProfilePropertiesFilterInput]
   or : CXS_ProfilePropertiesFilterInput
   
-  properties : CXS_ProfilePropertiesInput
+  # generated profile properties filters will be listed below  
+
 }
 
 type CXS_GeoPoint {
@@ -160,6 +165,13 @@ input CXS_GeoDistanceInput {
   distance : Float
 }
 
+type CXS_DateFilter {
+  after : Int
+  before : Int
+  includeAfter : Boolean
+  includeBefore : Boolean 
+}
+
 input CXS_DateFilterInput {
   after : Int
   before : Int
@@ -167,15 +179,24 @@ input CXS_DateFilterInput {
   includeBefore : Boolean
 }
 
-
-type CXS_EventPropertiesFilter {
+type CXS_EventFilter {
+  and : [CXS_EventFilter]
+  or : [CXS_EventFilter]
+  
+  id_equals : String
+  sourceId_equals : String
+  clientId_equals: String
+  profileId_equals : String
   location_distance : CXS_GeoDistance
+  timestamp_between : CXS_DateFilter
+
+  # generate event types will be listed here
 }
 
-# A filter is a way of querying for profiles based on profile properties or event properties. The filter list is not 
-# exhaustive and may be extended by any implementation.
+input CXS_EventFilterInput {
+  and : [CXS_EventFilterInput]
+  or : [CXS_EventFilterInput]
 
-input CXS_EventPropertiesFilterInput {
   id_equals : String
   sourceId_equals : String
   clientId_equals: String
@@ -184,25 +205,6 @@ input CXS_EventPropertiesFilterInput {
   timestamp_between : CXS_DateFilterInput
   
   # generate event types will be listed here
-  
-}
-
-type CXS_EventFilter {
-  and : [CXS_EventFilter]
-  or : [CXS_EventFilter]
-  
-  properties : CXS_EventPropertiesFilter
-  eventOccurrence : CXS_EventOccurrenceFilter
-}
-
-input CXS_EventFilterInput {
-  and : [CXS_EventFilterInput]
-  or : [CXS_EventFilterInput]
-
-  # An event filter input will contain only one of the following fields (this is a workaround GraphQL polymorphism limitations)
-
-  properties : CXS_EventPropertiesFilterInput # should we rename this to eventTypes ?
-  eventOccurrence : CXS_EventOccurrenceFilterInput
 }
 
 input CXS_ProfileFilterInput {
@@ -212,7 +214,7 @@ input CXS_ProfileFilterInput {
   properties : CXS_ProfilePropertiesFilterInput
   matchesSegments : [String]
   grantedConsents : [String]
-  events : CXS_EventFilterInput
+  eventOccurrences : CXS_EventOccurrenceFilterInput
 }
 
 type CXS_ListFilter {
@@ -643,13 +645,13 @@ input CXS_SegmentPropertiesFilterInput {
 type CXS_SegmentCondition {
   profilePropertiesFilter : CXS_ProfilePropertiesFilter
   grantedConsents : [String]
-  eventFilter : CXS_EventFilter
+  eventOccurrenceFilter : CXS_EventOccurrenceFilter
 }
 
 input CXS_SegmentConditionInput {  
   profilePropertiesFilter : CXS_ProfilePropertiesFilterInput
   grantedConsents : [String]
-  eventFilter : CXS_EventFilterInput
+  eventOccurrenceFilter : CXS_EventOccurrenceFilterInput
 }
 
 input CXS_SegmentFilterInput {

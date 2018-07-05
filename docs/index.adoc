@@ -349,6 +349,9 @@ Filters are used to drill down into profiles, events, and other CXS objects.
 Filters are designed to be easy to use for administrators and marketeers in visual user interfaces, but also in terms of technical implementation.
 
 Filters are essentially composed from basic property comparison expressions, and may be chained with the operators AND and OR, where AND is used by default.
+
+A single filter may only operate on a specified CXS object (i.e. profile or event).
+
 The following comparison operators are available:
 
 .Operator availability for property value types
@@ -390,6 +393,13 @@ Below are some basic filter examples:
     "unit" : "KILOMETERS",
     "distance" : 5
     }
+  }
+
+  {
+    "or" : [
+      { "firstName_equals" : "Serge" },
+      { "birthDate_greaterThan" : "1970-01-01" }
+    ]
   }
 
 === OrderBy
