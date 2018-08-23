@@ -96,23 +96,23 @@ input CXS_OrderByInput {
   order : CXS_SortOrder
 }
 
-type CXS_EventOccurrenceFilter {
-  eventType : String
-  beforeTime : String
-  afterTime : String
-  betweenTime : String
-  count : Int
-  
+type CXS_ProfileEventsFilter {
+  and : [CXS_ProfileEventsFilter]
+  or : [CXS_ProfileEventsFilter]
+  not : CXS_ProfileEventsFilter
+
+  minimalCount : Int,
+  maximalCount : Int,
   eventFilter : CXS_EventFilter
 }
 
-input CXS_EventOccurrenceFilterInput {
-  eventType : String
-  beforeTime : String
-  afterTime : String
-  betweenTime : String
-  count : Int
-  
+input CXS_ProfileEventsFilterInput {
+  and : [CXS_ProfileEventsFilterInput]
+  or : [CXS_ProfileEventsFilterInput]
+  not : CXS_ProfileEventsFilterInput
+
+  minimalCount : Int,
+  maximalCount : Int,
   eventFilter : CXS_EventFilterInput
 }
 
@@ -207,15 +207,25 @@ input CXS_EventFilterInput {
   # generate event types will be listed here
 }
 
+type CXS_ProfileFilter {
+  asString : String # optional ? 
+  
+  properties : CXS_ProfilePropertiesFilter
+  segments : [String]
+  consents : [String]
+  events : CXS_ProfileEventsFilter
+}
+
 input CXS_ProfileFilterInput {
   # Example for asString value : profile.test = 'testValue' AND eventOccurrence('pageView') = 10
   asString : String # optional ? 
   
   properties : CXS_ProfilePropertiesFilterInput
-  matchesSegments : [String]
-  grantedConsents : [String]
-  eventOccurrences : CXS_EventOccurrenceFilterInput
+  segments : [String]
+  consents : [String]
+  events : CXS_ProfileEventsFilterInput
 }
+
 
 type CXS_ListFilter {
   and : [CXS_ListFilter]
@@ -391,7 +401,7 @@ interface CXS_PropertyType {
   personalData : Boolean # default to true, identifiers are always personalData
 }
 
-# Only one field is allowed at a time
+# Only one field is allowed at a time, all others should be null.
 input CXS_PropertyTypeInput {
   identifier : CXS_IdentifierPropertyTypeInput
   string : CXS_StringPropertyTypeInput
@@ -618,46 +628,24 @@ type CXS_Segment {
   id : ID!
   view: CXS_View!
   name : String!
-  condition : CXS_SegmentCondition
+  profiles : CXS_ProfileFilter
 }
 
 input CXS_SegmentInput {
   id : ID #optional, may be server-generated
   view : CXS_ViewInput!
   name : String
-  condition : CXS_SegmentConditionInput
-}
-
-type CXS_SegmentPropertiesFilter {
-  view_equals : String
-  view_regexp : String
-  name_equals : String
-  name_regexp : String
-}
-
-input CXS_SegmentPropertiesFilterInput {
-  view_equals : String
-  view_regexp : String
-  name_equals : String
-  name_regexp : String
-}
-
-type CXS_SegmentCondition {
-  profilePropertiesFilter : CXS_ProfilePropertiesFilter
-  grantedConsents : [String]
-  eventOccurrenceFilter : CXS_EventOccurrenceFilter
-}
-
-input CXS_SegmentConditionInput {  
-  profilePropertiesFilter : CXS_ProfilePropertiesFilterInput
-  grantedConsents : [String]
-  eventOccurrenceFilter : CXS_EventOccurrenceFilterInput
+  profiles : CXS_ProfileFilterInput
 }
 
 input CXS_SegmentFilterInput {
   and : [CXS_SegmentFilterInput]
   or : [CXS_SegmentFilterInput]
-  properties : CXS_SegmentPropertiesFilterInput
+
+  view_equals : String
+  view_regexp : String
+  name_equals : String
+  name_regexp : String
 }
 
 #
