@@ -151,7 +151,12 @@ http://docs.oasis-open.org/emergency/edxl-have/os/emergency_edxl_have-1.0-spec-o
 \[Full reference citation]
 
 
-== Types
+== Use Cases
+
+TODO
+
+
+== Domain objects
 
 CXS defines a standard API based on GraphQL.
 This chapter describes the Types of the CXS domain model.
@@ -189,20 +194,6 @@ Different <<Clients>> like a website tracking script, CRM or identity system can
 
 The context server is responsible for building profiles based on the provided identifiers and the stream of events coming from each Client.
 
-A Profile consists of the following fields:
-
-==== CXS_Profile
-
-* <<ProfileIDs>> - list of IDs associated with this profile
-* <<Events>> - events associated with this profile
-* <<Segments>> - access segment this profile is active in
-* <<Interests>> - Scored list of topics the profile is interested in
-* <<Lists>> - Lists the profile is active in
-* <<Consents>> - Consents given by the profile
-* <<Properties>> - In compliance with the <<ProfilePropertyTypes>> schema
-
-==== CXS_ProfileInput
-
 
 === Properties
 
@@ -230,19 +221,6 @@ This is in particular useful as new datatypes can be added or removed through th
 
 Since the CXS api is defined using GraphQL, the API is also dynamically updated when the schema is changed.
 
-==== CXS_PropertyType
-
-* name (mandatory - unique name within its scope - allowed characters: [_A-Za-z][_0-9A-Za-z]*
-* valueType (Available valueTypes are: Identifier, String, Int, Float, Date, Boolean, GeoPoint or Set)
-* minOccur - Specify the minimum number of values
-* maxOccur - Specify if there is a maximum amount of values
-* tags
-* systemTags
-* personalData - Specify if this property holds data that can easily identify an individual. This is useful for handling new and strict privacy policies such as GDPR
-
-==== CXS_PropertyTypeInput
-
-
 
 === ProfilePropertyTypes
 
@@ -255,10 +233,6 @@ Any data imported to the system must be mapped to a corresponding ProfilePropert
 
 A profilePropertyType is technically a PropertyType, where the name must be unique for all profilePropertyTypes.
 
-==== CXS_ProfilePropertyType
-
-==== CXS_ProfilePropertyTypeInput
-
 
 === ProfileIDs
 Profiles have unique identifiers across different <<Clients>>.
@@ -269,12 +243,8 @@ A ProfileID consists of the following fields:
 * ID (mandatory - unique within Client)
 * Client (mandatory) # ClientID instead?
 
-==== CXS_ProfileID
 
-==== CXS_ProfileIDInput
-
-
-=== CXS_Event
+=== Event
 Events are what drives the Context Server forward.
 Events are collected from different Clients, such as a specific website, beacons, commerce systems or a CRM.
 
@@ -303,29 +273,11 @@ A single client may be used to track <<Events>> from a number of different websi
 Sources provide a way to identify the exact origin of the events beyond the client.
 As such, sources are comparable to siteID's in Google Analytics.
 
-==== CXS_Event
-
-* ID (mandatory)
-* eventType (mandator)
-* profileID
-* profile
-* source - optionally? specify source within client, i.e. a specific website
-* object (mandatory) - Reference to a target object for the event, i.e. an SKU, or a link )
-* location
-* timestamp - Datetime when the event occured
-* properties - Any <<Properties>> stored with the event - must match the schema of the EventType
 
 === EventTypes
 
 To uniquely separate events, an event must be associated with a specific EventType.
 EventTypes require a unique name, preferably using a namespace to avoid conflicts i.e. cxs_nearBeacon or company_Whatever
-
-==== CXS_EventType
-
-* Name (mandatory) - system-wide unique name - allowed characters: [_A-Za-z][_0-9A-Za-z]*
-* Schema (mandatory) - a Set propertyType allowing any number of propertyTypes
-
-==== CXS_EventTypeInput
 
 
 === Consents
@@ -334,21 +286,6 @@ New legislation and stricter rules for use of personal data is already here (i.e
 As such, consents are inherently more important to ensure you are using and storing data in compliance with policies.
 
 Consents hold an identifier that uniquely identifies the consent across your systems. The
-
-
-==== CXS_Consent
-
-* Name (Mandatory) - String that identifies the consent, i.e. a url or a reverse domain notation org.cxs.newsletter
-* Status - one of GRANT, DENY or REVOKED
-* StatusDate - Date when status was last updated
-* revokeDate - Revocation date, SHOULD have a default value like two years if left blank
-* View TODO: Why???
-* Source - Identifying the source of this consent? Optionally accessible from Profile?
-* Events - All events related to this consent
-* Profile - The profile this consent applies to
-
-
-==== CXS_ConsentInput
 
 === Interests
 
@@ -364,14 +301,6 @@ Example interests for products from a car manufacturer might be:
 *  Model S = 0.1
 *  Model 3 = 0.3
 *  Model X = 0.9
-
-==== CXS_Interest
-* Topic
-* Profile
-* Score
-* updated
-
-==== CXS_InterestInput
 
 === Filters
 
@@ -432,7 +361,7 @@ Below are some basic filter examples:
     ]
   }
 
-==== CXS_OrderBy
+=== OrderBy
 
 OrderBy is used in combination with filters and lets you sort the result based on properties available for the returned objects.
 
@@ -465,26 +394,10 @@ Example: Filter for identifying events of type `transaction` within the last 30 
   }
 
 
-==== CXS_EventFilterInput
-
-
 === ProfileFilters
 
 Profile Filters are slightly more complex than <<EventFilters>>.
 As profileFilter are composed from the following:
-
-
-==== CXS_ProfileFilter
-
-* asString - Filter expressed as a string
-* properties - Profile properties
-* Segments - that the profile must match
-* Consents - granted by the profile
-* Events - profileEventsFilter (TODO)
-
-ProfileFilters only return profiles that match the combined filter expressions.
-
-==== CXS_ProfileFilterInput
 
 
 === Views
@@ -494,12 +407,6 @@ Views provide a way of grouping administrative objects in the context server.
 but other items are typically handled by administrators or marketeers, and benefit from being grouped into different views to simplify handling.
 
 <<Lists>>, <<Segments>>, <<Topics>> and <<Personas>> are all tagged with Views.
-
-==== CXS_View
-
-* Name (mandatory, unique identifier)
-
-==== CXS_ViewInput
 
 
 === Personas
@@ -511,17 +418,6 @@ A common use-case would be testing personalized content in a CMS or a newsletter
 
 Personas and their fields can be explicitly created, where real profiles are built from a stream of events.
 
-==== CXS_Persona
-
-* <<ProfileIDs>> TODO
-* View
-* <<Segments>> - Specifically selected segments
-* <<Interests>> - Specifically defined interests
-* <<Lists>> - Specifically defined list memberships
-* <<Consents>> - Specifically defined consents
-* <<Properties>> - Specifically defined properties
-
-==== CXS_PersonaInput
 
 === Lists
 
@@ -529,17 +425,6 @@ Lists are explicitly created and named in the Context Server. Profiles may then 
 Whenever a profile opts out of a list, that information will also be stored. This prevents the profile from accidentally being added back to the list at a later point.
 
 A common use-case for lists is creating a list for a campaign, and add the target profiles to the list as the campaign starts.
-
-
-==== CXS_List
-
-* ID (mandatory)
-* Title (mandatory string)
-* View
-* Profiles - Active profiles in the list
-* Inactive - Profiles that have been deactivated
-
-==== CXS_ListInput
 
 
 === Segments
@@ -553,17 +438,6 @@ Example segments:
 * Rich europeans: Profiles in Europe with income above €100k
 * Frequent buyer: Profiles that have completed more than 5 transactions in the last 3 months
 * Etc
-
-==== CXS_Segment
-
-* ID (mandatory)
-* Title (mandatory string)
-* View
-* Filter (mandatory)
-* Exclude - optional array of profiles to exclude from segment (IDea from TSI)
-* Profiles - directly access all profiles in the segment
-
-==== CXS_SegmentInput
 
 
 === Topics
@@ -587,98 +461,149 @@ Example Topics for a car manufacturer might for instance be:
 * Title (mandatory??)
 * View
 
-==== CXS_TopicInput
+*CXS_TopicInput*
 
 TODO: What about localization?
 
 
-== Queries
+== GraphQL Types
 
-=== getEvent
+=== CXS_Profile
 
-=== getEventTypes
+* <<ProfileIDs>> - list of IDs associated with this profile
+* <<Events>> - events associated with this profile
+* <<Segments>> - access segment this profile is active in
+* <<Interests>> - Scored list of topics the profile is interested in
+* <<Lists>> - Lists the profile is active in
+* <<Consents>> - Consents given by the profile
+* <<Properties>> - In compliance with the <<ProfilePropertyTypes>> schema
 
-=== findEvents
+*CXS_ProfileInput*
 
-=== getProfile
+=== CXS_PropertyType
 
-=== findProfiles
+* name (mandatory - unique name within its scope - allowed characters: [_A-Za-z][_0-9A-Za-z]*
+* valueType (Available valueTypes are: Identifier, String, Int, Float, Date, Boolean, GeoPoint or Set)
+* minOccur - Specify the minimum number of values
+* maxOccur - Specify if there is a maximum amount of values
+* tags
+* systemTags
+* personalData - Specify if this property holds data that can easily identify an individual. This is useful for handling new and strict privacy policies such as GDPR
 
-=== getProfilePropertyTypes
+*CXS_PropertyTypeInput*
 
-=== getPersona
+=== CXS_ProfilePropertyType
 
-=== findPersonas
+*CXS_ProfilePropertyTypeInput*
 
-=== getSegment
+=== CXS_Consent
 
-=== findSegments
+* Name (Mandatory) - String that identifies the consent, i.e. a url or a reverse domain notation org.cxs.newsletter
+* Status - one of GRANT, DENY or REVOKED
+* StatusDate - Date when status was last updated
+* revokeDate - Revocation date, SHOULD have a default value like two years if left blank
+* View TODO: Why???
+* Source - Identifying the source of this consent? Optionally accessible from Profile?
+* Events - All events related to this consent
+* Profile - The profile this consent applies to
 
-=== getList
+=== CXS_ConsentInput
 
-=== findLists
+=== CXS_EventFilterInput
 
-=== getTopic
+=== CXS_Event
 
-=== findTopics
+* ID (mandatory)
+* eventType (mandator)
+* profileID
+* profile
+* source - optionally? specify source within client, i.e. a specific website
+* object (mandatory) - Reference to a target object for the event, i.e. an SKU, or a link )
+* location
+* timestamp - Datetime when the event occured
+* properties - Any <<Properties>> stored with the event - must match the schema of the EventType
 
-=== getViews
 
-=== getClient
+=== CXS_Segment
 
-=== getSources
+* ID (mandatory)
+* Title (mandatory string)
+* View
+* Filter (mandatory)
+* Exclude - optional array of profiles to exclude from segment (IDea from TSI)
+* Profiles - directly access all profiles in the segment
+
+=== CXS_SegmentInput
+
+
+=== CXS_List
+
+* ID (mandatory)
+* Title (mandatory string)
+* View
+* Profiles - Active profiles in the list
+* Inactive - Profiles that have been deactivated
+
+=== CXS_ListInput
+
+=== CXS_ProfileID
+
+*CXS_ProfileIDInput*
+
+=== CXS_Persona
+
+* <<ProfileIDs>> TODO
+* View
+* <<Segments>> - Specifically selected segments
+* <<Interests>> - Specifically defined interests
+* <<Lists>> - Specifically defined list memberships
+* <<Consents>> - Specifically defined consents
+* <<Properties>> - Specifically defined properties
+
+=== CXS_PersonaInput
+
+=== CXS_View
+
+* Name (mandatory, unique identifier)
+
+*CXS_ViewInput*
+
+=== CXS_ProfileFilter
+
+* asString - Filter expressed as a string
+* properties - Profile properties
+* Segments - that the profile must match
+* Consents - granted by the profile
+* Events - profileEventsFilter (TODO)
+
+ProfileFilters only return profiles that match the combined filter expressions.
+
+*CXS_ProfileFilterInput*
+
+=== CXS_Interest
+* Topic
+* Profile
+* Score
+* updated
+
+*CXS_InterestInput*
+
+=== CXS_EventType
+
+* Name (mandatory) - system-wide unique name - allowed characters: [_A-Za-z][_0-9A-Za-z]*
+* Schema (mandatory) - a Set propertyType allowing any number of propertyTypes
+
+=== CXS_EventTypeInput
+
+
+
+=== CXS_Queries
 
 TODO Didn't we remove sources???
 
+=== CXS_Mutations
 
-== Mutations
-
-=== processEvents
-
-=== createOrUpdateEventType
-
-=== deleteEventType
-
-=== deleteProfile
-
-=== deleteAllPersonalData
-
-=== addProfilePropertyTypes
-TODO: Hmmmm inconsistent?
-
-=== deleteProfilePropertyType
-
-=== createOrUpdatePersona
-
-=== deletePersona
-
-=== createOrUpdateSegment
-
-=== deleteSegment
-
-=== createOrUpdateList
-
-=== deleteList
-
-=== addProfileToList
-
-=== removeProfileFromList
-
-=== createOrUpdateTopic
-
-=== deleteTopic
-
-=== createOrUpdateView
-
-=== deleteView
-
-=== createOrUpdateSource
-
-=== deleteSource
-
-
-
-== Subscriptions
+=== CXS_Subscriptions
 
 TODO
 
