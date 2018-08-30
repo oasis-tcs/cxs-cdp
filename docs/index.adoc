@@ -1,5 +1,6 @@
 = Context Server 1.0.0
 :toc: macro
+:toc: right
 :toclevels: 4
 :sectnums:
 
@@ -149,11 +150,16 @@ http://docs.oasis-open.org/emergency/edxl-have/os/emergency_edxl_have-1.0-spec-o
 
 \[Full reference citation]
 
-== Domain Model
-This chapter describes the entities of the CXS domain model
 
+== Types
+
+CXS defines a standard API based on GraphQL.
+This chapter describes the Types of the CXS domain model.
+A section below prefixed with CXS_ is also defined in the API. Other sections are here for informational purposes.
 
 === Clients
+
+The CXS GraphQL API is not intended to be exposed publicly, but only made accessible to specific authorized clients.
 
 Client means any software that interacts directly with the Context Server.
 A Context Server likely holds sensitive and personal data, as such implementers are urged to place strong control over which clients can connect to a context server.
@@ -185,6 +191,8 @@ The context server is responsible for building profiles based on the provided id
 
 A Profile consists of the following fields:
 
+==== CXS_Profile
+
 * <<ProfileIDs>> - list of IDs associated with this profile
 * <<Events>> - events associated with this profile
 * <<Segments>> - access segment this profile is active in
@@ -192,6 +200,9 @@ A Profile consists of the following fields:
 * <<Lists>> - Lists the profile is active in
 * <<Consents>> - Consents given by the profile
 * <<Properties>> - In compliance with the <<ProfilePropertyTypes>> schema
+
+==== CXS_ProfileInput
+
 
 === Properties
 
@@ -219,7 +230,7 @@ This is in particular useful as new datatypes can be added or removed through th
 
 Since the CXS api is defined using GraphQL, the API is also dynamically updated when the schema is changed.
 
-A PropertyType consists of the following fields:
+==== CXS_PropertyType
 
 * name (mandatory - unique name within its scope - allowed characters: [_A-Za-z][_0-9A-Za-z]*
 * valueType (Available valueTypes are: Identifier, String, Int, Float, Date, Boolean, GeoPoint or Set)
@@ -228,6 +239,9 @@ A PropertyType consists of the following fields:
 * tags
 * systemTags
 * personalData - Specify if this property holds data that can easily identify an individual. This is useful for handling new and strict privacy policies such as GDPR
+
+==== CXS_PropertyTypeInput
+
 
 
 === ProfilePropertyTypes
@@ -241,6 +255,11 @@ Any data imported to the system must be mapped to a corresponding ProfilePropert
 
 A profilePropertyType is technically a PropertyType, where the name must be unique for all profilePropertyTypes.
 
+==== CXS_ProfilePropertyType
+
+==== CXS_ProfilePropertyTypeInput
+
+
 === ProfileIDs
 Profiles have unique identifiers across different <<Clients>>.
 As such the profile ID is a composite value from Client and a unique identifier within that Client.
@@ -250,8 +269,12 @@ A ProfileID consists of the following fields:
 * ID (mandatory - unique within Client)
 * Client (mandatory) # ClientID instead?
 
+==== CXS_ProfileID
 
-=== Events
+==== CXS_ProfileIDInput
+
+
+=== CXS_Event
 Events are what drives the Context Server forward.
 Events are collected from different Clients, such as a specific website, beacons, commerce systems or a CRM.
 
@@ -280,7 +303,7 @@ A single client may be used to track <<Events>> from a number of different websi
 Sources provide a way to identify the exact origin of the events beyond the client.
 As such, sources are comparable to siteID's in Google Analytics.
 
-Events consist of the following fields:
+==== CXS_Event
 
 * ID (mandatory)
 * eventType (mandator)
@@ -297,10 +320,13 @@ Events consist of the following fields:
 To uniquely separate events, an event must be associated with a specific EventType.
 EventTypes require a unique name, preferably using a namespace to avoid conflicts i.e. cxs_nearBeacon or company_Whatever
 
-An EventType consist of the following fields:
+==== CXS_EventType
 
 * Name (mandatory) - system-wide unique name - allowed characters: [_A-Za-z][_0-9A-Za-z]*
 * Schema (mandatory) - a Set propertyType allowing any number of propertyTypes
+
+==== CXS_EventTypeInput
+
 
 === Consents
 
@@ -309,7 +335,8 @@ As such, consents are inherently more important to ensure you are using and stor
 
 Consents hold an identifier that uniquely identifies the consent across your systems. The
 
-A consent consist of the following fields:
+
+==== CXS_Consent
 
 * Name (Mandatory) - String that identifies the consent, i.e. a url or a reverse domain notation org.cxs.newsletter
 * Status - one of GRANT, DENY or REVOKED
@@ -320,6 +347,8 @@ A consent consist of the following fields:
 * Events - All events related to this consent
 * Profile - The profile this consent applies to
 
+
+==== CXS_ConsentInput
 
 === Interests
 
@@ -332,20 +361,21 @@ The algorithm for how a context server scores and interest is implementation spe
 
 Example interests for products from a car manufacturer might be:
 
-  Model S = 0.1
-  Model 3 = 0.3
-  Model X = 0.9
+*  Model S = 0.1
+*  Model 3 = 0.3
+*  Model X = 0.9
 
-An Interest consist of the following fields:
-
+==== CXS_Interest
 * Topic
 * Profile
 * Score
 * updated
 
+==== CXS_InterestInput
+
 === Filters
 
-Filters are used to drill down into profiles, events, and other CXS objects.
+Filters are widely used in CXS, and enable querying profiles, events, and other CXS objects.
 Filters are designed to be easy to use for administrators and marketeers in visual user interfaces, but also in terms of technical implementation.
 
 Filters are essentially composed from basic property comparison expressions, and may be chained with the operators AND and OR, where AND is used by default.
@@ -402,7 +432,7 @@ Below are some basic filter examples:
     ]
   }
 
-=== OrderBy
+==== CXS_OrderBy
 
 OrderBy is used in combination with filters and lets you sort the result based on properties available for the returned objects.
 
@@ -414,9 +444,10 @@ Example:
     }
   ]
 
+
 === EventFilters
 
-EventFilters allow drilling into events based both on event occurences and properties?? TODO
+EventFilters are a specific version of filters for querying events.
 
 Example: Filter for identifying events of type `transaction` within the last 30 days.
 
@@ -434,31 +465,41 @@ Example: Filter for identifying events of type `transaction` within the last 30 
   }
 
 
+==== CXS_EventFilterInput
+
+
 === ProfileFilters
 
 Profile Filters are slightly more complex than <<EventFilters>>.
 As profileFilter are composed from the following:
 
-* Profile properties
-* Events - expressed as an eventFilter
+
+==== CXS_ProfileFilter
+
+* asString - Filter expressed as a string
+* properties - Profile properties
 * Segments - that the profile must match
 * Consents - granted by the profile
+* Events - profileEventsFilter (TODO)
 
 ProfileFilters only return profiles that match the combined filter expressions.
 
-TODO
+==== CXS_ProfileFilterInput
+
 
 === Views
 
 Views provide a way of grouping administrative objects in the context server.
-<<Profiles>>, <<Events>> and <<Consents>> are collected and stored globally,
-but other items are typically handled by administrators or marketeers, and differ from region to region, or through the various branches of a business.
+<<Profiles>>, <<Events>> and <<Consents>> are all collected and stored globally,
+but other items are typically handled by administrators or marketeers, and benefit from being grouped into different views to simplify handling.
 
 <<Lists>>, <<Segments>>, <<Topics>> and <<Personas>> are all tagged with Views.
 
-An View consist of the following fields:
+==== CXS_View
 
 * Name (mandatory, unique identifier)
+
+==== CXS_ViewInput
 
 
 === Personas
@@ -470,7 +511,7 @@ A common use-case would be testing personalized content in a CMS or a newsletter
 
 Personas and their fields can be explicitly created, where real profiles are built from a stream of events.
 
-A Persona consist of the following fields:
+==== CXS_Persona
 
 * <<ProfileIDs>> TODO
 * View
@@ -480,6 +521,8 @@ A Persona consist of the following fields:
 * <<Consents>> - Specifically defined consents
 * <<Properties>> - Specifically defined properties
 
+==== CXS_PersonaInput
+
 === Lists
 
 Lists are explicitly created and named in the Context Server. Profiles may then be added to a list, and later opt out if desired.
@@ -487,13 +530,17 @@ Whenever a profile opts out of a list, that information will also be stored. Thi
 
 A common use-case for lists is creating a list for a campaign, and add the target profiles to the list as the campaign starts.
 
-A List consists of the following fields:
+
+==== CXS_List
 
 * ID (mandatory)
 * Title (mandatory string)
 * View
 * Profiles - Active profiles in the list
 * Inactive - Profiles that have been deactivated
+
+==== CXS_ListInput
+
 
 === Segments
 
@@ -507,7 +554,7 @@ Example segments:
 * Frequent buyer: Profiles that have completed more than 5 transactions in the last 3 months
 * Etc
 
-A Segment consist of the following fields:
+==== CXS_Segment
 
 * ID (mandatory)
 * Title (mandatory string)
@@ -516,10 +563,12 @@ A Segment consist of the following fields:
 * Exclude - optional array of profiles to exclude from segment (IDea from TSI)
 * Profiles - directly access all profiles in the segment
 
+==== CXS_SegmentInput
+
 
 === Topics
 
-Topics represent the core entities of the business running the Context Server.
+Topics represent the core entities of the business that is using the Context Server.
 The Context Server aims to find correlation between profiles and the topics.
 When such correlations are identified, it is called <<Interests>>.
 
@@ -527,22 +576,111 @@ CXS Administrators need to maintain a list of topics in order to obtain profile 
 Profile interests is typically a core objective of Marketing activities, and targeting users with better content.
 
 Example Topics for a car manufacturer might for instance be:
+
 * "Model S"
 * "Model 3"
 * "Model X"
 
-A Topic consist of the following fields:
+==== CXS_Topic
 
 * ID (generated??) TODO ? Should this be the "key"? I.e. sync/import from external system
 * Title (mandatory??)
 * View
 
-== API
+==== CXS_TopicInput
 
-CXS defines a standard API based on GraphQL.
+TODO: What about localization?
 
-The CXS GraphQL API is not intended to be exposed publicly, but only made accessible to specific authorized clients.
 
+== Queries
+
+=== getEvent
+
+=== getEventTypes
+
+=== findEvents
+
+=== getProfile
+
+=== findProfiles
+
+=== getProfilePropertyTypes
+
+=== getPersona
+
+=== findPersonas
+
+=== getSegment
+
+=== findSegments
+
+=== getList
+
+=== findLists
+
+=== getTopic
+
+=== findTopics
+
+=== getViews
+
+=== getClient
+
+=== getSources
+
+TODO Didn't we remove sources???
+
+
+== Mutations
+
+=== processEvents
+
+=== createOrUpdateEventType
+
+=== deleteEventType
+
+=== deleteProfile
+
+=== deleteAllPersonalData
+
+=== addProfilePropertyTypes
+TODO: Hmmmm inconsistent?
+
+=== deleteProfilePropertyType
+
+=== createOrUpdatePersona
+
+=== deletePersona
+
+=== createOrUpdateSegment
+
+=== deleteSegment
+
+=== createOrUpdateList
+
+=== deleteList
+
+=== addProfileToList
+
+=== removeProfileFromList
+
+=== createOrUpdateTopic
+
+=== deleteTopic
+
+=== createOrUpdateView
+
+=== deleteView
+
+=== createOrUpdateSource
+
+=== deleteSource
+
+
+
+== Subscriptions
+
+TODO
 
 == Conformance
 
