@@ -598,6 +598,7 @@ type CXS_FilterMatch {
   executionTimeMillis : Int
 }
 
+"Context Server GraphQL queries"
 type CXS_Query {
 
   getEventTypes : [CXS_EventType]
@@ -626,13 +627,13 @@ type CXS_Query {
   getSources : [CXS_Source]
 }
 
-# Context Server GraphQL queries
 type Query {
 
   cxs : CXS_Query
     
 }
 
+"Context Server GraphQL mutations"
 type CXS_Mutation {
   # Events may trigger different types of operations within the context server, such as updating consents, 
   # reset interests, or profile updates.   
@@ -670,13 +671,13 @@ type CXS_Mutation {
   deleteAllPersonalData : Boolean
 }
 
-# Context Server GraphQL mutations
 type Mutation {
 
   cxs : CXS_Mutation
 
 }
 
+"Context Server GraphQL subscriptions"
 type CXS_Subscription {
   eventListener(profileID : CXS_ProfileIDInput, filter: CXS_EventFilterInput) : CXS_Event!
   
