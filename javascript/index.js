@@ -1,13 +1,18 @@
-var express = require('express');
-var graphqlHTTP = require('express-graphql');
-var { buildSchema } = require('graphql');
-var cxsSchema = require('./cxs-graphql-schema');
+const { ApolloServer } = require('apollo-server');
 
-var app = express();
-app.use('/graphql', graphqlHTTP({
-    schema: cxsSchema.schema,
-    rootValue: cxsSchema.root,
-    graphiql: true,
-}));
-app.listen(4000);
-console.log('Running a GraphQL API server at localhost:4000/graphql');
+const { cxsGlobalSchema } = require('./cxs-graphql-schema');
+const { cxsFiltersSchema } = require('./cxs-filters-schema');
+const { cxsPaginationSchema } = require('./cxs-pagination-schema');
+const { cxsPropertyTypesSchema } = require('./cxs-propertytypes-schema');
+
+const resolvers = {};
+
+const typeDefs = [
+    cxsGlobalSchema,
+    cxsFiltersSchema,
+    cxsPaginationSchema,
+    cxsPropertyTypesSchema
+];
+
+const server = new ApolloServer({ typeDefs, resolvers });
+server.listen().then(() => console.log("Server started ! Open your browser at http://localhost:4000"));
