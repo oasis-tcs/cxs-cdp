@@ -3,6 +3,7 @@
 :toc: right
 :toclevels: 4
 :sectnums:
+:sourcedir: ../javascript
 
 image::images/OASISLogo.jpg["Oasis Open Logo"]
 
@@ -153,31 +154,37 @@ http://docs.oasis-open.org/emergency/edxl-have/os/emergency_edxl_have-1.0-spec-o
 
 == Use Cases
 
-TODO
+=== Personalization
+
+=== Newsletters
+
+=== Privacy
+
+=== A/B testing
+
 
 
 == Domain objects
 
-CXS defines a standard API based on GraphQL.
-This chapter describes the Types of the CXS domain model.
-A section below prefixed with CXS_ is also defined in the API. Other sections are here for informational purposes.
+The ConteXt Server (CXS) standard is built around a set of domain objects, and offers a GraphQL API for interacting with these.
+This chapter describes the domain objects in detail.
 
 === Clients
 
 The CXS GraphQL API is not intended to be exposed publicly, but only made accessible to specific authorized clients.
 
 Client means any software that interacts directly with the Context Server.
-A Context Server likely holds sensitive and personal data, as such implementers are urged to place strong control over which clients can connect to a context server.
-It should not be possible for unauthorized clients to access the context server API.
+A Context Server typically holds personal data, as such implementers are urged to place strong control over which clients can connect to a context server.
+In any case, it should not be possible for unauthorized clients to access the context server API.
 
 Examples of clients are:
 
-* A cookie-based tracker for website(s)
-* An integration with your CRM
-* An integration with your Identity System
+* Cookie-based tracker for website(s)
+* Integration with your CRM
+* Integration with your Identity System
 
 Each Client is responsible for uniquely identifying visitors, for instance through the use of a cookie on the website, a customer ID in the CRM or a user ID in the Identity system.
-The Context Server requires <<profileIDs>> to be unique within a client.
+The Context Server requires <<profileIDs>> to be unique within every client.
 For instance, if a client is used to track visitors across multiple websites, it should aim to re-use the same profileID across all of them, for the same visitor.
 
 NOTE: The standard does not specify Queries or Mutations for creating or retrieving Clients in the CXS specification, as this is considered an implementation-specific feature.
@@ -217,9 +224,16 @@ I.e. from the example above: setOfProperties.response would hold the value "yo"
 === PropertyTypes
 
 PropertyTypes are used to dynamically define schemas in the Context Server.
-This is in particular useful as new datatypes can be added or removed through the API.
+A propertyType essentially defines:
 
-Since the CXS api is defined using GraphQL, the API is also dynamically updated when the schema is changed.
+* the property name
+* the valueType of the property (Identifier, String, Int, Float, Date, Boolean, GeoPoint and Set)
+* minimum occurences of values (a single property may hold one or more values)
+* maximum occurences
+
+Since the CXS api is defined using GraphQL, the parts of the API that relates to schemas are dynamically updated when the schema is changed.
+
+See <<CXS_PropertyType>> for more API details.
 
 
 === ProfilePropertyTypes
@@ -244,7 +258,7 @@ A ProfileID consists of the following fields:
 * Client (mandatory) # ClientID instead?
 
 
-=== Event
+=== Events
 Events are what drives the Context Server forward.
 Events are collected from different Clients, such as a specific website, beacons, commerce systems or a CRM.
 
@@ -455,46 +469,10 @@ Example Topics for a car manufacturer might for instance be:
 * "Model 3"
 * "Model X"
 
-==== CXS_Topic
-
-* ID (generated??) TODO ? Should this be the "key"? I.e. sync/import from external system
-* Title (mandatory??)
-* View
-
-*CXS_TopicInput*
-
 TODO: What about localization?
 
 
-== GraphQL Types
-
-=== CXS_Profile
-
-* <<ProfileIDs>> - list of IDs associated with this profile
-* <<Events>> - events associated with this profile
-* <<Segments>> - access segment this profile is active in
-* <<Interests>> - Scored list of topics the profile is interested in
-* <<Lists>> - Lists the profile is active in
-* <<Consents>> - Consents given by the profile
-* <<Properties>> - In compliance with the <<ProfilePropertyTypes>> schema
-
-*CXS_ProfileInput*
-
-=== CXS_PropertyType
-
-* name (mandatory - unique name within its scope - allowed characters: [_A-Za-z][_0-9A-Za-z]*
-* valueType (Available valueTypes are: Identifier, String, Int, Float, Date, Boolean, GeoPoint or Set)
-* minOccur - Specify the minimum number of values
-* maxOccur - Specify if there is a maximum amount of values
-* tags
-* systemTags
-* personalData - Specify if this property holds data that can easily identify an individual. This is useful for handling new and strict privacy policies such as GDPR
-
-*CXS_PropertyTypeInput*
-
-=== CXS_ProfilePropertyType
-
-*CXS_ProfilePropertyTypeInput*
+== GraphQL Type definitions
 
 === CXS_Consent
 
@@ -507,33 +485,29 @@ TODO: What about localization?
 * Events - All events related to this consent
 * Profile - The profile this consent applies to
 
-=== CXS_ConsentInput
-
-=== CXS_EventFilterInput
 
 === CXS_Event
 
-* ID (mandatory)
-* eventType (mandator)
-* profileID
-* profile
-* source - optionally? specify source within client, i.e. a specific website
-* object (mandatory) - Reference to a target object for the event, i.e. an SKU, or a link )
-* location
-* timestamp - Datetime when the event occured
-* properties - Any <<Properties>> stored with the event - must match the schema of the EventType
+[source,graphql]
+----
+include::{sourcedir}/schemas/events.js[lines=2..76]
+----
 
+==== CXS_EventFilterInput
 
-=== CXS_Segment
+==== CXS_EventType
 
-* ID (mandatory)
-* Title (mandatory string)
-* View
-* Filter (mandatory)
-* Exclude - optional array of profiles to exclude from segment (IDea from TSI)
-* Profiles - directly access all profiles in the segment
+[source,graphql]
+----
+include::{sourcedir}/schemas/events.js[lines=2..40]
+----
 
-=== CXS_SegmentInput
+=== CXS_Interest
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/interests.js[lines=2..10]
+----
 
 
 === CXS_List
@@ -544,31 +518,30 @@ TODO: What about localization?
 * Profiles - Active profiles in the list
 * Inactive - Profiles that have been deactivated
 
-=== CXS_ListInput
 
-=== CXS_ProfileID
-
-*CXS_ProfileIDInput*
 
 === CXS_Persona
 
-* <<ProfileIDs>> TODO
-* View
-* <<Segments>> - Specifically selected segments
-* <<Interests>> - Specifically defined interests
-* <<Lists>> - Specifically defined list memberships
-* <<Consents>> - Specifically defined consents
-* <<Properties>> - Specifically defined properties
+[source,graphql]
+----
+include::{sourcedir}/schemas/personas.js[lines=2..24]
+----
 
-=== CXS_PersonaInput
+=== CXS_Profile
 
-=== CXS_View
+[source,graphql]
+----
+include::{sourcedir}/schemas/profiles.js[lines=2..25]
+----
 
-* Name (mandatory, unique identifier)
+==== CXS_ProfileProperties
 
-*CXS_ViewInput*
+[source,graphql]
+----
+include::{sourcedir}/schemas/profileproperties.js[lines=2..15]
+----
 
-=== CXS_ProfileFilter
+==== CXS_ProfileFilterInput
 
 * asString - Filter expressed as a string
 * properties - Profile properties
@@ -578,32 +551,114 @@ TODO: What about localization?
 
 ProfileFilters only return profiles that match the combined filter expressions.
 
-*CXS_ProfileFilterInput*
-
-=== CXS_Interest
-* Topic
-* Profile
-* Score
-* updated
-
-*CXS_InterestInput*
-
-=== CXS_EventType
-
-* Name (mandatory) - system-wide unique name - allowed characters: [_A-Za-z][_0-9A-Za-z]*
-* Schema (mandatory) - a Set propertyType allowing any number of propertyTypes
-
-=== CXS_EventTypeInput
+==== CXS_ProfileID
 
 
+=== CXS_PropertyType
 
-=== CXS_Queries
+CXS_PropertyType is to be considered an interface, with implementations for each valueType.
+This simplifies use and provides strong typing in GraphQL.
 
-TODO Didn't we remove sources???
+[source,graphql]
+----
+include::{sourcedir}/schemas/propertytypes.js[lines=2..27]
+----
 
-=== CXS_Mutations
+==== CXS_BooleanPropertyType
 
-=== CXS_Subscriptions
+[source,graphql]
+----
+include::{sourcedir}/schemas/booleanpropertytypes.js[lines=2..23]
+----
+
+==== CXS_DatePropertyType
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/datepropertytypes.js[lines=2..23]
+----
+
+==== CXS_FloatPropertyType
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/floatpropertytypes.js[lines=2..23]
+----
+
+
+==== CXS_GeoPointPropertyType
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/geopointpropertytypes.js[lines=2..23]
+----
+
+==== CXS_IdentifierPropertyType
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/identifierpropertytypes.js[lines=2..23]
+----
+
+==== CXS_IntPropertyType
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/intpropertytypes.js[lines=2..23]
+----
+
+==== CXS_StringPropertyType
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/stringpropertytypes.js[lines=2..23]
+----
+
+==== CXS_SetPropertyType
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/setpropertytypes.js[lines=2..23]
+----
+
+
+
+=== CXS_Segment
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/segments.js[lines=2..14]
+----
+
+
+==== CXS_SegmentFilterInput
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/segmentfilterinput.js[lines=2..10]
+----
+
+
+=== CXS_Topic
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/topics.js[lines=2..12]
+----
+
+
+
+=== CXS_View
+
+* Name (mandatory, unique identifier)
+
+
+
+== GraphQL Queries
+
+== GraphQL Mutations
+
+== GraphQL Subscriptions
 
 TODO
 

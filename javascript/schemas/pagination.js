@@ -1,6 +1,4 @@
-
-exports.cxsPaginationSchema = `
-
+exports.paginationSchema = `
 # PAGINATION-RELATED TYPES
 # ----------------------------------------------------------------------------
 
