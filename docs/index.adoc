@@ -164,10 +164,15 @@ http://docs.oasis-open.org/emergency/edxl-have/os/emergency_edxl_have-1.0-spec-o
 
 
 
-== Domain objects
+== API Reference
 
-The ConteXt Server (CXS) standard is built around a set of domain objects, and offers a GraphQL API for interacting with these.
-This chapter describes the domain objects in detail.
+The ConteXt Server (CXS) standard is built around a set of concepts, domain objects and services for interacting with them.
+This is represented through a strongly typed API defined through GraphQL Types, Queries, Mutations and Subscriptions.
+
+This chapter describes the API in detail.
+
+NOTE: The best way to expore the API is by using TODO TODO
+
 
 === Clients
 
@@ -190,6 +195,28 @@ For instance, if a client is used to track visitors across multiple websites, it
 NOTE: The standard does not specify Queries or Mutations for creating or retrieving Clients in the CXS specification, as this is considered an implementation-specific feature.
 For any CXS implementation, a Client must be pre-defined in the CXS server before it can access the API.
 
+==== Types
+
+===== CXS_Client
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/events.js[lines=2..6]
+----
+
+==== Queries
+
+Fetching clients is considered implementation specific
+
+==== Mutations
+
+Creating or updating clients is considered implementation specific
+
+==== Subscriptions
+
+There are no subscriptions available for Clients
+
+
 
 === Profiles
 Profiles are in many ways the essence of CXS.
@@ -200,6 +227,65 @@ A Profile can be created from an anonymous visitor on a webpage, or populated fr
 Different <<Clients>> like a website tracking script, CRM or identity system can be configured to feed <<Events>> to the context server.
 
 The context server is responsible for building profiles based on the provided identifiers and the stream of events coming from each Client.
+
+==== Interfaces
+
+
+==== Types
+
+===== CXS_ProfileInterface
+This interface is also used by <<Personas>>
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/profiles.js[lines=2..10]
+----
+
+===== CXS_Profile
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/profiles.js[lines=12..25]
+----
+
+===== CXS_ProfileProperties
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/profileproperties.js[lines=2..15]
+----
+
+===== CXS_ProfileFilterInput
+
+* asString - Filter expressed as a string
+* properties - Profile properties
+* Segments - that the profile must match
+* Consents - granted by the profile
+* Events - profileEventsFilter (TODO)
+
+ProfileFilters only return profiles that match the combined filter expressions.
+
+===== CXS_ProfileID
+
+
+==== Queries
+
+===== getProfile
+
+===== findProfiles
+
+
+==== Mutations
+
+Profiles cannot be created, but are rather composed through a chain of events.
+Implementers are however encouraged to implement interfaces for importing profilesSchema
+
+TODO (are we sure about this?)
+
+==== Subscriptions
+
+There are no subscriptions available for Profiles
+
 
 
 === Properties
@@ -527,31 +613,6 @@ include::{sourcedir}/schemas/interests.js[lines=2..10]
 include::{sourcedir}/schemas/personas.js[lines=2..24]
 ----
 
-=== CXS_Profile
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/profiles.js[lines=2..25]
-----
-
-==== CXS_ProfileProperties
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/profileproperties.js[lines=2..15]
-----
-
-==== CXS_ProfileFilterInput
-
-* asString - Filter expressed as a string
-* properties - Profile properties
-* Segments - that the profile must match
-* Consents - granted by the profile
-* Events - profileEventsFilter (TODO)
-
-ProfileFilters only return profiles that match the combined filter expressions.
-
-==== CXS_ProfileID
 
 
 === CXS_PropertyType

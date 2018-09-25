@@ -1,6 +1,9 @@
 const { ApolloServer } = require('apollo-server');
 
 const { cxsGlobalSchema } = require('./schemas/cxsglobal');
+const { querySchema } = require('./schemas/query');
+const { subscriptionSchema } = require('./schemas/subscription');
+const { clientsSchema } = require('./schemas/client');
 const { eventsSchema } = require('./schemas/events');
 const { eventTypesSchema } = require('./schemas/eventtypes');
 const { profilesSchema } = require('./schemas/profiles');
@@ -26,6 +29,9 @@ const resolvers = {};
 
 const typeDefs = [
     cxsGlobalSchema,
+    querySchema,
+    subscriptionSchema,
+    clientsSchema,
     eventsSchema,
     eventTypesSchema,
     profilesSchema,
