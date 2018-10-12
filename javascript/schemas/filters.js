@@ -1,7 +1,6 @@
-
 exports.filtersSchema = `
-"The sort order is used in CXS_OrderBy types to specify the sorting order"
-enum CXS_SortOrder {
+"The sort order is used in CDP_OrderBy types to specify the sorting order"
+enum CDP_SortOrder {
   ASC,
   DESC,
   UNSPECIFIED
@@ -17,39 +16,39 @@ enum CXS_SortOrder {
 #     and never logged in
 #
 
-input CXS_OrderByInput {
+input CDP_OrderByInput {
   fieldName : String # eg : endTime, properties.location
-  order : CXS_SortOrder
+  order : CDP_SortOrder
 }
 
-type CXS_ProfileEventsFilter {
-  and : [CXS_ProfileEventsFilter]
-  or : [CXS_ProfileEventsFilter]
-  not : CXS_ProfileEventsFilter
+type CDP_ProfileEventsFilter {
+  and : [CDP_ProfileEventsFilter]
+  or : [CDP_ProfileEventsFilter]
+  not : CDP_ProfileEventsFilter
 
   minimalCount : Int,
   maximalCount : Int,
-  eventFilter : CXS_EventFilter
+  eventFilter : CDP_EventFilter
 }
 
-input CXS_ProfileEventsFilterInput {
-  and : [CXS_ProfileEventsFilterInput]
-  or : [CXS_ProfileEventsFilterInput]
-  not : CXS_ProfileEventsFilterInput
+input CDP_ProfileEventsFilterInput {
+  and : [CDP_ProfileEventsFilterInput]
+  or : [CDP_ProfileEventsFilterInput]
+  not : CDP_ProfileEventsFilterInput
 
   minimalCount : Int,
   maximalCount : Int,
-  eventFilter : CXS_EventFilterInput
+  eventFilter : CDP_EventFilterInput
 }
 
 """
 This filter will contain generated fields that are concatenations of property names and operators. The values
 provided here are just examples.
 """
-type CXS_ProfilePropertiesFilter {
+type CDP_ProfilePropertiesFilter {
 
-  and : [CXS_ProfilePropertiesFilter]
-  or : [CXS_ProfilePropertiesFilter]
+  and : [CDP_ProfilePropertiesFilter]
+  or : [CDP_ProfilePropertiesFilter]
 
   # generated profile properties filters will be listed below
 }
@@ -58,135 +57,135 @@ type CXS_ProfilePropertiesFilter {
 This filter will contain generated fields that are concatenations of property names and operators. The values
 provided here are just examples.
 """
-input CXS_ProfilePropertiesFilterInput {
+input CDP_ProfilePropertiesFilterInput {
 
-  and : [CXS_ProfilePropertiesFilterInput]
-  or : CXS_ProfilePropertiesFilterInput
+  and : [CDP_ProfilePropertiesFilterInput]
+  or : CDP_ProfilePropertiesFilterInput
 
   # generated profile properties filters will be listed below
 
 }
 
-type CXS_GeoPoint {
+type CDP_GeoPoint {
   longitude : Float
   latitude : Float
 }
 
-input CXS_GeoPointInput {
+input CDP_GeoPointInput {
   longitude : Float
   latitude : Float
 }
 
-enum CXS_GeoDistanceUnit {
+enum CDP_GeoDistanceUnit {
   METERS,
   KILOMETERS,
   MILES
 }
 
-type CXS_GeoDistance {
-  center : CXS_GeoPoint
-  unit : CXS_GeoDistanceUnit
+type CDP_GeoDistance {
+  center : CDP_GeoPoint
+  unit : CDP_GeoDistanceUnit
   distance : Float
 }
 
-input CXS_GeoDistanceInput {
-  center : CXS_GeoPointInput
-  unit : CXS_GeoDistanceUnit
+input CDP_GeoDistanceInput {
+  center : CDP_GeoPointInput
+  unit : CDP_GeoDistanceUnit
   distance : Float
 }
 
-type CXS_DateFilter {
+type CDP_DateFilter {
   after : Int
   before : Int
   includeAfter : Boolean
   includeBefore : Boolean
 }
 
-input CXS_DateFilterInput {
+input CDP_DateFilterInput {
   after : Int
   before : Int
   includeAfter : Boolean
   includeBefore : Boolean
 }
 
-type CXS_EventFilter {
-  and : [CXS_EventFilter]
-  or : [CXS_EventFilter]
+type CDP_EventFilter {
+  and : [CDP_EventFilter]
+  or : [CDP_EventFilter]
 
   id_equals : String
   sourceId_equals : String
   clientId_equals: String
   profileId_equals : String
-  location_distance : CXS_GeoDistance
-  timestamp_between : CXS_DateFilter
+  location_distance : CDP_GeoDistance
+  timestamp_between : CDP_DateFilter
 
   # generate event types will be listed here
 }
 
-input CXS_EventFilterInput {
-  and : [CXS_EventFilterInput]
-  or : [CXS_EventFilterInput]
+input CDP_EventFilterInput {
+  and : [CDP_EventFilterInput]
+  or : [CDP_EventFilterInput]
 
   id_equals : String
   sourceId_equals : String
   clientId_equals: String
   profileId_equals : String
-  location_distance : CXS_GeoDistanceInput
-  timestamp_between : CXS_DateFilterInput
+  location_distance : CDP_GeoDistanceInput
+  timestamp_between : CDP_DateFilterInput
 
   # generate event types will be listed here
 }
 
-type CXS_ProfileFilter {
+type CDP_ProfileFilter {
   asString : String # optional ?
 
-  properties : CXS_ProfilePropertiesFilter
+  properties : CDP_ProfilePropertiesFilter
   segments : [String]
   consents : [String]
-  events : CXS_ProfileEventsFilter
+  events : CDP_ProfileEventsFilter
 }
 
-input CXS_ProfileFilterInput {
+input CDP_ProfileFilterInput {
   # Example for asString value : profile.test = 'testValue' AND eventOccurrence('pageView') = 10
   asString : String # optional ?
 
-  properties : CXS_ProfilePropertiesFilterInput
+  properties : CDP_ProfilePropertiesFilterInput
   segments : [String]
   consents : [String]
-  events : CXS_ProfileEventsFilterInput
+  events : CDP_ProfileEventsFilterInput
 }
 
 
-type CXS_ListFilter {
-  and : [CXS_ListFilter]
-  or : [CXS_ListFilter]
+type CDP_ListFilter {
+  and : [CDP_ListFilter]
+  or : [CDP_ListFilter]
 
   view_equals : String
   name_equals : String
   name_regexp : String
 }
 
-input CXS_ListFilterInput {
-  and : [CXS_ListFilterInput]
-  or : [CXS_ListFilterInput]
+input CDP_ListFilterInput {
+  and : [CDP_ListFilterInput]
+  or : [CDP_ListFilterInput]
 
   view_equals : String
   name_equals : String
   name_regexp : String
 }
 
-type CXS_TopicFilter {
-  and : [CXS_TopicFilter]
-  or : [CXS_TopicFilter]
+type CDP_TopicFilter {
+  and : [CDP_TopicFilter]
+  or : [CDP_TopicFilter]
 
   view_equals : String
   id_equals : String
   displayName_regexp : String
 }
 
-input CXS_TopicFilterInput {
-  and : [CXS_TopicFilterInput]
-  or : [CXS_TopicFilterInput]
+input CDP_TopicFilterInput {
+  and : [CDP_TopicFilterInput]
+  or : [CDP_TopicFilterInput]
 
   view_equals : String
   id_equals : String
