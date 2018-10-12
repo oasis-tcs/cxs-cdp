@@ -1,6 +1,6 @@
 exports.subscriptionSchema = `
 type Subscription {
 
-  cxs : CXS_Subscription
+  cxs : CDP_Subscription
 }
 `;

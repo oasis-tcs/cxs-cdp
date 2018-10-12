@@ -1,71 +1,99 @@
-= Context Server 1.0.0
+= Customer Data Platform 1.0.0
 :toc: macro
 :toc: right
 :toclevels: 4
 :sectnums:
 :sourcedir: ../javascript
 
-image::images/OASISLogo.jpg["Oasis Open Logo"]
+image::images/OASISLogo-v2.0.jpg["Oasis Open Logo"]
 
+[discrete]
+== Committee Specification Draft 01 / Public Review Draft 01
 
-\[Stage]
+[discrete]
+== 12 October 2018
 
-01 June 2018
-
-Specification URIs:
+[discrete]
+=== Specification URIs:
 
 This Version:
-  http://docs.oasis-open.org/cxs/[additional path/filename].html
-  http://docs.oasis-open.org/cxs/[additional path/filename].pdf
+
+  * http://docs.oasis-open.org/cxs/cdp/v1.0/csprd01/cdp-v1.0-csprd01.adoc (Authoritative)
+  * http://docs.oasis-open.org/cxs/cdp/v1.0/csprd01/cdp-v1.0-csprd01.html
+  * http://docs.oasis-open.org/cxs/cdp/v1.0/csprd01/cdp-v1.0-csprd01.pdf
 
 Previous Version:
-  http://docs.oasis-open.org/cxs/[additional path/filename].html
-  http://docs.oasis-open.org/cxs/[additional path/filename].pdf
+  N/A
 
 Latest Version:
-  http://docs.oasis-open.org/cxs/[additional path/filename].html
-  http://docs.oasis-open.org/cxs/[additional path/filename].pdf
 
-Technical Committee:
+  * http://docs.oasis-open.org/cxs/cdp/v1.0/cdp-v1.0.txt (Authoritative)
+  * http://docs.oasis-open.org/cxs/cdp/v1.0/cdp-v1.0.html
+  * http://docs.oasis-open.org/cxs/cdp/v1.0/cdp-v1.0.pdf
 
-OASIS CXS TC
 
-Chair(s):
-  Serge Huber
-  Thomas Lund Sigdestad
+[discrete]
+=== Technical Committee:
 
-Editor(s):
-  Thomas Lund Sigdestad
-  [Editor name]
+OASIS Context Server (CXS) TC
 
-Related Work:
-  This specification replaces or supersedes:
-  [specifications replaced by this standard - OASIS as well as other standards organizations]
-  [specifications replaced by this standard - OASIS as well as other standards organizations]
+[discrete]
+==== Chair(s):
+
+  * Serge Huber (shuber@jahia.com), Jahia Solutions Group SA
+  * Thomas Lund Sigdestad (tsi@enonic.com), Enonic
+
+[discrete]
+==== Editor(s):
+
+  * Thomas Lund Sigdestad (tsi@enonic.com), Enonic
+
+[discrete]
+=== Additional artifacts:
+
+This prose specification is one component of a Work Product that also includes:
+
+  * GraphQL sample implementation: http://docs.oasis-open.org/tc-short-name/WP-abbrev/version/csdXX/schemas/ (hyperlink, including terminating /)
+  * Other parts (list full title and VISIBLE hyperlink, preferably to HTML version)
+
+[discrete]
+=== Related work:
 
 This specification is related to:
-  [specifications related to this standard - OASIS as well as other standards organizations]
-  [specifications related to this standard - OASIS as well as other standards organizations]
 
-Declared XML Namespace(s):
-  [list namespaces here]
-  [list namespaces here]
+  * GraphQL ... (TODO)
+  *	Related specifications (VISIBLE hyperlink, preferably to HTML version)
 
-Abstract:
-  [Abstract goes here]
+[discrete]
+=== Abstract:
 
-Status:
-  This document was last revised or approved by the [TC name | membership of OASIS] on the above date. The level of approval is also listed above. Check the "Latest Version" or "Latest Approved Version" location noted above for possible later revisions of this document.
+This specification aims to standardize exchange of customer data across systems and silos by defining a web-based API using GraphQL, thus providing a self-documented and strongly typed interface while allowing extensive customization. It is based upon four core concepts: Profiles, Events, Consents, and Clients.
 
-  Technical Committee members should send comments on this specification to the Technical Committee’s email list. Others should send comments to the Technical Committee by using the “Send A Comment” button on the Technical Committee’s web page at http://www.oasis-open.org/committees/cxs.
+[discrete]
+=== Status:
 
-  For information on whether any patents have been disclosed that may be essential to implementing this specification, and any offers of patent licensing terms, please refer to the Intellectual Property Rights section of the Technical Committee web page (http://www.oasis-open.org/committees/cxs/ipr.php.
+This document was last revised or approved by the OASIS Context Server (CXS) TC on the above date. The level of approval is also listed above. Check the "Latest version" location noted above for possible later revisions of this document. Any other numbered Versions and other technical work produced by the Technical Committee (TC) are listed at https://www.oasis-open.org/committees/tc_home.php?wg_abbrev=cxs#technical.
 
-  The non-normative errata page for this specification is located at http://www.oasis-open.org/committees/[specific location].
+TC members should send comments on this specification to the TC's email list. Others should send comments to the TC's public comment list, after subscribing to it by following the instructions at the "Send A Comment" button on the TC's web page at https://www.oasis-open.org/committees/cxs/.
 
-Notices
+This specification is provided under the Non-Assertion Mode of the OASIS IPR Policy, the mode chosen when the Technical Committee was established. For information on whether any patents have been disclosed that may be essential to implementing this specification, and any offers of patent licensing terms, please refer to the Intellectual Property Rights section of the TC's web page (https://www.oasis-open.org/committees/cxs/ipr.php).
 
-Copyright © OASIS® 2018. All Rights Reserved.
+Note that any machine-readable content (Computer Language Definitions) declared Normative for this Work Product is provided in separate plain text files. In the event of a discrepancy between any such plain text file and display content in the Work Product's prose narrative document(s), the content in the separate plain text file prevails.
+
+[discrete]
+=== Citation format:
+
+When referencing this specification the following citation format should be used:
+
+*CDP-v1.0*
+
+_Customer Data Platform Version 1.0_. Edited by Thomas Lund Sigdestad. 12 October 2018. OASIS Committee Specification Draft 01 / Public Review Draft 01. http://docs.oasis-open.org/cxs/cdp/v1.0/csprd01/cdp-v1.0-csprd01.html. Latest version: http://docs.oasis-open.org/cxs/cdp/v1.0/cdp-v1.0.html.
+
+
+[discrete]
+== Notices
+
+Copyright © OASIS Open 2018. All Rights Reserved.
 
 All capitalized terms in the following text have the meanings assigned to them in the OASIS Intellectual Property Rights Policy (the "OASIS IPR Policy"). The full Policy may be found at the OASIS website.
 
@@ -79,11 +107,9 @@ OASIS requests that any OASIS Party or any other party that believes it has pate
 
 OASIS invites any party to contact the OASIS TC Administrator if it is aware of a claim of ownership of any patent claims that would necessarily be infringed by implementations of this specification by a patent holder that is not willing to provide a license to such patent claims in a manner consistent with the IPR Mode of the OASIS Technical Committee that produced this specification. OASIS may include such claims on its website, but disclaims any obligation to do so.
 
-OASIS takes no position regarding the validity or View of any intellectual property or other rights that might be claimed to pertain to the implementation or use of the technology described in this document or the extent to which any license under such rights might or might not be available; neither does it represent that it has made any effort to identify any such rights. Information on OASIS' procedures with respect to rights in any document or deliverable produced by an OASIS Technical Committee can be found on the OASIS website. Copies of claims of rights made available for publication and any assurances of licenses to be made available, or the result of an attempt made to obtain a general license or permission for the use of such proprietary rights by implementers or users of this OASIS Committee Specification or OASIS Standard, can be obtained from the OASIS TC Administrator. OASIS makes no representation that any information or list of intellectual property rights will at any time be complete, or that any claims in such list are, in fact, Essential Claims.
+OASIS takes no position regarding the validity or scope of any intellectual property or other rights that might be claimed to pertain to the implementation or use of the technology described in this document or the extent to which any license under such rights might or might not be available; neither does it represent that it has made any effort to identify any such rights. Information on OASIS' procedures with respect to rights in any document or deliverable produced by an OASIS Technical Committee can be found on the OASIS website. Copies of claims of rights made available for publication and any assurances of licenses to be made available, or the result of an attempt made to obtain a general license or permission for the use of such proprietary rights by implementers or users of this OASIS Committee Specification or OASIS Standard, can be obtained from the OASIS TC Administrator. OASIS makes no representation that any information or list of intellectual property rights will at any time be complete, or that any claims in such list are, in fact, Essential Claims.
 
-The names "OASIS", [insert specific trademarked names, abbreviations, etc. here] are trademarks of OASIS, the owner and developer of this specification, and should be used only to refer to the organization and its official outputs. OASIS welcomes reference to, and implementation and use of, specifications, while reserving the right to enforce its marks against misleading uses. Please see http://www.oasis-open.org/who/trademark.php for above guidance.
-
-Table of Contents
+The name "OASIS" is a trademark of OASIS, the owner and developer of this specification, and should be used only to refer to the organization and its official outputs. OASIS welcomes reference to, and implementation and use of, specifications, while reserving the right to enforce its marks against misleading uses. Please see https://www.oasis-open.org/policies-guidelines/trademark for above guidance.
 
 toc::[]
 
@@ -97,59 +123,36 @@ Even digital savvy businesses struggle to control and utilize this information.
 Businesses and users also rely on such data to be accessible in real-time, and at scale - for instance to deliver personalizations.
 Additionally businesses now face severe legal charges if customer data is not treated according to regulatory requirements (ref GDPR).
 
-The Context Server (CXS) specification aims to standardize exchange of customer data across systems and silos.
+The Customer Data Platform (CDP) specification aims to standardize exchange of customer data across systems and silos.
 This enables centralization of customer data - consequently giving control of the data back to the business, and the customers.
 
-The CXS standard builds upon four core concepts: Profiles, Events, Consents, and Clients
+The CDP standard builds upon four core concepts: Profiles, Events, Consents, and Clients
 
   * Profiles represent each individual "customer". Aggregating and tracking all registered properties, including which system actually collected the data.
   * Events represent user behavioral data / interactions performed by a customer (aka profile). A purchase, or a simple click on a link represents different events.
   * Consents are actual permission given by a customer to the organization, with a limited View and duration
-  * Clients represent the various systems that provide and/or consume data from a Context Server, typical clients are: CRM systems, Identity Systems, Content Management Systems, E-commerce etc.
+  * Clients represent the various systems that provide and/or consume data from a Customer Data Platform, typical clients are: CRM systems, Identity Systems, Content Management Systems, E-commerce etc.
 
-The CXS standard is defined as a web-based API using GraphQL - providing a self-documented and strongly typed interface.
+The CDP standard is defined as a web-based API using GraphQL - providing a self-documented and strongly typed interface.
 
-It has been an explicit goal of the CXS committee to allow extensive customization of CXS deployments, in order to fit the need of each different organization.
+It has been an explicit goal of the CXS committee to allow extensive customization of CDP deployments, in order to fit the need of each different organization.
 As such, the API dynamically evolves as you customize your deployment.
 
 
 === Terminology
 
-The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”, “SHOULD”, “SHOULD NOT”, “RECOMMENDED”, “MAY”, and “OPTIONAL” are to be interpreted as described in [RFC2119].
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC2119] and [RFC8174] when, and only when, they appear in all capitals, as shown here.
 
 === Normative References
 
-\[RFC2119]
-
-S Bradner, Key words for use in RFCs to Indicate Requirement Levels, http://www.ietf.org/rfc/rfc2119.txt, IETF RFC 2119, March 1997.
-
-\[Reference]
-
-\[Full reference citation]
-
-
-
-NOTE: The proper format for a citation to an OASIS Technical Committee's work (whether Normative or Non-Normative) is:
-
-OASIS
-Stage (Committee Draft 01, Committee Draft 02, Committee Specifcation 01, etc. or Standard)
-Title (italicized or in quotation marks)
-Approval Date (Month YYYY)
-URI of the actual Authoritative Specification (namespace is not acceptable as the content changes over time)
-
-For example:
-
-\[EDXL-HAVE]
-
-OASIS Standard, "Emergency Data Exchange Language (EDXL) Hospital AVailability Exchange (HAVE) Version 1.0", November 2008.
-http://docs.oasis-open.org/emergency/edxl-have/os/emergency_edxl_have-1.0-spec-os.doc
-
+  \[RFC2119]	Bradner, S., "Key words for use in RFCs to Indicate Requirement Levels", BCP 14, RFC 2119, DOI 10.17487/RFC2119, March 1997, <http://www.rfc-editor.org/info/rfc2119>.
+  \[RFC8174]	Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174, May 2017, <http://www.rfc-editor.org/info/rfc8174>.
+  \[Reference]	\[Full reference citation]
 
 === Non-Normative References
 
-\[Reference]
-
-\[Full reference citation]
+  \[RFC3552]	Rescorla, E. and B. Korver, "Guidelines for Writing RFC Text on Security Considerations", BCP 72, RFC 3552, DOI 10.17487/RFC3552, July 2003, <https://www.rfc-editor.org/info/rfc3552>.
+  \[Reference]	\[Full reference citation]
 
 
 == Use Cases
@@ -166,7 +169,7 @@ http://docs.oasis-open.org/emergency/edxl-have/os/emergency_edxl_have-1.0-spec-o
 
 == API Reference
 
-The ConteXt Server (CXS) standard is built around a set of concepts, domain objects and services for interacting with them.
+The Customer Data Platform (CDP) standard is built around a set of concepts, domain objects and services for interacting with them.
 This is represented through a strongly typed API defined through GraphQL Types, Queries, Mutations and Subscriptions.
 
 This chapter describes the API in detail.
@@ -176,11 +179,11 @@ NOTE: The best way to expore the API is by using TODO TODO
 
 === Clients
 
-The CXS GraphQL API is not intended to be exposed publicly, but only made accessible to specific authorized clients.
+The CDP GraphQL API is not intended to be exposed publicly, but only made accessible to specific authorized clients.
 
-Client means any software that interacts directly with the Context Server.
-A Context Server typically holds personal data, as such implementers are urged to place strong control over which clients can connect to a context server.
-In any case, it should not be possible for unauthorized clients to access the context server API.
+Client means any software that interacts directly with the Customer Data Platform.
+A Customer Data Platform typically holds personal data, as such implementers are urged to place strong control over which clients can connect to a Customer Data Platform.
+In any case, it should not be possible for unauthorized clients to access the Customer Data Platform API.
 
 Examples of clients are:
 
@@ -189,15 +192,15 @@ Examples of clients are:
 * Integration with your Identity System
 
 Each Client is responsible for uniquely identifying visitors, for instance through the use of a cookie on the website, a customer ID in the CRM or a user ID in the Identity system.
-The Context Server requires <<profileIDs>> to be unique within every client.
+The Customer Data Platform requires <<profileIDs>> to be unique within every client.
 For instance, if a client is used to track visitors across multiple websites, it should aim to re-use the same profileID across all of them, for the same visitor.
 
-NOTE: The standard does not specify Queries or Mutations for creating or retrieving Clients in the CXS specification, as this is considered an implementation-specific feature.
-For any CXS implementation, a Client must be pre-defined in the CXS server before it can access the API.
+NOTE: The standard does not specify Queries or Mutations for creating or retrieving Clients in the CDP specification, as this is considered an implementation-specific feature.
+For any CDP implementation, a Client must be pre-defined in the CDP server before it can access the API.
 
 ==== Types
 
-===== CXS_Client
+===== CDP_Client
 
 [source,graphql]
 ----
@@ -219,21 +222,21 @@ There are no subscriptions available for Clients
 
 
 === Profiles
-Profiles are in many ways the essence of CXS.
-A Context Server dynamically builds profiles from events that occur over time.
+Profiles are in many ways the essence of CDP.
+A Customer Data Platform dynamically builds profiles from events that occur over time.
 
 A Profile can be created from an anonymous visitor on a webpage, or populated from an identity system or maybe a CRM - or the combination of all of them.
 
-Different <<Clients>> like a website tracking script, CRM or identity system can be configured to feed <<Events>> to the context server.
+Different <<Clients>> like a website tracking script, CRM or identity system can be configured to feed <<Events>> to the Customer Data Platform.
 
-The context server is responsible for building profiles based on the provided identifiers and the stream of events coming from each Client.
+The Customer Data Platform is responsible for building profiles based on the provided identifiers and the stream of events coming from each Client.
 
 ==== Interfaces
 
 
 ==== Types
 
-===== CXS_ProfileInterface
+===== CDP_ProfileInterface
 This interface is also used by <<Personas>>
 
 [source,graphql]
@@ -241,21 +244,21 @@ This interface is also used by <<Personas>>
 include::{sourcedir}/schemas/profiles.js[lines=2..10]
 ----
 
-===== CXS_Profile
+===== CDP_Profile
 
 [source,graphql]
 ----
 include::{sourcedir}/schemas/profiles.js[lines=12..25]
 ----
 
-===== CXS_ProfileProperties
+===== CDP_ProfileProperties
 
 [source,graphql]
 ----
 include::{sourcedir}/schemas/profileproperties.js[lines=2..15]
 ----
 
-===== CXS_ProfileFilterInput
+===== CDP_ProfileFilterInput
 
 * asString - Filter expressed as a string
 * properties - Profile properties
@@ -265,7 +268,7 @@ include::{sourcedir}/schemas/profileproperties.js[lines=2..15]
 
 ProfileFilters only return profiles that match the combined filter expressions.
 
-===== CXS_ProfileID
+===== CDP_ProfileID
 
 
 ==== Queries
@@ -309,7 +312,7 @@ I.e. from the example above: setOfProperties.response would hold the value "yo"
 
 === PropertyTypes
 
-PropertyTypes are used to dynamically define schemas in the Context Server.
+PropertyTypes are used to dynamically define schemas in the Customer Data Platform.
 A propertyType essentially defines:
 
 * the property name
@@ -317,67 +320,179 @@ A propertyType essentially defines:
 * minimum occurences of values (a single property may hold one or more values)
 * maximum occurences
 
-Since the CXS api is defined using GraphQL, the parts of the API that relates to schemas are dynamically updated when the schema is changed.
+Since the CDP api is defined using GraphQL, the parts of the API that relates to schemas are dynamically updated when the schema is changed.
 
-See <<CXS_PropertyType>> for more API details.
+==== Interfaces
+
+===== CDP_PropertyType
+
+CDPPropertyType defines the basis implementations for each valueType.
+This simplifies use and provides strong typing in GraphQL.
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/propertytypes.js[lines=2..27]
+----
+
+==== Types
+
+===== CDP_BooleanPropertyType
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/booleanpropertytypes.js[lines=2..23]
+----
+
+===== CDP_DatePropertyType
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/datepropertytypes.js[lines=2..23]
+----
+
+===== CDP_FloatPropertyType
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/floatpropertytypes.js[lines=2..23]
+----
+
+
+===== CDP_GeoPointPropertyType
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/geopointpropertytypes.js[lines=2..23]
+----
+
+===== CDP_IdentifierPropertyType
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/identifierpropertytypes.js[lines=2..23]
+----
+
+===== CDP_IntPropertyType
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/intpropertytypes.js[lines=2..23]
+----
+
+===== CDP_StringPropertyType
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/stringpropertytypes.js[lines=2..23]
+----
+
+===== CDP_SetPropertyType
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/setpropertytypes.js[lines=2..23]
+----
+
+
+==== Queries
+
+==== Mutations
+
+==== Subscriptions
+
+
 
 
 === ProfilePropertyTypes
 
 To create a schema for <<Profiles>>, we need a globally defined set of propertyTypes.
 
-Collectively, profilePropertyType defines the schema of properties that can be used by any profile in the Context Server.
+Collectively, profilePropertyType defines the schema of properties that can be used by any profile in the Customer Data Platform.
 
 This enables administrators and developers to build and maintain a consistent data model for profiles across all <<Clients>>.
 Any data imported to the system must be mapped to a corresponding ProfilePropertyType.
 
 A profilePropertyType is technically a PropertyType, where the name must be unique for all profilePropertyTypes.
 
+==== Types
 
-=== ProfileIDs
-Profiles have unique identifiers across different <<Clients>>.
-As such the profile ID is a composite value from Client and a unique identifier within that Client.
+See <<CDP_ProfilePropertyType>> for more API details.
 
-A ProfileID consists of the following fields:
+==== Queries
 
-* ID (mandatory - unique within Client)
-* Client (mandatory) # ClientID instead?
+==== Mutations
+
+==== Subscriptions
+
+
 
 
 === Events
-Events are what drives the Context Server forward.
+Events are what drives the Customer Data Platform forward.
 Events are collected from different Clients, such as a specific website, beacons, commerce systems or a CRM.
 
 A single Client might still produce many different profiles for a "real person".
 For instance - if a visitor uses different devices on a single web page, each device will produce a new profile, with a unique profileID.
 
-As such, Context Servers implementations SHOULD support profile merges.
+As such, Customer Data Platforms implementations SHOULD support profile merges.
 
-As profiles evolve over time, the context server may discover that two profiles actually represent the same individual i.e. if the same e-mail address is registered in both profiles, or if the user in on both his devices. This may then result in a profile merge.
-During a profile merge, the Context Server will link two (or more) separate profiles together.
+As profiles evolve over time, the Customer Data Platform may discover that two profiles actually represent the same individual i.e. if the same e-mail address is registered in both profiles, or if the user in on both his devices. This may then result in a profile merge.
+During a profile merge, the Customer Data Platform will link two (or more) separate profiles together.
 In order to keep event history and avoid re-processing of data, the merge process must not affect the existing and unique profileIDs.
 This is why profiles are defined to have multiple profileIDs.
 
 Example: As such, when visitors on a website are tracked through a cookie (defining the profileID), the cookie will remain the same even if the profile is merged.
 
-The Context Server is essentially interested in "User behavioral events".
+The Customer Data Platform is essentially interested in "User behavioral events".
 An event could be anything from someone clicking a link, to performing a transaction or consenting to use of his/hers information.
-Events are streamed or delivered from authorized <<Clients>> to the Context Server.
+Events are streamed or delivered from authorized <<Clients>> to the Customer Data Platform.
 
 As an example: Imagine an e-commerce site with a client that collect events from its visitors.
-When a visitor browses the site with his laptop, the client assigns a cookie to his/her browser and starts feeding events to the CXS API.
-As the visitor click on some product links, and maybe fills in a form that includes e-mail. CXS will gradually populate a profile, using the cookie value as an ID.
+When a visitor browses the site with his laptop, the client assigns a cookie to his/her browser and starts feeding events to the CDP API.
+As the visitor click on some product links, and maybe fills in a form that includes e-mail. CDP will gradually populate a profile, using the cookie value as an ID.
 At a later point, the same visitor picks up a different device and returns to the site. As the client cannot know this is the same individual, a new cookie is generated, and a new profile starts to build up.
 
 A single client may be used to track <<Events>> from a number of different websites, where each website can be tagged with a source.
 Sources provide a way to identify the exact origin of the events beyond the client.
 As such, sources are comparable to siteID's in Google Analytics.
 
+==== Types
+
+==== CDP_Event
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/events.js[lines=2..76]
+----
+
+
+==== Queries
+
+==== Mutations
+
+==== Subscriptions
+
+
 
 === EventTypes
 
 To uniquely separate events, an event must be associated with a specific EventType.
-EventTypes require a unique name, preferably using a namespace to avoid conflicts i.e. cxs_nearBeacon or company_Whatever
+EventTypes require a unique name, preferably using a namespace to avoid conflicts i.e. cdp_nearBeacon or company_Whatever
+
+==== Types
+
+==== CDP_EventType
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/events.js[lines=2..40]
+----
+
+==== Queries
+
+==== Mutations
+
+==== Subscriptions
 
 
 === Consents
@@ -385,15 +500,37 @@ EventTypes require a unique name, preferably using a namespace to avoid conflict
 New legislation and stricter rules for use of personal data is already here (i.e. GDPR).
 As such, consents are inherently more important to ensure you are using and storing data in compliance with policies.
 
-Consents hold an identifier that uniquely identifies the consent across your systems. The
+Consents hold an identifier that uniquely identifies the consent across your systems.
+
+==== Types
+
+===== CDP_Consent
+
+TODO
+
+* Name (Mandatory) - String that identifies the consent, i.e. a url or a reverse domain notation org.cdp.newsletter
+* Status - one of GRANT, DENY or REVOKED
+* StatusDate - Date when status was last updated
+* revokeDate - Revocation date, SHOULD have a default value like two years if left blank
+* View TODO: Why???
+* Source - Identifying the source of this consent? Optionally accessible from Profile?
+* Events - All events related to this consent
+* Profile - The profile this consent applies to
+
+==== Queries
+
+==== Mutations
+
+==== Subscriptions
+
 
 === Interests
 
-An important use-case for the Context Server is to determine a profiles "Interests".
-Whenever the Context server registers an events that are associated with one or more <<Topics>>, this will affect the profile's interest for the specific Topic.
+An important use-case for the Customer Data Platform is to determine a profiles "Interests".
+Whenever the Customer Data Platform registers an events that are associated with one or more <<Topics>>, this will affect the profile's interest for the specific Topic.
 A profiles interest in a specific topic is measured between 0-1, where 1 is maximum. As such 0,5 would indicate a higher interest than 0,35.
 
-The algorithm for how a context server scores and interest is implementation specific
+The algorithm for how a Customer Data Platform scores and interest is implementation specific
 - but implementations should also take care of automatically decreasing interest over time, unless new and relevant events occur.
 
 Example interests for products from a car manufacturer might be:
@@ -402,14 +539,32 @@ Example interests for products from a car manufacturer might be:
 *  Model 3 = 0.3
 *  Model X = 0.9
 
+
+==== Types
+
+===== CDP_Interest
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/interests.js[lines=2..10]
+----
+
+==== Queries
+
+==== Mutations
+
+==== Subscriptions
+
+
+
 === Filters
 
-Filters are widely used in CXS, and enable querying profiles, events, and other CXS objects.
+Filters are widely used in CDP, and enable querying profiles, events, and other CDP objects.
 Filters are designed to be easy to use for administrators and marketeers in visual user interfaces, but also in terms of technical implementation.
 
 Filters are essentially composed from basic property comparison expressions, and may be chained with the operators AND and OR, where AND is used by default.
 
-A single filter may only operate on a specified CXS object (i.e. profile or event).
+A single filter may only operate on a specified CDP object (i.e. profile or event).
 
 The following comparison operators are available:
 
@@ -483,7 +638,7 @@ Example: Filter for identifying events of type `transaction` within the last 30 
   {
     "properties" : {
         "timestamp_between" : { "after" : "2018-06-28T05:25:28+00:00", "before" : "2018-06-28T06:25:28+00:00", includeBefore : false, includeAfter : true },
-        "cxs_UpdateProfile" : {
+        "cdp_UpdateProfile" : {
           "updateProperties": {
             "firstName_startsWith" : "T"
             "lastName_endsWith" : "d"
@@ -494,37 +649,126 @@ Example: Filter for identifying events of type `transaction` within the last 30 
   }
 
 
+==== Types
+
+See <<CDP_EventFilter>> for more API details.
+
+==== Queries
+
+==== Mutations
+
+==== Subscriptions
+
+
+
 === ProfileFilters
 
 Profile Filters are slightly more complex than <<EventFilters>>.
 As profileFilter are composed from the following:
 
+==== Types
+
+See <<CDP_ProfileFilter>> for more API details.
+
+==== Queries
+
+==== Mutations
+
+==== Subscriptions
+
+
+=== SegmentFilters
+
+TODO
+
+==== Types
+
+===== CDP_SegmentFilterInput
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/segmentfilterinput.js[lines=2..10]
+----
+
+==== Queries
+
+==== Mutations
+
+==== Subscriptions
+
 
 === Views
 
-Views provide a way of grouping administrative objects in the context server.
+Views provide a way of grouping administrative objects in the Customer Data Platform.
 <<Profiles>>, <<Events>> and <<Consents>> are all collected and stored globally,
 but other items are typically handled by administrators or marketeers, and benefit from being grouped into different views to simplify handling.
 
 <<Lists>>, <<Segments>>, <<Topics>> and <<Personas>> are all tagged with Views.
 
 
+==== Types
+
+===== CDP_View
+
+* Name (mandatory, unique identifier).
+
+==== Queries
+
+==== Mutations
+
+==== Subscriptions
+
+
 === Personas
 
 A persona is a concept used by marketeers to visualize one or more target customers, and simplify personalization and targeting of content.
 
-In CXS, personas are essentially "dummy" profiles with the primary purpose of testing or emulating a real profile.
+In CDP, personas are essentially "dummy" profiles with the primary purpose of testing or emulating a real profile.
 A common use-case would be testing personalized content in a CMS or a newsletter.
 
 Personas and their fields can be explicitly created, where real profiles are built from a stream of events.
 
+==== Types
+
+=== CDP_Persona
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/personas.js[lines=2..24]
+----
+
+==== Queries
+
+==== Mutations
+
+==== Subscriptions
+
 
 === Lists
 
-Lists are explicitly created and named in the Context Server. Profiles may then be added to a list, and later opt out if desired.
+Lists are explicitly created and named in the Customer Data Platform. Profiles may then be added to a list, and later opt out if desired.
 Whenever a profile opts out of a list, that information will also be stored. This prevents the profile from accidentally being added back to the list at a later point.
 
 A common use-case for lists is creating a list for a campaign, and add the target profiles to the list as the campaign starts.
+
+==== Types
+
+
+=== CDP_List
+
+TODO
+
+* ID (mandatory)
+* Title (mandatory string)
+* View
+* Profiles - Active profiles in the list
+* Inactive - Profiles that have been deactivated
+
+==== Queries
+
+==== Mutations
+
+==== Subscriptions
 
 
 === Segments
@@ -540,13 +784,29 @@ Example segments:
 * Etc
 
 
+==== Types
+
+===== CDP_Segment
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/segments.js[lines=2..14]
+----
+
+==== Queries
+
+==== Mutations
+
+==== Subscriptions
+
+
 === Topics
 
-Topics represent the core entities of the business that is using the Context Server.
-The Context Server aims to find correlation between profiles and the topics.
+Topics represent the core entities of the business that is using the Customer Data Platform.
+The Customer Data Platform aims to find correlation between profiles and the topics.
 When such correlations are identified, it is called <<Interests>>.
 
-CXS Administrators need to maintain a list of topics in order to obtain profile interests.
+CDP Administrators need to maintain a list of topics in order to obtain profile interests.
 Profile interests is typically a core objective of Marketing activities, and targeting users with better content.
 
 Example Topics for a car manufacturer might for instance be:
@@ -558,187 +818,62 @@ Example Topics for a car manufacturer might for instance be:
 TODO: What about localization?
 
 
-== GraphQL Type definitions
+==== Types
 
-=== CXS_Consent
-
-* Name (Mandatory) - String that identifies the consent, i.e. a url or a reverse domain notation org.cxs.newsletter
-* Status - one of GRANT, DENY or REVOKED
-* StatusDate - Date when status was last updated
-* revokeDate - Revocation date, SHOULD have a default value like two years if left blank
-* View TODO: Why???
-* Source - Identifying the source of this consent? Optionally accessible from Profile?
-* Events - All events related to this consent
-* Profile - The profile this consent applies to
-
-
-=== CXS_Event
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/events.js[lines=2..76]
-----
-
-==== CXS_EventFilterInput
-
-==== CXS_EventType
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/events.js[lines=2..40]
-----
-
-=== CXS_Interest
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/interests.js[lines=2..10]
-----
-
-
-=== CXS_List
-
-* ID (mandatory)
-* Title (mandatory string)
-* View
-* Profiles - Active profiles in the list
-* Inactive - Profiles that have been deactivated
-
-
-
-=== CXS_Persona
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/personas.js[lines=2..24]
-----
-
-
-
-=== CXS_PropertyType
-
-CXS_PropertyType is to be considered an interface, with implementations for each valueType.
-This simplifies use and provides strong typing in GraphQL.
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/propertytypes.js[lines=2..27]
-----
-
-==== CXS_BooleanPropertyType
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/booleanpropertytypes.js[lines=2..23]
-----
-
-==== CXS_DatePropertyType
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/datepropertytypes.js[lines=2..23]
-----
-
-==== CXS_FloatPropertyType
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/floatpropertytypes.js[lines=2..23]
-----
-
-
-==== CXS_GeoPointPropertyType
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/geopointpropertytypes.js[lines=2..23]
-----
-
-==== CXS_IdentifierPropertyType
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/identifierpropertytypes.js[lines=2..23]
-----
-
-==== CXS_IntPropertyType
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/intpropertytypes.js[lines=2..23]
-----
-
-==== CXS_StringPropertyType
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/stringpropertytypes.js[lines=2..23]
-----
-
-==== CXS_SetPropertyType
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/setpropertytypes.js[lines=2..23]
-----
-
-
-
-=== CXS_Segment
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/segments.js[lines=2..14]
-----
-
-
-==== CXS_SegmentFilterInput
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/segmentfilterinput.js[lines=2..10]
-----
-
-
-=== CXS_Topic
+===== CDP_Topic
 
 [source,graphql]
 ----
 include::{sourcedir}/schemas/topics.js[lines=2..12]
 ----
 
+==== Queries
+
+==== Mutations
+
+==== Subscriptions
+
+== GraphQL Type definitions
 
 
-=== CXS_View
 
-* Name (mandatory, unique identifier)
+== Queries
+The GraphQL Query Type is defined here
 
+== Mutations
+The GraphQL Mutation type is defined here
 
+== Subscriptions
+The GraphQL Subscription type is defined here
 
-== GraphQL Queries
+== Security Considerations
 
-== GraphQL Mutations
+TODO REMOVE: (Note: OASIS strongly recommends that Technical Committees consider issues that could affect security when implementing their specification and document them for implementers and adopters. For some purposes, you may find it required, e.g. if you apply for IANA registration.
+While it may not be immediately obvious how your specification might make systems vulnerable to attack, most specifications, because they involve communications between systems, message formats, or system settings, open potential channels for exploit. For example, IETF \[RFC3552] lists “eavesdropping, replay, message insertion, deletion, modification, and man-in-the-middle” as well as potential denial of service attacks as threats that must be considered and, if appropriate, addressed in IETF RFCs.
 
-== GraphQL Subscriptions
+In addition to considering and describing foreseeable risks, this section should include guidance on how implementers and adopters can protect against these risks
+We encourage editors and TC members concerned with this subject to read Guidelines for Writing RFC Text on Security Considerations, IETF \[RFC3552], for more information.)
 
-TODO
 
 == Conformance
 
-conformance clauses/statements go here
+TODO REMOVE: (For the definition of "conformance clause," see OASIS Defined Terms.
+See "Guidelines to Writing Conformance Clauses": http://docs.oasis-open.org/templates/TCHandbook/ConformanceGuidelines.html.)
+
 
 == Appendix A. Acknowledgements
 
 The following individuals have participated in the creation of this specification and are gratefully acknowledged:
+
 Participants:
 
-\[list of acknowledgements as determined by Technical Committee chair(s)]
+  * Participant Name, Affiliation | Individual Member
+  * Participant Name, Affiliation | Individual Member
 
-== Appendix B. Non-Normative Text
+== Appendix B. Example Title
 
-[any additional appendices for non-normative text here]
+TODO: any additional appendices for non-normative text here
 
 == Appendix C. Revision History
 
-\[Required in all approved Work Products]
 Revision 	Date 	Editor 	Changes Made

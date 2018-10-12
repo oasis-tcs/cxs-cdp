@@ -29,13 +29,13 @@ exports.eventTypesSchema = `
 # - Opt-in / opt-out of a list
 
 
-type CXS_EventType {
+type CDP_EventType {
   name : String!
-  properties : [CXS_PropertyType]
+  properties : [CDP_PropertyType]
 }
 
-input CXS_EventTypeInput {
-  name : ID! # must be in a format that's acceptable as a GraphQL field name (/[_A-Za-z][_0-9A-Za-z]*/) , and we recommend to prefix it to avoid conflicts, something like acme_pageView, acme_click. The "cxs_" prefix is reserved for built-in CXS event types
-  properties : [CXS_PropertyTypeInput]
+input CDP_EventTypeInput {
+  name : ID! # must be in a format that's acceptable as a GraphQL field name (/[_A-Za-z][_0-9A-Za-z]*/) , and we recommend to prefix it to avoid conflicts, something like acme_pageView, acme_click. The "CDP_" prefix is reserved for built-in CXS event types
+  properties : [CDP_PropertyTypeInput]
 }
 `;

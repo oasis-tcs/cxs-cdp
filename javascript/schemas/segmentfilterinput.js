@@ -1,7 +1,7 @@
 exports.segmentFilterInputSchema = `
-input CXS_SegmentFilterInput {
-  and : [CXS_SegmentFilterInput]
-  or : [CXS_SegmentFilterInput]
+input CDP_SegmentFilterInput {
+  and : [CDP_SegmentFilterInput]
+  or : [CDP_SegmentFilterInput]
 
   view_equals : String
   view_regexp : String

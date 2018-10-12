@@ -1,30 +1,30 @@
 exports.querySchema = `
 "Context Server GraphQL queries"
-type CXS_Query {
+type CDP_Query {
 
-  getEventTypes : [CXS_EventType]
-  getEvent(id : String!) : CXS_Event
-  findEvents(filter : CXS_EventFilterInput, orderBy : [CXS_OrderByInput], first: Int, after: String, last: Int, before: String) : CXS_EventConnection
+  getEventTypes : [CDP_EventType]
+  getEvent(id : String!) : CDP_Event
+  findEvents(filter : CDP_EventFilterInput, orderBy : [CDP_OrderByInput], first: Int, after: String, last: Int, before: String) : CDP_EventConnection
 
-  getProfile(profileID : CXS_ProfileIDInput, createIfMissing: Boolean) : CXS_Profile
-  findProfiles(filter: CXS_ProfileFilterInput, orderBy: [CXS_OrderByInput], first: Int, after: String, last: Int, before: String) : CXS_ProfileConnection
+  getProfile(profileID : CDP_ProfileIDInput, createIfMissing: Boolean) : CDP_Profile
+  findProfiles(filter: CDP_ProfileFilterInput, orderBy: [CDP_OrderByInput], first: Int, after: String, last: Int, before: String) : CDP_ProfileConnection
 
-  getPersona(personaID : String) : CXS_Persona
-  findPersonas(filter: CXS_ProfileFilterInput, orderBy: [CXS_OrderByInput], first: Int, after: String, last: Int, before: String) : CXS_ProfileConnection
+  getPersona(personaID : String) : CDP_Persona
+  findPersonas(filter: CDP_ProfileFilterInput, orderBy: [CDP_OrderByInput], first: Int, after: String, last: Int, before: String) : CDP_ProfileConnection
 
-  getSegment(segmentID : ID) : CXS_Segment
-  findSegments(filter: CXS_SegmentFilterInput, orderBy: [CXS_OrderByInput], first: Int, after: String, last: Int, before: String) : CXS_SegmentConnection
+  getSegment(segmentID : ID) : CDP_Segment
+  findSegments(filter: CDP_SegmentFilterInput, orderBy: [CDP_OrderByInput], first: Int, after: String, last: Int, before: String) : CDP_SegmentConnection
 
-  getList(listID : ID) : CXS_List
-  findLists(filter: CXS_ListFilterInput, orderBy: [CXS_OrderByInput], first: Int, after: String, last: Int, before: String) : CXS_ListConnection
+  getList(listID : ID) : CDP_List
+  findLists(filter: CDP_ListFilterInput, orderBy: [CDP_OrderByInput], first: Int, after: String, last: Int, before: String) : CDP_ListConnection
 
-  getTopic(topicID : ID) : CXS_Topic
-  findTopics(filter: CXS_TopicFilterInput, orderBy: [CXS_OrderByInput], first: Int, after: String, last: Int, before: String) : CXS_TopicConnection
+  getTopic(topicID : ID) : CDP_Topic
+  findTopics(filter: CDP_TopicFilterInput, orderBy: [CDP_OrderByInput], first: Int, after: String, last: Int, before: String) : CDP_TopicConnection
 
-  getProfilePropertyTypes : CXS_PropertyTypeConnection
+  getProfilePropertyTypes : CDP_PropertyTypeConnection
 
-  getViews : [CXS_View]
+  getViews : [CDP_View]
 
-  getSources : [CXS_Source]
+  getSources : [CDP_Source]
 }
 `;

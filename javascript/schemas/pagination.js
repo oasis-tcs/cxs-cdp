@@ -7,78 +7,78 @@ type PageInfo {
   hasNextPage : Boolean!
 }
 
-type CXS_EventEdge {
-  node : CXS_Event
+type CDP_EventEdge {
+  node : CDP_Event
   cursor : String!
 }
 
-type CXS_EventConnection {
-  edges : [CXS_EventEdge]
+type CDP_EventConnection {
+  edges : [CDP_EventEdge]
   pageInfo : PageInfo
 }
 
-type CXS_PropertyTypeEdge {
-  node : CXS_PropertyType
+type CDP_PropertyTypeEdge {
+  node : CDP_PropertyType
   cursor : String!
 }
 
-type CXS_PropertyTypeConnection {
-  edges : [CXS_PropertyTypeEdge]
+type CDP_PropertyTypeConnection {
+  edges : [CDP_PropertyTypeEdge]
   pageInfo : PageInfo
 }
 
-type CXS_ProfileEdge {
-  node : CXS_ProfileInterface
+type CDP_ProfileEdge {
+  node : CDP_ProfileInterface
   cursor : String!
 }
 
-type CXS_ProfileConnection {
+type CDP_ProfileConnection {
   totalCount: Int
-  edges : [CXS_ProfileEdge]
+  edges : [CDP_ProfileEdge]
   pageInfo : PageInfo
 }
 
-type CXS_SegmentEdge {
-  node: CXS_Segment
+type CDP_SegmentEdge {
+  node: CDP_Segment
   cursor: String!
 }
 
-type CXS_SegmentConnection {
+type CDP_SegmentConnection {
   totalCount: Int
-  edges : [CXS_SegmentEdge]
+  edges : [CDP_SegmentEdge]
   pageInfo : PageInfo
 }
 
-type CXS_ListEdge {
-  node: CXS_List
+type CDP_ListEdge {
+  node: CDP_List
   cursor: String!
 }
 
-type CXS_ListConnection {
+type CDP_ListConnection {
   totalCount: Int
-  edges : [CXS_ListEdge]
+  edges : [CDP_ListEdge]
   pageInfo : PageInfo
 }
 
-type CXS_TopicEdge {
-  node: CXS_Topic
+type CDP_TopicEdge {
+  node: CDP_Topic
   cursor: String!
 }
 
-type CXS_TopicConnection {
+type CDP_TopicConnection {
   totalCount: Int
-  edges : [CXS_TopicEdge]
+  edges : [CDP_TopicEdge]
   pageInfo : PageInfo
 }
 
-type CXS_InterestEdge {
-  node : CXS_Interest
+type CDP_InterestEdge {
+  node : CDP_Interest
   cursor: String!
 }
 
-type CXS_InterestConnection {
+type CDP_InterestConnection {
   totalCount: Int
-  edges : [CXS_InterestEdge]
+  edges : [CDP_InterestEdge]
   pageInfo : PageInfo
 }
 `;

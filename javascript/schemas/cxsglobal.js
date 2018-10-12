@@ -8,11 +8,11 @@ scalar JSON
 
 # Roles are predefined in the CXS server implementation, no API is provided to manipulate them.
 # system-admin, system-public, system-authenticated, acme-admin, test-admin
-type CXS_Role {
+type CDP_Role {
   id : ID!
   name : String!
   displayName : String
-  view : CXS_View! # may include a system view
+  view : CDP_View! # may include a system view
 }
 
 # MANAGEMENT OBJECTS
@@ -21,29 +21,29 @@ type CXS_Role {
 """
 Management objects are associated with a view
 """
-type CXS_View {
+type CDP_View {
   name: ID!
 }
 
-input CXS_ViewInput {
+input CDP_ViewInput {
   name: ID!
 }
 
 
 
-type CXS_List {
+type CDP_List {
   " The ID cannot change and is usually server generated "
   id : ID! # cannot change and usually server generated
-  view: CXS_View!
+  view: CDP_View!
   name : String!
 
   " Active members have opted in the list "
-  active(first: Int, after: String, last: Int, before: String) : CXS_ProfileConnection
+  active(first: Int, after: String, last: Int, before: String) : CDP_ProfileConnection
   " Inactive users have opted out of the list "
-  inactive(first: Int, after: String, last: Int, before: String) : CXS_ProfileConnection
+  inactive(first: Int, after: String, last: Int, before: String) : CDP_ProfileConnection
 }
 
-input CXS_ListInput {
+input CDP_ListInput {
   id : ID # optional and can be server generated
   view: String!
   name : String!
@@ -55,7 +55,7 @@ input CXS_ListInput {
 """
 Event properties will be updated based on the properties defined by CXS server event handlers
 """
-type CXS_EventProperties {
+type CDP_EventProperties {
   # we provide some samples properties here because GraphQL doesn't allow empty types, but these are not mandatory
   like : String
 }
@@ -63,20 +63,20 @@ type CXS_EventProperties {
 
 
 # This pre-defined property type is used to update profile properties
-input CXS_UpdateProfileInput {
-  updateProperties : CXS_ProfilePropertiesInput
+input CDP_UpdateProfileInput {
+  updateProperties : CDP_ProfilePropertiesInput
   removeProperties : [String]
 }
 
 # This pre-defined property type is used to update a single profile consent
-input CXS_UpdateConsentInput {
-  consent : CXS_ConsentInput
+input CDP_UpdateConsentInput {
+  consent : CDP_ConsentInput
 }
 
 # This pre-defined property type is used to update profile list membership
-input CXS_UpdateListInput {
-  joinLists : [CXS_ListInput]
-  leaveLists : [CXS_ListInput]
+input CDP_UpdateListInput {
+  joinLists : [CDP_ListInput]
+  leaveLists : [CDP_ListInput]
 }
 
 enum SessionState {
@@ -86,7 +86,7 @@ enum SessionState {
   RESUME
 }
 
-input CXS_UpdateSessionStateInput {
+input CDP_UpdateSessionStateInput {
   newState : SessionState
 }
 
@@ -188,27 +188,27 @@ type _SampleAddress {
 }
 
 
-type CXS_OptimizationResult {
+type CDP_OptimizationResult {
     name : String!
-    scoredObjects : [CXS_ScoredObject]
+    scoredObjects : [CDP_ScoredObject]
 }
 
-type CXS_ScoredObject {
-    object : CXS_Object
+type CDP_ScoredObject {
+    object : CDP_Object
     score : Float
 }
 
 # Example : return list of products that the profile has viewed but not bought
-input CXS_OptimizationInput {
+input CDP_OptimizationInput {
     name : String!
-    objects : [CXS_ObjectInput],
-    eventOccurenceBoosts : [CXS_EventOccurenceBoostInput]
+    objects : [CDP_ObjectInput],
+    eventOccurenceBoosts : [CDP_EventOccurenceBoostInput]
     strategy : String # unspecified, random, scoring, best first match, worst match, a/b test ?
 }
 
 # Used to boost positively/negatively the algorithm based on event type and time span
 # Example : return a list of products the profile has viewed in the last year
-input CXS_EventOccurenceBoostInput {
+input CDP_EventOccurenceBoostInput {
     eventType : String
     boost : Int # could be negative
     fromDate : String
@@ -216,32 +216,32 @@ input CXS_EventOccurenceBoostInput {
 }
 
 # Object is globally unique in its combination of id and collections
-type CXS_Object {
+type CDP_Object {
     id : ID! # unique within each specified collection
     collections : [String]! # could be URIs, e.g. schema.org (http://schema.org/Product) or reverse domain naming convention (org.acme.Product)
 }
 
-input CXS_ObjectInput {
+input CDP_ObjectInput {
     id : ID! # unique within each specified collection
   collections : [String]! # a way of classifying objects : page, product, article
 }
 
-input CXS_AlgorithmInput {
+input CDP_AlgorithmInput {
     name : String! # similarity, bought-Together, bought-byOthers, viewed-byOthers, trending, related
     parameters : JSON # parameters can be used to filter the results of the recommendation algorithm or any other custom processing that is supported by the implementation. Parameters are specific to the algorithm.
 }
 
-input CXS_RecommendationInput {
+input CDP_RecommendationInput {
     name : String!
     objectID : ID # this is optional since we might just want to use collections to retrieve recommendations
     collections : [String] # collections we want to use to retrieve recommendations
     size : Int # maximum number of results to retrieve
-    algorithm : CXS_AlgorithmInput
+    algorithm : CDP_AlgorithmInput
 }
 
-type CXS_RecommendationResult {
+type CDP_RecommendationResult {
     name : String!
-    scoredObjects : [CXS_ScoredObject]
+    scoredObjects : [CDP_ScoredObject]
 }
 
 #
@@ -293,7 +293,7 @@ type CXS_RecommendationResult {
 # -
 # (for GDPR controllers / processors ?)
 
-enum CXS_ConsentStatus {
+enum CDP_ConsentStatus {
     ALLOWED,
     DENIED,
     REVOKED
@@ -303,19 +303,19 @@ enum CXS_ConsentStatus {
 # should use a URI convention. Some URIs could actually be URLs and point to real resource that would give the
 # semantics of the consent type. Types are not globally unique, a combination of view and types are globally unique
 # and context server implementations may use "global" or "system" views to share types.
-type CXS_Consent {
+type CDP_Consent {
   token : ID! # similar to OAuth 2 authorization tokens to access the consent without the profile, also useful to delete the consent
-  source : CXS_Source
-  client : CXS_Client
+  source : CDP_Source
+  client : CDP_Client
   type : String! # "//mycompany.com/consents/newsletters/weekly", "//crmcompany.com/consents/push-to-crm", "//oasis_open.org/cxs/consents/send-to-third-parties"
-  status : CXS_ConsentStatus!
+  status : CDP_ConsentStatus!
   statusDate : String
   revokeDate : String
-  profile : CXS_ProfileInterface
-  events : CXS_EventConnection
+  profile : CDP_ProfileInterface
+  events : CDP_EventConnection
 }
 
-input CXS_ConsentInput {
+input CDP_ConsentInput {
   sourceId : String
   clientId : String
   type : String! # "//mycompany.com/consents/newsletters/weekly", "//crmcompany.com/consents/push-to-crm", "//oasis_open.org/cxs/consents/send-to-third-parties"
@@ -338,22 +338,22 @@ input CXS_ConsentInput {
 
 # ProfileIDs are always associated with a source as multiple profileIDs are associated with a single profile. CXS
 # server implementations may generate their own internal system IDs by defining them for a "system" source.
-type CXS_ProfileID {
-    source : CXS_Client
+type CDP_ProfileID {
+    source : CDP_Client
     id : ID! # unique profile identifier for the source
 }
 
-input CXS_ProfileIDInput {
+input CDP_ProfileIDInput {
     clientId : ID!
     id : ID! # unique profile identifier for the source
 }
 
-type CXS_Source {
+type CDP_Source {
     id : ID! # the "system" source ID is reserved for the CXS context server to use for internal IDs.
     thirdParty : Boolean # optional, indicates that the source is a third party (useful for privacy regulations such as GDPR)
 }
 
-input CXS_SourceInput {
+input CDP_SourceInput {
     id : ID! # the "system" source ID is reserved for the CXS context server to use for internal IDs.
     thirdParty : Boolean # optional, indicates that the source is a third party (useful for privacy regulations such as GDPR)
 }
@@ -361,13 +361,13 @@ input CXS_SourceInput {
 # Named filters are used to evaluate filters against a profile (for example: is this profile located in the US,
 # is this profile over 30). This is very useful for example when integrating WCMs for building personalized
 # experiences.
-input CXS_NamedFilterInput {
+input CDP_NamedFilterInput {
   name : String!
-  filter: CXS_ProfileFilterInput
+  filter: CDP_ProfileFilterInput
 }
 
 # A result for a named filter match request.
-type CXS_FilterMatch {
+type CDP_FilterMatch {
   name : String
   matched : Boolean
   executionTimeMillis : Int
@@ -376,42 +376,42 @@ type CXS_FilterMatch {
 
 type Query {
 
-  cxs : CXS_Query
+  cxs : CDP_Query
 
 }
 
 "Context Server GraphQL mutations"
-type CXS_Mutation {
+type CDP_Mutation {
   # Events may trigger different types of operations within the context server, such as updating consents,
   # reset interests, or profile updates.
-  processEvents(events: [CXS_EventInput]!) : Int
+  processEvents(events: [CDP_EventInput]!) : Int
 
-  deleteProfile(profileID : CXS_ProfileIDInput) : CXS_Profile
+  deleteProfile(profileID : CDP_ProfileIDInput) : CDP_Profile
 
-  createOrUpdatePersona(persona : CXS_PersonaInput) : CXS_Persona
-  deletePersona(personaID : String) : CXS_Persona
+  createOrUpdatePersona(persona : CDP_PersonaInput) : CDP_Persona
+  deletePersona(personaID : String) : CDP_Persona
 
-  createOrUpdateSegment(segment : CXS_SegmentInput) : CXS_Segment
-  deleteSegment(segmentID : String) : CXS_Segment
+  createOrUpdateSegment(segment : CDP_SegmentInput) : CDP_Segment
+  deleteSegment(segmentID : String) : CDP_Segment
 
-  createOrUpdateList(list : CXS_ListInput) : CXS_List
-  addProfileToList(list : CXS_ListInput, profileID : CXS_ProfileIDInput, active : Boolean) : CXS_List
-  removeProfileFromList(list : CXS_ListInput, profileID : CXS_ProfileIDInput) : CXS_List
-  deleteList(listID : String) : CXS_List
+  createOrUpdateList(list : CDP_ListInput) : CDP_List
+  addProfileToList(list : CDP_ListInput, profileID : CDP_ProfileIDInput, active : Boolean) : CDP_List
+  removeProfileFromList(list : CDP_ListInput, profileID : CDP_ProfileIDInput) : CDP_List
+  deleteList(listID : String) : CDP_List
 
-  createOrUpdateTopic(topic : CXS_TopicInput) : CXS_Topic
-  deleteTopic(topicID : String) : CXS_Topic
+  createOrUpdateTopic(topic : CDP_TopicInput) : CDP_Topic
+  deleteTopic(topicID : String) : CDP_Topic
 
-  addProfilePropertyTypes(propertyTypes : [CXS_PropertyTypeInput]) : Boolean
+  addProfilePropertyTypes(propertyTypes : [CDP_PropertyTypeInput]) : Boolean
   deleteProfilePropertyType(propertyTypeName : ID!) : Boolean
 
-  createOrUpdateEventType(eventType : CXS_EventTypeInput) : CXS_EventType
+  createOrUpdateEventType(eventType : CDP_EventTypeInput) : CDP_EventType
   deleteEventType(eventName : ID!) : Boolean
 
-  createOrUpdateView(view: CXS_ViewInput) : CXS_View
+  createOrUpdateView(view: CDP_ViewInput) : CDP_View
   deleteView(viewID : ID!) : Boolean
 
-  createOrUpdateSource(source : CXS_SourceInput) : CXS_Source
+  createOrUpdateSource(source : CDP_SourceInput) : CDP_Source
   deleteSource(sourceID : ID!) : Boolean
 
   # Privacy
@@ -420,15 +420,15 @@ type CXS_Mutation {
 
 type Mutation {
 
-  cxs : CXS_Mutation
+  cxs : CDP_Mutation
 
 }
 
 "Context Server GraphQL subscriptions"
-type CXS_Subscription {
-  eventListener(profileID : CXS_ProfileIDInput, filter: CXS_EventFilterInput) : CXS_Event!
+type CDP_Subscription {
+  eventListener(profileID : CDP_ProfileIDInput, filter: CDP_EventFilterInput) : CDP_Event!
 
-  profileListener(profileID: CXS_ProfileIDInput) : CXS_Profile
+  profileListener(profileID: CDP_ProfileIDInput) : CDP_Profile
 
   # jobListener(jobID: String) : JobStatus
 }

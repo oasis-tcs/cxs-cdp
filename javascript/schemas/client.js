@@ -1,11 +1,11 @@
 exports.clientsSchema = `
-type CXS_Client {
+type CDP_Client {
     id : ID!
     title : String
-    sources : [CXS_Source] # optional
+    sources : [CDP_Source] # optional
 }
 
-input CXS_ClientInput {
+input CDP_ClientInput {
     id : ID!
     title : String
 }

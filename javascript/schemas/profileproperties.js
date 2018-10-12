@@ -1,6 +1,6 @@
 exports.profilePropertiesSchema = `
 # Profile properties are dynamically generated from all declared profile property types.
-type CXS_ProfileProperties {
+type CDP_ProfileProperties {
   # the following are just examples to make GraphQL JS schema parser happy otherwise we have an empty type
   firstName : String
   lastName : String
@@ -8,7 +8,7 @@ type CXS_ProfileProperties {
   address : _SampleAddress
 }
 
-input CXS_ProfilePropertiesInput {
+input CDP_ProfilePropertiesInput {
   # the following are just examples to make GraphQL JS schema parser happy otherwise we have an empty type
   firstName : String
   lastName : String

@@ -1,15 +1,15 @@
 exports.eventsSchema = `
-type CXS_Event {
+type CDP_Event {
   id: ID!
-  source : CXS_Source
-  client : CXS_Client
-  eventType: CXS_EventType!
-  profileID: CXS_ProfileID!
-  profile : CXS_Profile!
+  source : CDP_Source
+  client : CDP_Client
+  eventType: CDP_EventType!
+  profileID: CDP_ProfileID!
+  profile : CDP_Profile!
   object: String!
   location: String
   timestamp: String # ISO-8601 format Java 8 Instant equivalent
-  properties : CXS_EventProperties
+  properties : CDP_EventProperties
 }
 
 # The actual payload will be dynamically generated based on the root properties defined by the CXS event
@@ -57,19 +57,19 @@ type CXS_Event {
 # }
 #
 
-input CXS_EventInput {
+input CDP_EventInput {
   id: ID # optional, usually server-generated but could be interesting to import events
-  cxs_ClientID : String
-  cxs_SourceID : String
-  cxs_ProfileID: CXS_ProfileIDInput!
-  cxs_Object: CXS_ObjectInput!
-  cxs_Location: [CXS_GeoPointInput] # optional
-  cxs_Timestamp: Int # optional because the server can generate it if it's missing
+  CDP_ClientID : String
+  CDP_SourceID : String
+  CDP_ProfileID: CDP_ProfileIDInput!
+  CDP_Object: CDP_ObjectInput!
+  CDP_Location: [CDP_GeoPointInput] # optional
+  CDP_Timestamp: Int # optional because the server can generate it if it's missing
   # Built-in predefined event types
-  cxs_UpdateProfile : CXS_UpdateProfileInput
-  cxs_UpdateConsent : CXS_UpdateConsentInput
-  cxs_UpdateLists : CXS_UpdateListInput
-  cxs_UpdateSessionState : CXS_UpdateSessionStateInput
+  CDP_UpdateProfile : CDP_UpdateProfileInput
+  CDP_UpdateConsent : CDP_UpdateConsentInput
+  CDP_UpdateLists : CDP_UpdateListInput
+  CDP_UpdateSessionState : CDP_UpdateSessionStateInput
   # Here below will be the generated event field based on the registered event types
   # Example of a generated event type
   pageView : PageViewInput

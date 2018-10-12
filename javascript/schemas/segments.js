@@ -1,15 +1,15 @@
 exports.segmentsSchema = `
-type CXS_Segment {
+type CDP_Segment {
   id : ID!
-  view: CXS_View!
+  view: CDP_View!
   name : String!
-  profiles : CXS_ProfileFilter
+  profiles : CDP_ProfileFilter
 }
 
-input CXS_SegmentInput {
+input CDP_SegmentInput {
   id : ID #optional, may be server-generated
-  view : CXS_ViewInput!
+  view : CDP_ViewInput!
   name : String
-  profiles : CXS_ProfileFilterInput
+  profiles : CDP_ProfileFilterInput
 }
 `;

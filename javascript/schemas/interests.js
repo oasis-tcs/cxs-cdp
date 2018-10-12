@@ -1,11 +1,11 @@
 exports.interestsSchema = `
-type CXS_Interest {
-  topic: CXS_Topic!
+type CDP_Interest {
+  topic: CDP_Topic!
   score : Float # 0.0 to 1.0
 }
 
-input CXS_InterestInput {
-  topic : CXS_TopicInput!
+input CDP_InterestInput {
+  topic : CDP_TopicInput!
   score : Float
 }
 `;
