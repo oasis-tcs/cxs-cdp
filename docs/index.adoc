@@ -62,7 +62,8 @@ This prose specification is one component of a Work Product that also includes:
 
 This specification is related to:
 
-  * GraphQL ... (TODO)
+  * GraphQL : https://graphql.org
+  * GraphQL specification : https://facebook.github.io/graphql/
   *	Related specifications (VISIBLE hyperlink, preferably to HTML version)
 
 [discrete]
