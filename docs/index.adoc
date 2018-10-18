@@ -11,7 +11,7 @@ image::images/OASISLogo-v2.0.jpg["Oasis Open Logo"]
 == Committee Specification Draft 01 / Public Review Draft 01
 
 [discrete]
-== 12 October 2018
+== 18 October 2018
 
 [discrete]
 === Specification URIs:
@@ -174,7 +174,7 @@ This is represented through a strongly typed API defined through GraphQL Types, 
 
 This chapter describes the API in detail.
 
-NOTE: The best way to expore the API is by using TODO TODO
+NOTE: The most efficient way to expore the GraphQL API is by starting the sample CDP server TODO
 
 
 === Clients
@@ -481,7 +481,7 @@ EventTypes require a unique name, preferably using a namespace to avoid conflict
 
 ==== Types
 
-==== CDP_EventType
+===== CDP_EventType
 
 [source,graphql]
 ----
@@ -502,20 +502,73 @@ As such, consents are inherently more important to ensure you are using and stor
 
 Consents hold an identifier that uniquely identifies the consent across your systems.
 
+Consents are given and revoked through events. This means that the CDP specification defines reserved property types for granting and revoking consents.
+
+TODO:
+
+----
+
+# Do Not Track is a special case, because it cannot be handled using the content management since we cannot
+# track the user connect to the context server in any way. In this case, profile ID cookies should never be
+# generated, and each new request will be treated as a separate visit.
+#
+# Tracking is seperated from cookie identification. For example we could have a form that has an opt-in checkbox
+# to "remember" the user, but NOT tracking his behavior, so that when he fills another form, pre-fill could happen,
+# or a single form submission could be handled.
+#
+# https://onetrust.com/nobody-likes-cookie-pop-ups-browser-based-consent-eprivacy-regulation/
+#
+# Can we leverage OAuth 2 autorization scopes here ? Consent types are very similar to OAuth 2 authorization scopes.
+#
+# Examples:
+# {
+#   sourceId : "jahia.com",
+#   type: {name:"send-to-salesforce"},
+#   grant: ALLOW
+#   grantDate : 3498734899
+#   # no revoke date means it will not expire or defaults to system or legal standard (GDPR)
+# }
+# {
+#   sourceId : "jahia.com",
+#   type : {name:"newsletter-subscription-latestNews"},
+#   grant: DENY
+#   grantDate : 3498734899
+#   # no revoke date means it will not expire or defaults to system or legal standard (GDPR)
+# }
+#
+# Consent Types may include:
+# - tracking
+# - list membership
+# - newsletter membership
+# - access to camera
+# - access to friends / contacts data
+# - access to medical records
+# - send sms
+# - call you
+# - send personal data to third parties
+# - send anonymous data to third parties
+
+# CXS Consent types include:
+# - allow tracking
+# -
+# (for GDPR controllers / processors ?)
+
+# Consent types are not defined in the specification, only the format of the type identifier
+# should use a URI convention. Some URIs could actually be URLs and point to real resource that would give the
+# semantics of the consent type. Types are not globally unique, a combination of view and types are globally unique
+# and context server implementations may use "global" or "system" views to share types.
+
+----
+
 ==== Types
 
 ===== CDP_Consent
 
-TODO
+[source,graphql]
+----
+include::{sourcedir}/schemas/consents.js[lines=2..27]
+----
 
-* Name (Mandatory) - String that identifies the consent, i.e. a url or a reverse domain notation org.cdp.newsletter
-* Status - one of GRANT, DENY or REVOKED
-* StatusDate - Date when status was last updated
-* revokeDate - Revocation date, SHOULD have a default value like two years if left blank
-* View TODO: Why???
-* Source - Identifying the source of this consent? Optionally accessible from Profile?
-* Events - All events related to this consent
-* Profile - The profile this consent applies to
 
 ==== Queries
 
@@ -710,7 +763,12 @@ but other items are typically handled by administrators or marketeers, and benef
 
 ===== CDP_View
 
-* Name (mandatory, unique identifier).
+[source,graphql]
+----
+include::{sourcedir}/schemas/views.js[lines=2..9]
+----
+
+
 
 ==== Queries
 
@@ -730,7 +788,7 @@ Personas and their fields can be explicitly created, where real profiles are bui
 
 ==== Types
 
-=== CDP_Persona
+===== CDP_Persona
 
 [source,graphql]
 ----
@@ -753,16 +811,14 @@ A common use-case for lists is creating a list for a campaign, and add the targe
 
 ==== Types
 
+===== CDP_List
 
-=== CDP_List
+[source,graphql]
+----
+include::{sourcedir}/schemas/lists.js[lines=2..15]
+----
 
-TODO
 
-* ID (mandatory)
-* Title (mandatory string)
-* View
-* Profiles - Active profiles in the list
-* Inactive - Profiles that have been deactivated
 
 ==== Queries
 
@@ -833,9 +889,90 @@ include::{sourcedir}/schemas/topics.js[lines=2..12]
 
 ==== Subscriptions
 
+
+=== Optimization
+
+TODO: write an introduction to optimization
+
+==== Types
+
+===== CDP_Object
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/optimizations.js[lines=2..6]
+----
+
+
+===== CDP_ObjectInput
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/optimizations.js[lines=8..11]
+----
+
+===== CDP_OptimizationResult
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/optimizations.js[lines=13..16]
+----
+
+===== CDP_ScoredObject
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/optimizations.js[lines=18..21]
+----
+
+===== CDP_OptimizationInput
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/optimizations.js[lines=23..29]
+----
+
+===== CDP_EventOccurenceBoostInput
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/optimizations.js[lines=31..37]
+----
+
+===== CDP_AlgorithmInput
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/optimizations.js[lines=39..42]
+----
+
+===== CDP_RecommendationResult
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/optimizations.js[lines=44..47]
+----
+
+===== CDP_RecommendationInput
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/optimizations.js[lines=49..55]
+----
+
+==== Queries
+
+==== Mutations
+
+==== Subscriptions
+
+
+
+
+
+
+
 == GraphQL Type definitions
-
-
 
 == Queries
 The GraphQL Query Type is defined here

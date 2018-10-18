@@ -1,29 +1,33 @@
 const { ApolloServer } = require('apollo-server');
 
+const { booleanPropertyTypesSchema } = require('./schemas/booleanpropertytypes');
 const { cxsGlobalSchema } = require('./schemas/cxsglobal');
+const { consentsSchema } = require('./schemas/consents');
 const { querySchema } = require('./schemas/query');
 const { subscriptionSchema } = require('./schemas/subscription');
 const { clientsSchema } = require('./schemas/client');
+const { datePropertyTypesSchema } = require('./schemas/datepropertytypes');
 const { eventsSchema } = require('./schemas/events');
 const { eventTypesSchema } = require('./schemas/eventtypes');
+const { filtersSchema } = require('./schemas/filters');
+const { floatPropertyTypesSchema } = require('./schemas/floatpropertytypes');
+const { geoPointPropertyTypesSchema } = require('./schemas/geopointpropertytypes');
+const { identifierPropertyTypesSchema } = require('./schemas/identifierpropertytypes');
+const { intPropertyTypesSchema } = require('./schemas/intpropertytypes');
+const { listsSchema } = require('./schemas/lists');
+const { optimizationsSchema } = require('./schemas/optimizations');
+const { paginationSchema } = require('./schemas/pagination');
 const { profilesSchema } = require('./schemas/profiles');
 const { profilePropertiesSchema } = require('./schemas/profileproperties');
+const { propertyTypesSchema } = require('./schemas/propertytypes');
 const { personasSchema } = require('./schemas/personas');
 const { interestsSchema } = require('./schemas/interests');
-const { topicsSchema } = require('./schemas/topics');
 const { segmentsSchema } = require('./schemas/segments');
 const { segmentFilterInputSchema } = require('./schemas/segmentfilterinput');
-const { filtersSchema } = require('./schemas/filters');
-const { paginationSchema } = require('./schemas/pagination');
-const { propertyTypesSchema } = require('./schemas/propertytypes');
-const { identifierPropertyTypesSchema } = require('./schemas/identifierpropertytypes');
 const { stringPropertyTypesSchema } = require('./schemas/stringpropertytypes');
-const { intPropertyTypesSchema } = require('./schemas/intpropertytypes');
-const { floatPropertyTypesSchema } = require('./schemas/floatpropertytypes');
-const { datePropertyTypesSchema } = require('./schemas/datepropertytypes');
-const { booleanPropertyTypesSchema } = require('./schemas/booleanpropertytypes');
-const { geoPointPropertyTypesSchema } = require('./schemas/geopointpropertytypes');
 const { setPropertyTypesSchema } = require('./schemas/setpropertytypes');
+const { topicsSchema } = require('./schemas/topics');
+const { viewsSchema } = require('./schemas/views');
 
 const resolvers = {};
 
@@ -32,7 +36,9 @@ const typeDefs = [
     querySchema,
     subscriptionSchema,
     clientsSchema,
+    consentsSchema,
     eventsSchema,
+    optimizationsSchema,
     eventTypesSchema,
     profilesSchema,
     profilePropertiesSchema,
@@ -41,6 +47,7 @@ const typeDefs = [
     topicsSchema,
     segmentsSchema,
     segmentFilterInputSchema,
+    listsSchema,
     filtersSchema,
     paginationSchema,
     propertyTypesSchema,
@@ -51,7 +58,8 @@ const typeDefs = [
     datePropertyTypesSchema,
     booleanPropertyTypesSchema,
     geoPointPropertyTypesSchema,
-    setPropertyTypesSchema
+    setPropertyTypesSchema,
+    viewsSchema
 ];
 
 const server = new ApolloServer({ typeDefs, resolvers });
