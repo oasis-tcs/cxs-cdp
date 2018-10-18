@@ -47,6 +47,7 @@ OASIS Context Server (CXS) TC
 ==== Editor(s):
 
   * Thomas Lund Sigdestad (tsi@enonic.com), Enonic
+  * Serge Huber (shuber@jahia.com), Jahia Solutions Group SA
 
 [discrete]
 === Additional artifacts:
@@ -157,15 +158,65 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 == Use Cases
 
+In this section we present a few use cases that are relevant to the scope covered by the CDP specification. They are by
+no means exhaustive and serve primarly as illustrations of what may be achieved using servers that implement the
+standard.
+
 === Personalization
+
+The first and most common use case is the case of delivering personalized experiences on (desktop or mobile) web sites.
+
+image::images/cdp-webpersonalization-usecase.svg["Personalization use case diagram"]
+
+As illustrated above, the browser can interact with both a Content Management System (CMS) and a CDP-compliant server
+to first retrieve the HTML needed to deliver the page content, and then the CDP to get and update information about the
+profile of the current visitor to the site. The CMS may contain personalization filters that are sent to the CDP for
+evaluation and will allow the CMS to personalize the page content based on whether the current visitor profile matches
+the filters or not.
 
 === Newsletters
 
+This use case is relevant to users interested in delivering newsletters to the proper audience. For example it might be
+interesting to send a newsletter to promote a product to a group of profiles that has not purchased the product before,
+but it would not be a good idea to send it to people that have already purchased it.
+
+image::images/cdp-newsletter-usecase.svg["Newsletter use case diagram"]
+
+In the above illustration the newsletter server can query the CDP for a group of profile using either a query or a pre-
+defined segment to retrieve the subset of profiles it is interested in. Once those profiles are retrieved they may be
+used to update the newsletters management system lists with information coming from those exported profiles. And finally,
+when the newsletter is ready to be distributed, the updated lists may be used to send the emails using an email delivery
+server.
+
 === Privacy
+
+Privacy is a very important topic, especially when dealing with visitor data. For example, new legislation such as the
+https://eugdpr.org[GDPR] imposes strict restrictions on how visitor data collection should be processed. It is therefore
+very important that the CDP specification provide standardized ways of complying with more and more stringent
+requirements.
+
+image::images/cdp-privacy-usecase.svg["Privacy use case diagram"]
+
+In the above use case we illustrate the support of consent management that is available in CDP-compliant systems. A
+visitor profile may store the state of consents (granted or not) and these may be updated by using specialized event
+types.
+
+Other use cases for privacy include profile downloading, being able to anonymize visitor data, as well as deleting
+profiles.
 
 === A/B testing
 
+CDP systems may also be used to deliver A/B testing experiences. In this use case, the CDP server will use the visitor
+profile information by updating it with the variants that the visitor has been exposed to, effectively "classifying" the
+visitor into a sub-group.
 
+image::images/cdp-abtesting-usecase.svg["A/B testing use case diagram"]
+
+In the above illustration, this use case is implemented by using a CMS to deliver the different variants of content, and an
+algorithm is used to perform the random display distribution. Once the variant is selected and displayed, the CDP receives
+an event that updates the visitor profile with the variant that has been selected and displayed. Later on, this information may be
+used to classify the visitor profile into a subset (of profiles) or to personalize a future interaction with the systems
+connected to the CDP.
 
 == API Reference
 
