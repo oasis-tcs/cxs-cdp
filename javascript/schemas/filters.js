@@ -11,19 +11,6 @@ input CDP_OrderByInput {
   order : CDP_SortOrder
 }
 
-# Named filters are used to evaluate filters against a profile - useful for building personalized experiences.
-input CDP_NamedFilterInput {
-  name : String!
-  filter: CDP_ProfileFilterInput
-}
-
-# A result for a named filter match request.
-type CDP_FilterMatch {
-  name : String
-  matched : Boolean
-  executionTimeMillis : Int
-}
-
 type CDP_GeoPoint {
   longitude : Float
   latitude : Float
@@ -65,19 +52,5 @@ input CDP_DateFilterInput {
   includeAfter : Boolean
   includeBefore : Boolean
 }
-
-
-type CDP_ProfileEventsFilter {
-  and : [CDP_ProfileEventsFilter]
-  or : [CDP_ProfileEventsFilter]
-  not : CDP_ProfileEventsFilter
-
-  minimalCount : Int,
-  maximalCount : Int,
-  eventFilter : CDP_EventFilter
-}
-
-
-
 
 `;

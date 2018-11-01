@@ -1,5 +1,5 @@
 
-exports.cxsGlobalSchema = `
+exports.cdpGlobalSchema = `
 # CUSTOM SCALAR TYPES
 # ----------------------------------------------------------------------------
 
@@ -97,20 +97,16 @@ type _SampleAddress {
 
 
 type Query {
-  cxs : CDP_Query
+  cdp : CDP_Query
 }
 
 
 type Mutation {
-
-  cxs : CDP_Mutation
-
+  cdp : CDP_Mutation
 }
 
 type Subscription {
-
-  cxs : CDP_Subscription
+  cdp : CDP_Subscription
 }
-
 
 `;

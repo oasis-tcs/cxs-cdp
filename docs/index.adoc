@@ -472,6 +472,13 @@ As such, sources are comparable to siteID's in Google Analytics.
 include::{sourcedir}/schemas/events.js[lines=2..76]
 ----
 
+==== Queries
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/query.js[lines=5..7]
+----
+
 === EventTypes
 
 To uniquely separate events, an event must be associated with a specific EventType.

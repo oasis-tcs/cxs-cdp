@@ -38,4 +38,28 @@ input CDP_ProfilePropertiesFilterInput {
   or : CDP_ProfilePropertiesFilterInput
   # generated profile properties filters will be listed below
 }
+
+type CDP_ProfileEventsFilter {
+  and : [CDP_ProfileEventsFilter]
+  or : [CDP_ProfileEventsFilter]
+  not : CDP_ProfileEventsFilter
+
+  minimalCount : Int,
+  maximalCount : Int,
+  eventFilter : CDP_EventFilter
+}
+
+# Named filters are used to evaluate filters against a profile - useful for building personalized experiences.
+input CDP_NamedFilterInput {
+  name : String!
+  filter: CDP_ProfileFilterInput
+}
+
+# A result for a named filter match request.
+type CDP_FilterMatch {
+  name : String
+  matched : Boolean
+  executionTimeMillis : Int
+}
+
 `;

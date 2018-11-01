@@ -16,7 +16,7 @@ type CDP_ProfileID {
 }
 
 input CDP_ProfileIDInput {
-    source : CDP_Source!
+    source : CDP_SourceInput!
     id : ID! # unique profile identifier for the source
 }
 
