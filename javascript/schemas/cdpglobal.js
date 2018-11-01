@@ -38,7 +38,7 @@ input CDP_UpdateListInput {
   leaveLists : [CDP_ListInput]
 }
 
-enum SessionState {
+enum CDP_SessionState {
   START,
   STOP,
   PAUSE,
@@ -46,7 +46,7 @@ enum SessionState {
 }
 
 input CDP_UpdateSessionStateInput {
-  newState : SessionState
+  newState : CDP_SessionState
 }
 
 
