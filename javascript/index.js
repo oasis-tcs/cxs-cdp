@@ -4,10 +4,12 @@ const { booleanPropertyTypesSchema } = require('./schemas/booleanpropertytypes')
 const { cxsGlobalSchema } = require('./schemas/cxsglobal');
 const { consentsSchema } = require('./schemas/consents');
 const { querySchema } = require('./schemas/query');
+const { mutationSchema } = require('./schemas/mutation');
 const { subscriptionSchema } = require('./schemas/subscription');
 const { clientsSchema } = require('./schemas/client');
 const { datePropertyTypesSchema } = require('./schemas/datepropertytypes');
 const { eventsSchema } = require('./schemas/events');
+const { eventFiltersSchema } = require('./schemas/eventfilters');
 const { eventTypesSchema } = require('./schemas/eventtypes');
 const { filtersSchema } = require('./schemas/filters');
 const { floatPropertyTypesSchema } = require('./schemas/floatpropertytypes');
@@ -19,11 +21,13 @@ const { optimizationsSchema } = require('./schemas/optimizations');
 const { paginationSchema } = require('./schemas/pagination');
 const { profilesSchema } = require('./schemas/profiles');
 const { profilePropertiesSchema } = require('./schemas/profileproperties');
+const { profileFiltersSchema } = require('./schemas/profilefilters');
 const { propertyTypesSchema } = require('./schemas/propertytypes');
 const { personasSchema } = require('./schemas/personas');
 const { interestsSchema } = require('./schemas/interests');
+const { sourcesSchema } = require('./schemas/sources');
+const { managementFiltersSchema } = require('./schemas/managementfilters');
 const { segmentsSchema } = require('./schemas/segments');
-const { segmentFilterInputSchema } = require('./schemas/segmentfilterinput');
 const { stringPropertyTypesSchema } = require('./schemas/stringpropertytypes');
 const { setPropertyTypesSchema } = require('./schemas/setpropertytypes');
 const { topicsSchema } = require('./schemas/topics');
@@ -34,19 +38,23 @@ const resolvers = {};
 const typeDefs = [
     cxsGlobalSchema,
     querySchema,
+    mutationSchema,
     subscriptionSchema,
     clientsSchema,
     consentsSchema,
     eventsSchema,
+    eventFiltersSchema,
     optimizationsSchema,
     eventTypesSchema,
     profilesSchema,
+    profileFiltersSchema,
     profilePropertiesSchema,
     interestsSchema,
     personasSchema,
     topicsSchema,
     segmentsSchema,
-    segmentFilterInputSchema,
+    sourcesSchema,
+    managementFiltersSchema,
     listsSchema,
     filtersSchema,
     paginationSchema,

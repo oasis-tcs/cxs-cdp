@@ -72,6 +72,6 @@ input CDP_EventInput {
   CDP_UpdateSessionState : CDP_UpdateSessionStateInput
   # Here below will be the generated event field based on the registered event types
   # Example of a generated event type
-  pageView : PageViewInput
+  # pageView : PageViewInput
 }
 `;

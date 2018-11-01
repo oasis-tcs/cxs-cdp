@@ -9,6 +9,17 @@ interface CDP_ProfileInterface {
   propertyTypes : [CDP_PropertyType]
 }
 
+# ProfileIDs uniquely identify a profile within a source
+type CDP_ProfileID {
+    source : CDP_Source!
+    id : ID! # unique profile identifier within source
+}
+
+input CDP_ProfileIDInput {
+    source : CDP_Source!
+    id : ID! # unique profile identifier for the source
+}
+
 type CDP_Profile implements CDP_ProfileInterface {
   profileIDs : [CDP_ProfileID] # the CXS server may generated a system profile ID and expose it here
   events(filter : CDP_EventFilterInput, first : Int, last: Int, after : String, before: String) : CDP_EventConnection
