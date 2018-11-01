@@ -2,10 +2,6 @@ exports.querySchema = `
 "Context Server GraphQL queries"
 type CDP_Query {
 
-  getEventTypes : [CDP_EventType]
-  getEvent(id : String!) : CDP_Event
-  findEvents(filter : CDP_EventFilterInput, orderBy : [CDP_OrderByInput], first: Int, after: String, last: Int, before: String) : CDP_EventConnection
-
   getProfile(profileID : CDP_ProfileIDInput, createIfMissing: Boolean) : CDP_Profile
   findProfiles(filter: CDP_ProfileFilterInput, orderBy: [CDP_OrderByInput], first: Int, after: String, last: Int, before: String) : CDP_ProfileConnection
 

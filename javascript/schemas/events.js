@@ -74,4 +74,10 @@ input CDP_EventInput {
   # Example of a generated event type
   # pageView : PageViewInput
 }
+
+extend type CDP_Query {
+  getEventTypes : [CDP_EventType]
+  getEvent(id : String!) : CDP_Event
+  findEvents(filter : CDP_EventFilterInput, orderBy : [CDP_OrderByInput], first: Int, after: String, last: Int, before: String) : CDP_EventConnection
+}
 `;

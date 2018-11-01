@@ -472,11 +472,11 @@ As such, sources are comparable to siteID's in Google Analytics.
 include::{sourcedir}/schemas/events.js[lines=2..76]
 ----
 
-==== Queries
+==== CDP_Query event fields
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/query.js[lines=5..7]
+include::{sourcedir}/schemas/events.js[lines=79..81]
 ----
 
 === EventTypes
