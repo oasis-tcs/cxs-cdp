@@ -170,10 +170,12 @@ The first and most common use case is the case of delivering personalized experi
 image::images/cdp-webpersonalization-usecase.svg["Personalization use case diagram"]
 
 As illustrated above, the browser can interact with both a Content Management System (CMS) and a CDP-compliant server
-to first retrieve the HTML needed to deliver the page content, and then the CDP to get and update information about the
-profile of the current visitor to the site. The CMS may contain personalization filters that are sent to the CDP for
-evaluation and will allow the CMS to personalize the page content based on whether the current visitor profile matches
-the filters or not.
+to first retrieve the HTML needed to deliver the page content. After this the next request to the CMS is a request
+for personalized content that will be customized based on the profile retrieved from the CDP. The result is personalized
+content for the current visitor being sent back to the browser.
+
+This illustration is by no means the only way to implement personalization using a CDP but it serves as a simple
+introduction to the possibilies such a system may offer.
 
 === Newsletters
 
@@ -213,11 +215,9 @@ visitor into a sub-group.
 
 image::images/cdp-abtesting-usecase.svg["A/B testing use case diagram"]
 
-In the above illustration, this use case is implemented by using a CMS to deliver the different variants of content, and an
-algorithm is used to perform the random display distribution. Once the variant is selected and displayed, the CDP receives
-an event that updates the visitor profile with the variant that has been selected and displayed. Later on, this information may be
-used to classify the visitor profile into a subset (of profiles) or to personalize a future interaction with the systems
-connected to the CDP.
+In the above illustration, this use case is implemented by using a CMS to deliver the different variants of content that
+are hidden by default. After that, the CDP is asked whether the profile is in variant A or B, which might be implemented
+in different fashions but they will be remembered by the CDP for future displays.
 
 == API Reference
 
