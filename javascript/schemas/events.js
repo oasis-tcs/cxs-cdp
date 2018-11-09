@@ -80,4 +80,10 @@ extend type CDP_Query {
   getEvent(id : String!) : CDP_Event
   findEvents(filter : CDP_EventFilterInput, orderBy : [CDP_OrderByInput], first: Int, after: String, last: Int, before: String) : CDP_EventConnection
 }
+
+extend type CDP_Mutation {
+  processEvents(events: [CDP_EventInput]!) : Int
+  createOrUpdateEventType(eventType : CDP_EventTypeInput) : CDP_EventType
+  deleteEventType(eventName : ID!) : Boolean
+}
 `;

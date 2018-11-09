@@ -1,11 +1,7 @@
 const { ApolloServer } = require('apollo-server');
-
-const { booleanPropertyTypesSchema } = require('./schemas/booleanpropertytypes');
 const { cdpGlobalSchema } = require('./schemas/cdpglobal');
+const { booleanPropertyTypesSchema } = require('./schemas/booleanpropertytypes');
 const { consentsSchema } = require('./schemas/consents');
-const { querySchema } = require('./schemas/query');
-const { mutationSchema } = require('./schemas/mutation');
-const { subscriptionSchema } = require('./schemas/subscription');
 const { clientsSchema } = require('./schemas/client');
 const { datePropertyTypesSchema } = require('./schemas/datepropertytypes');
 const { eventsSchema } = require('./schemas/events');
@@ -37,9 +33,6 @@ const resolvers = {};
 
 const typeDefs = [
     cdpGlobalSchema,
-    querySchema,
-    mutationSchema,
-    subscriptionSchema,
     clientsSchema,
     consentsSchema,
     eventsSchema,

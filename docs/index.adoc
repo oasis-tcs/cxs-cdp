@@ -109,7 +109,7 @@ OASIS requests that any OASIS Party or any other party that believes it has pate
 
 OASIS invites any party to contact the OASIS TC Administrator if it is aware of a claim of ownership of any patent claims that would necessarily be infringed by implementations of this specification by a patent holder that is not willing to provide a license to such patent claims in a manner consistent with the IPR Mode of the OASIS Technical Committee that produced this specification. OASIS may include such claims on its website, but disclaims any obligation to do so.
 
-OASIS takes no position regarding the validity or scope of any intellectual property or other rights that might be claimed to pertain to the implementation or use of the technology described in this document or the extent to which any license under such rights might or might not be available; neither does it represent that it has made any effort to identify any such rights. Information on OASIS' procedures with respect to rights in any document or deliverable produced by an OASIS Technical Committee can be found on the OASIS website. Copies of claims of rights made available for publication and any assurances of licenses to be made available, or the result of an attempt made to obtain a general license or permission for the use of such proprietary rights by implementers or users of this OASIS Committee Specification or OASIS Standard, can be obtained from the OASIS TC Administrator. OASIS makes no representation that any information or list of intellectual property rights will at any time be complete, or that any claims in such list are, in fact, Essential Claims.
+OASIS takes no posi tion regarding the validity or scope of any intellectual property or other rights that might be claimed to pertain to the implementation or use of the technology described in this document or the extent to which any license under such rights might or might not be available; neither does it represent that it has made any effort to identify any such rights. Information on OASIS' procedures with respect to rights in any document or deliverable produced by an OASIS Technical Committee can be found on the OASIS website. Copies of claims of rights made available for publication and any assurances of licenses to be made available, or the result of an attempt made to obtain a general license or permission for the use of such proprietary rights by implementers or users of this OASIS Committee Specification or OASIS Standard, can be obtained from the OASIS TC Administrator. OASIS makes no representation that any information or list of intellectual property rights will at any time be complete, or that any claims in such list are, in fact, Essential Claims.
 
 The name "OASIS" is a trademark of OASIS, the owner and developer of this specification, and should be used only to refer to the organization and its official outputs. OASIS welcomes reference to, and implementation and use of, specifications, while reserving the right to enforce its marks against misleading uses. Please see https://www.oasis-open.org/policies-guidelines/trademark for above guidance.
 
@@ -260,6 +260,42 @@ include::{sourcedir}/schemas/client.js[lines=2..6]
 ----
 
 
+=== Sources
+Sources are used to secure unique identifier per client.
+For instance, if a CRM is used as a source it will have unique identifiers for its respective profile records.
+As the CDP server collects data from multiple records, the combination of source and identifier provides a globally unique, but consistent identifier for CDP to process.
+
+==== CDP_Source
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/sources.js[lines=2..5]
+----
+
+==== CDP_SourceInput
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/sources.js[lines=7..10]
+----
+
+==== CDP_Query
+
+.Source related queries
+[source,graphql]
+----
+include::{sourcedir}/schemas/sources.js[lines=12..14]
+----
+
+==== CDP_Mutation
+
+.Source related mutations
+[source,graphql]
+----
+include::{sourcedir}/schemas/sources.js[lines=16..19]
+----
+
+
 === Profiles
 Profiles are in many ways the essence of CDP.
 A Customer Data Platform dynamically builds profiles from events that occur over time.
@@ -273,7 +309,6 @@ The Customer Data Platform is responsible for building profiles based on the pro
 NOTE: Profiles are not created like many other objects, but are rather composed through a chain of events.
 
 NOTE: Specification implementers are encouraged to implement interfaces for importing profilesSchema??
-
 
 
 ==== CDP_ProfileInterface
@@ -311,6 +346,21 @@ include::{sourcedir}/schemas/profileproperties.js[lines=2..15]
 
 ProfileFilters are used to query all profiles, and return only profiles that match the filter expressions.
 
+==== CDP_Query
+
+.Profile queries
+[source,graphql]
+----
+include::{sourcedir}/schemas/profiles.js[lines=39..41]
+----
+
+==== CDP_Mutation
+
+.Profile mutations
+[source,graphql]
+----
+include::{sourcedir}/schemas/profiles.js[lines=45..47]
+----
 
 
 === Properties
@@ -417,22 +467,20 @@ include::{sourcedir}/schemas/setpropertytypes.js[lines=2..23]
 
 To create a schema for <<Profiles>>, we need a globally defined set of propertyTypes.
 
-Collectively, profilePropertyType defines the schema of properties that can be used by any profile in the Customer Data Platform.
+Collectively, all profilePropertyTypes defines the schema of properties that can be used by any profile in the Customer Data Platform.
 
 This enables administrators and developers to build and maintain a consistent data model for profiles across all <<Clients>>.
 Any data imported to the system must be mapped to a corresponding ProfilePropertyType.
 
 A profilePropertyType is technically a PropertyType, where the name must be unique for all profilePropertyTypes.
 
-==== Types
+==== CDP_ProfileProperty
 
-See <<CDP_ProfilePropertyType>> for more API details.
+TODO, are we missing this from our schema? Or are all propertyTypes profilePropertyTypes??
 
-==== Queries
+==== CDP_Query
 
-==== Mutations
-
-==== Subscriptions
+==== CDP_Mutation
 
 
 
@@ -472,11 +520,20 @@ As such, sources are comparable to siteID's in Google Analytics.
 include::{sourcedir}/schemas/events.js[lines=2..76]
 ----
 
-==== CDP_Query event fields
+==== CDP_Query
 
+.Event queries
 [source,graphql]
 ----
 include::{sourcedir}/schemas/events.js[lines=79..81]
+----
+
+==== CDP_Mutation
+
+.Event mutations
+[source,graphql]
+----
+include::{sourcedir}/schemas/events.js[lines=85..87]
 ----
 
 === EventTypes
@@ -827,8 +884,33 @@ but other items are typically handled by administrators or marketeers, and benef
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/views.js[lines=2..9]
+include::{sourcedir}/schemas/views.js[lines=2..5]
 ----
+
+==== CDP_ViewInput
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/views.js[lines=7..9]
+----
+
+
+==== CDP_Query
+
+.View queries
+[source,graphql]
+----
+include::{sourcedir}/schemas/views.js[lines=27..28]
+----
+
+==== CDP_Mutation
+
+.View mutations
+[source,graphql]
+----
+include::{sourcedir}/schemas/views.js[lines=32..33]
+----
+
 
 
 === Personas
@@ -844,7 +926,30 @@ Personas and their fields can be explicitly created, where real profiles are bui
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/personas.js[lines=2..24]
+include::{sourcedir}/schemas/personas.js[lines=2..13]
+----
+
+==== CDP_PersonaInput
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/personas.js[lines=15..24]
+----
+
+==== CDP_Query
+
+.Persona queries
+[source,graphql]
+----
+include::{sourcedir}/schemas/personas.js[lines=27..28]
+----
+
+==== CDP_Mutation
+
+.Persona mutations
+[source,graphql]
+----
+include::{sourcedir}/schemas/personas.js[lines=32..33]
 ----
 
 
@@ -859,7 +964,30 @@ A common use-case for lists is creating a list for a campaign, and add the targe
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/lists.js[lines=2..15]
+include::{sourcedir}/schemas/lists.js[lines=2..9]
+----
+
+==== CDP_ListInput
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/lists.js[lines=11..15]
+----
+
+==== CDP_Query
+
+.List queries
+[source,graphql]
+----
+include::{sourcedir}/schemas/lists.js[lines=18..19]
+----
+
+==== CDP_Mutation
+
+.List mutations
+[source,graphql]
+----
+include::{sourcedir}/schemas/lists.js[lines=23..26]
 ----
 
 
@@ -880,7 +1008,30 @@ Example segments:
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/segments.js[lines=2..14]
+include::{sourcedir}/schemas/segments.js[lines=2..7]
+----
+
+==== CDP_SegmentInput
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/segments.js[lines=9..14]
+----
+
+==== CDP_Query
+
+.Segment queries
+[source,graphql]
+----
+include::{sourcedir}/schemas/segments.js[lines=17..18]
+----
+
+==== CDP_Mutation
+
+.Segment mutations
+[source,graphql]
+----
+include::{sourcedir}/schemas/segments.js[lines=22..23]
 ----
 
 
@@ -906,8 +1057,33 @@ TODO: What about localization?
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/topics.js[lines=2..12]
+include::{sourcedir}/schemas/topics.js[lines=2..6]
 ----
+
+==== CDP_TopicInput
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/topics.js[lines=8..12]
+----
+
+==== CDP_Query
+
+.Topic queries
+[source,graphql]
+----
+include::{sourcedir}/schemas/topics.js[lines=15..16]
+----
+
+==== CDP_Mutation
+
+.Topic mutations
+[source,graphql]
+----
+include::{sourcedir}/schemas/topics.js[lines=20..21]
+----
+
+
 
 
 === Optimization
@@ -977,36 +1153,6 @@ include::{sourcedir}/schemas/optimizations.js[lines=44..47]
 ----
 include::{sourcedir}/schemas/optimizations.js[lines=49..55]
 ----
-
-
-=== Query Types
-
-==== CDP_Query
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/query.js[lines=2..29]
-----
-
-=== Mutation Types
-
-==== CDP_Mutations
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/mutation.js[lines=2..38]
-----
-
-
-=== Subscription Types
-
-==== CDP_Subscriptions
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/subscription.js[lines=2..9]
-----
-
 
 == Security Considerations
 

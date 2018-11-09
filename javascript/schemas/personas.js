@@ -22,4 +22,14 @@ input CDP_PersonaInput {
   consents : [CDP_ConsentInput]
   properties : CDP_ProfilePropertiesInput
 }
+
+extend type CDP_Query {
+  getPersona(personaID : String) : CDP_Persona
+  findPersonas(filter: CDP_ProfileFilterInput, orderBy: [CDP_OrderByInput], first: Int, after: String, last: Int, before: String) : CDP_ProfileConnection
+}
+
+extend type CDP_Mutation {
+  createOrUpdatePersona(persona : CDP_PersonaInput) : CDP_Persona
+  deletePersona(personaID : String) : CDP_Persona
+}
 `;
