@@ -31,7 +31,7 @@ exports.eventTypesSchema = `
 
 type CDP_EventType {
   name : String!
-  properties : [CDP_PropertyType]
+  properties : [CDP_PropertyTypeInterface]
 }
 
 input CDP_EventTypeInput {

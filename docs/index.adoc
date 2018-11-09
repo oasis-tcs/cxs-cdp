@@ -395,14 +395,23 @@ A propertyType essentially defines:
 Since the CDP api is defined using GraphQL,
 the API is dynamically updated when the schema is changed.
 
-==== CDP_PropertyType
+==== CDP_PropertyTypeInterface
 
 This interface defines the basis implementations for each valueType.
 This simplifies use and provides strong typing in GraphQL.
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/propertytypes.js[lines=2..27]
+include::{sourcedir}/schemas/propertytypes.js[lines=2..13]
+----
+
+==== CDP_PropertyTypeInput
+
+TODO Describe this type and its constraints.
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/propertytypes.js[lines=15..27]
 ----
 
 ==== CDP_BooleanPropertyType

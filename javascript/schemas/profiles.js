@@ -6,7 +6,7 @@ interface CDP_ProfileInterface {
   consents : [CDP_Consent]
   lists(views : [CDP_ViewInput]) : [CDP_List]
   properties : CDP_ProfileProperties
-  propertyTypes : [CDP_PropertyType]
+  propertyTypes : [CDP_PropertyTypeInterface]
 }
 
 # ProfileIDs uniquely identify a profile within a source
@@ -32,7 +32,7 @@ type CDP_Profile implements CDP_ProfileInterface {
   optimize(parameters : [CDP_OptimizationInput]) : [CDP_OptimizationResult]
   recommend(parameters : [CDP_RecommendationInput]) : [CDP_RecommendationResult]
   properties : CDP_ProfileProperties
-  propertyTypes : [CDP_PropertyType]
+  propertyTypes : [CDP_PropertyTypeInterface]
 }
 
 extend type CDP_Query {
@@ -42,7 +42,7 @@ extend type CDP_Query {
 }
 
 extend type CDP_Mutation {
-  addProfilePropertyTypes(propertyTypes : [CDP_PropertyTypeInput]) : Boolean
+  createOrUpdateProfilePropertyTypes(propertyTypes : [CDP_PropertyTypeInput]) : Boolean
   deleteProfilePropertyType(propertyTypeName : ID!) : Boolean
   deleteProfile(profileID : CDP_ProfileIDInput) : CDP_Profile
 }
