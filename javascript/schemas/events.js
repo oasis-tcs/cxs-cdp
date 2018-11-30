@@ -59,17 +59,17 @@ type CDP_Event {
 
 input CDP_EventInput {
   id: ID # optional, usually server-generated but could be interesting to import events
-  CDP_ClientID : String
-  CDP_SourceID : String
-  CDP_ProfileID: CDP_ProfileIDInput!
-  CDP_Object: CDP_ObjectInput!
-  CDP_Location: [CDP_GeoPointInput] # optional
-  CDP_Timestamp: Int # optional because the server can generate it if it's missing
+  cdp_ClientID : String
+  cdp_SourceID : String
+  cdp_ProfileID: CDP_ProfileIDInput!
+  cdp_Object: CDP_ObjectInput!
+  cdp_Location: [CDP_GeoPointInput] # optional
+  cdp_Timestamp: Int # optional because the server can generate it if it's missing
   # Built-in predefined event types
-  CDP_UpdateProfile : CDP_UpdateProfileInput
-  CDP_UpdateConsent : CDP_UpdateConsentInput
-  CDP_UpdateLists : CDP_UpdateListInput
-  CDP_UpdateSessionState : CDP_UpdateSessionStateInput
+  cdp_UpdateProfile : CDP_UpdateProfileInput
+  cdp_UpdateConsent : CDP_UpdateConsentInput
+  cdp_UpdateLists : CDP_UpdateListInput
+  cdp_UpdateSessionState : CDP_UpdateSessionStateInput
   # Here below will be the generated event field based on the registered event types
   # Example of a generated event type
   # pageView : PageViewInput

@@ -4,6 +4,7 @@
   "description": "GraphQL Implementation of the OASIS Context Server API Specification",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -17,9 +18,7 @@
   },
   "homepage": "https://github.com/sergehuber/contextserver-graphql-api#readme",
   "dependencies": {
-    "apollo-server": "^2.0.5",
-    "express": "^4.16.3",
-    "express-graphql": "^0.6.12",
-    "graphql": "^0.13.2"
+    "apollo-server": "^2.2.5",
+    "graphql": "^14.0.2"
   }
 }

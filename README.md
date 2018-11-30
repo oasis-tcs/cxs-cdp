@@ -18,10 +18,11 @@ should not be considered stable.
 
 To test the server simply launch
 
+    cd javascript
     npm install
-    node index.js
+    npm start
     
 You can then connect a browser to the following URL:
 
-    http://localhost:4000/graphql
+    http://localhost:4000
     

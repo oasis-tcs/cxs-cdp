@@ -3,8 +3,10 @@ exports.cdpGlobalSchema = `
 # CUSTOM SCALAR TYPES
 # ----------------------------------------------------------------------------
 
-" We use a custom JSON scalar type for arguments that cannot be defined in this specification"
+"We use a custom JSON scalar type for arguments that cannot be defined in this specification"
 scalar JSON
+"We use a custom scalar type to be able to define empty types since GraphQL doesn't allow that by default"
+scalar EmptyTypeWorkAround
 
 type Query {
   cdp : CDP_Query
@@ -20,7 +22,8 @@ type Subscription {
 
 # Namespaced queries
 type CDP_Query {
-  mustbesomethinghere : Boolean
+  "Please disregard the underscore field, it is only there because GraphQL schema doesn't allow empty types"
+  _ : EmptyTypeWorkAround
 }
 
 type CDP_Mutation {

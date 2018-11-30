@@ -52,6 +52,36 @@ input CDP_UpdateProfileInput {
   removeProperties : [String]
 }
 
+# Sample input types generated from ProfilePropertyType definitions
+input CDP_ProfilePropertiesInput {
+  firstName : String
+  lastName : String
+  location : Sample_LocationInput
+  address : Sample_AddressInput
+}
+
+input Sample_LocationInput {
+  latitude : Float,
+  longitude : Float
+}
+
+# Sample of nested PropertyType
+input Sample_AddressInput {
+  streetName : String,
+  streetNumber : Sample_StreetNumberInput,
+  citySubDivisions : [String]
+  city : String,
+  postalCode : String,
+  countrySubvisions : [String]
+  country : String
+}
+
+input Sample_StreetNumberInput {
+  streetNumber : Int,
+  prefix : String,
+  postfix : String
+}
+
 # This pre-defined event?  type is used to update a single profile consent
 input CDP_UpdateConsentInput {
   consent : CDP_ConsentInput
