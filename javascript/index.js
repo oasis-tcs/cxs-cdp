@@ -15,10 +15,10 @@ const { intPropertyTypesSchema } = require('./schemas/intpropertytypes');
 const { listsSchema } = require('./schemas/lists');
 const { optimizationsSchema } = require('./schemas/optimizations');
 const { paginationSchema } = require('./schemas/pagination');
+const { propertyTypesSchema } = require('./schemas/propertytypes');
 const { profilesSchema } = require('./schemas/profiles');
 const { profilePropertiesSchema } = require('./schemas/profileproperties');
 const { profileFiltersSchema } = require('./schemas/profilefilters');
-const { propertyTypesSchema } = require('./schemas/propertytypes');
 const { personasSchema } = require('./schemas/personas');
 const { interestsSchema } = require('./schemas/interests');
 const { sourcesSchema } = require('./schemas/sources');
@@ -26,6 +26,7 @@ const { managementFiltersSchema } = require('./schemas/managementfilters');
 const { segmentsSchema } = require('./schemas/segments');
 const { stringPropertyTypesSchema } = require('./schemas/stringpropertytypes');
 const { setPropertyTypesSchema } = require('./schemas/setpropertytypes');
+const { sessionsSchema } = require('./schemas/sessions');
 const { topicsSchema } = require('./schemas/topics');
 const { viewsSchema } = require('./schemas/views');
 
@@ -34,14 +35,15 @@ const resolvers = {};
 const typeDefs = [
     cdpGlobalSchema,
     clientsSchema,
+    sessionsSchema,
     consentsSchema,
     eventsSchema,
     eventFiltersSchema,
     optimizationsSchema,
     eventTypesSchema,
     profilesSchema,
-    profileFiltersSchema,
     profilePropertiesSchema,
+    profileFiltersSchema,
     interestsSchema,
     personasSchema,
     topicsSchema,

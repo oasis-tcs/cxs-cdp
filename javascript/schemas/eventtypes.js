@@ -38,4 +38,28 @@ input CDP_EventTypeInput {
   name : ID! # must be in a format that's acceptable as a GraphQL field name (/[_A-Za-z][_0-9A-Za-z]*/) , and we recommend to prefix it to avoid conflicts, something like acme_pageView, acme_click. The "CDP_" prefix is reserved for built-in CXS event types
   properties : [CDP_PropertyTypeInput]
 }
+
+# Where does the stuff below fit in??
+# Event properties will be updated based on the properties defined by CXS server event handlers
+type CDP_EventProperties {
+  # we provide some samples properties here because GraphQL doesn't allow empty types, but these are not mandatory
+  like : String
+}
+
+# This pre-defined event? type is used to update profile properties
+input CDP_UpdateProfileInput {
+  updateProperties : CDP_ProfilePropertiesInput
+  removeProperties : [String]
+}
+
+# This pre-defined event?  type is used to update a single profile consent
+input CDP_UpdateConsentInput {
+  consent : CDP_ConsentInput
+}
+
+# TODO: Pre-defined propertyType used to update profile list membership
+input CDP_UpdateListInput {
+  joinLists : [CDP_ListInput]
+  leaveLists : [CDP_ListInput]
+}
 `;

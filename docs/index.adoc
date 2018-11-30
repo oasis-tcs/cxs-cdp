@@ -295,6 +295,26 @@ include::{sourcedir}/schemas/sources.js[lines=12..14]
 include::{sourcedir}/schemas/sources.js[lines=16..19]
 ----
 
+=== Sessions
+When individuals interact, clients may enrich the data associated with interaction by specifying sessions.
+For instance, a session may start when a user loads a specific app, and end when he closes it.
+
+TODO: Mandatory/Automatic/????
+
+==== CDP_SessionState
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/sessions.js[lines=2..7]
+----
+
+==== CDP_UpdateSessionStateInput
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/sessions.js[lines=9..11]
+----
+
 
 === Profiles
 Profiles are in many ways the essence of CDP.
@@ -478,19 +498,50 @@ To create a schema for <<Profiles>>, we need a globally defined set of propertyT
 
 Collectively, all profilePropertyTypes defines the schema of properties that can be used by any profile in the Customer Data Platform.
 
-This enables administrators and developers to build and maintain a consistent data model for profiles across all <<Clients>>.
+This enables administrators and developers to build and maintain a consistent data model for profiles across different <<Clients>>.
 Any data imported to the system must be mapped to a corresponding ProfilePropertyType.
 
 A profilePropertyType is technically a PropertyType, where the name must be unique for all profilePropertyTypes.
 
-==== CDP_ProfileProperty
+==== CDP_ProfileProperties
 
-TODO, are we missing this from our schema? Or are all propertyTypes profilePropertyTypes??
+TODO: Are we missing a way to specify profileProperties??
+
+We update profiles always through events.
+The history of external or internal profile modifications is accessible through the profile update events.
+CDP must also specify a way to provide subscriptions on profile modifications so that external systems can retrieve the profile modifications.
+
+The flow looks like this :
+Real Event --> Source -> Mapping -> Profile
+
+Profile merges are optional in the CXS specification. They may be supported by using a property defined as an identifier as a merge key (multiple merge keys may of course exist) to merge multiple profiles. The resulting merged profile MUST contain all the source profile IDs of the merged profiles as well as the merged profile data. The original profiles that were merged may be flagged or deleted, this is implementation specific.
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/profileproperties.js[lines=2..9]
+----
+
+==== CDP_ProfilePropertiesInput
+
+TODO: Is this actually available? If so we don't need events to update profiles?
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/profileproperties.js[lines=11..17]
+----
+
+==== Sample ProfilePropertyTypes
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/profileproperties.js[lines=19..41]
+----
+
+
 
 ==== CDP_Query
 
 ==== CDP_Mutation
-
 
 
 === Events
@@ -608,6 +659,17 @@ input crmLeadUpdate {
 ----
 include::{sourcedir}/schemas/events.js[lines=2..40]
 ----
+
+
+==== ARE THESE EVENT TYPES?
+
+TODO, is this correctly placed?
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/eventtypes.js[lines=42..64]
+----
+
 
 === Consents
 
