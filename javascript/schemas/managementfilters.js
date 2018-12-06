@@ -24,7 +24,4 @@ input CDP_TopicFilterInput {
   displayName_regexp : String
 }
 
-# TODO?:  CDP_InterestFilterInput
-# TODO?:  CDP_PersonaFilterInput
-
 `;

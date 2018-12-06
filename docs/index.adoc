@@ -414,9 +414,9 @@ These are ``Identifier``,``String``, ``Int``, ``Float``, ``Date``, ``Boolean``, 
 Some example properties:
 
 * someString : "Serge"
-* someDate : date(1975-10-17)
+* someDate : "1996-12-19"
 * someInteger : 1337
-* location : geoPoint(x,y)
+* location : "lat,lon"
 * arrayOfStrings : ["This", "is", "nice"]
 * setOfProperties : {prompt : "hello", response : "yo"}
 
@@ -669,7 +669,7 @@ include::{sourcedir}/schemas/events.js[lines=2..76]
 .Event queries
 [source,graphql]
 ----
-include::{sourcedir}/schemas/events.js[lines=79..81]
+include::{sourcedir}/schemas/events.js[lines=79..80]
 ----
 
 ==== CDP_Mutation
@@ -677,7 +677,7 @@ include::{sourcedir}/schemas/events.js[lines=79..81]
 .Event mutations
 [source,graphql]
 ----
-include::{sourcedir}/schemas/events.js[lines=85..87]
+include::{sourcedir}/schemas/events.js[lines=84..84]
 ----
 
 === EventTypes
@@ -754,6 +754,21 @@ TODO, is this correctly placed?
 include::{sourcedir}/schemas/eventtypes.js[lines=42..64]
 ----
 
+==== CDP_Query
+
+.Event type queries
+[source,graphql]
+----
+include::{sourcedir}/schemas/eventtypes.js[lines=97..97]
+----
+
+==== CDP_Mutation
+
+.Event type mutations
+[source,graphql]
+----
+include::{sourcedir}/schemas/eventtypes.js[lines=101..102]
+----
 
 === Consents
 
@@ -963,7 +978,7 @@ What are these?
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/filters.js[lines=28..54]
+include::{sourcedir}/schemas/filters.js[lines=27..43]
 ----
 
 
@@ -1076,15 +1091,6 @@ include::{sourcedir}/schemas/managementfilters.js[lines=11..17]
 ----
 include::{sourcedir}/schemas/managementfilters.js[lines=19..25]
 ----
-
-===== CDP_InterestFilterInput
-
-TODO: MISSING?
-
-===== CDP_PersonaFilterInput
-
-TODO: MISSING?
-
 
 === Views
 

@@ -24,17 +24,6 @@ input CDP_DateFilterInput {
   includeBefore : Boolean
 }
 
-# TODO: What are these?
-type CDP_GeoPoint {
-  longitude : Float
-  latitude : Float
-}
-
-input CDP_GeoPointInput {
-  longitude : Float
-  latitude : Float
-}
-
 enum CDP_GeoDistanceUnit {
   METERS,
   KILOMETERS,
@@ -42,13 +31,13 @@ enum CDP_GeoDistanceUnit {
 }
 
 type CDP_GeoDistance {
-  center : CDP_GeoPoint
+  center : GeoPoint
   unit : CDP_GeoDistanceUnit
   distance : Float
 }
 
 input CDP_GeoDistanceInput {
-  center : CDP_GeoPointInput
+  center : GeoPoint
   unit : CDP_GeoDistanceUnit
   distance : Float
 }

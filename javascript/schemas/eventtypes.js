@@ -92,4 +92,14 @@ input CDP_UpdateListInput {
   joinLists : [CDP_ListInput]
   leaveLists : [CDP_ListInput]
 }
+
+extend type CDP_Query {
+  getEventTypes : [CDP_EventType]
+}
+
+extend type CDP_Mutation {
+  createOrUpdateEventType(eventType : CDP_EventTypeInput) : CDP_EventType
+  deleteEventType(eventName : ID!) : Boolean
+}
+
 `;

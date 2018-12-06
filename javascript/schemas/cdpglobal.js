@@ -7,6 +7,14 @@ exports.cdpGlobalSchema = `
 scalar JSON
 "We use a custom scalar type to be able to define empty types since GraphQL doesn't allow that by default"
 scalar EmptyTypeWorkAround
+"The Date scalar uses RFC-3339 representation, see https://github.com/graphql-java/graphql-java-extended-scalars for example implementation "
+scalar Date
+"The Time scalar uses RFC-3339 representation, see https://github.com/graphql-java/graphql-java-extended-scalars for example implementation "
+scalar Time
+"The DateTime scalar uses RFC-3339 representation, see https://github.com/graphql-java/graphql-java-extended-scalars for example implementation "
+scalar DateTime
+"The GeoPoint scalar uses a string representation of lat,lon"
+scalar GeoPoint
 
 type Query {
   cdp : CDP_Query

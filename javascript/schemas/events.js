@@ -63,7 +63,7 @@ input CDP_EventInput {
   cdp_SourceID : String
   cdp_ProfileID: CDP_ProfileIDInput!
   cdp_Object: CDP_ObjectInput!
-  cdp_Location: [CDP_GeoPointInput] # optional
+  cdp_Location: GeoPoint # optional
   cdp_Timestamp: Int # optional because the server can generate it if it's missing
   # Built-in predefined event types
   cdp_UpdateProfile : CDP_UpdateProfileInput
@@ -76,14 +76,11 @@ input CDP_EventInput {
 }
 
 extend type CDP_Query {
-  getEventTypes : [CDP_EventType]
   getEvent(id : String!) : CDP_Event
   findEvents(filter : CDP_EventFilterInput, orderBy : [CDP_OrderByInput], first: Int, after: String, last: Int, before: String) : CDP_EventConnection
 }
 
 extend type CDP_Mutation {
   processEvents(events: [CDP_EventInput]!) : Int
-  createOrUpdateEventType(eventType : CDP_EventTypeInput) : CDP_EventType
-  deleteEventType(eventName : ID!) : Boolean
 }
 `;
