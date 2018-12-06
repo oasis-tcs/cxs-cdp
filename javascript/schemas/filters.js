@@ -1,5 +1,4 @@
 exports.filtersSchema = `
-"Specify filter result sort order"
 enum CDP_SortOrder {
   ASC,
   DESC,
@@ -7,10 +6,25 @@ enum CDP_SortOrder {
 }
 
 input CDP_OrderByInput {
-  fieldName : String # eg : endTime, properties.location
+  fieldName : String
   order : CDP_SortOrder
 }
 
+type CDP_DateFilter {
+  after : Int
+  before : Int
+  includeAfter : Boolean
+  includeBefore : Boolean
+}
+
+input CDP_DateFilterInput {
+  after : Int
+  before : Int
+  includeAfter : Boolean
+  includeBefore : Boolean
+}
+
+# TODO: What are these?
 type CDP_GeoPoint {
   longitude : Float
   latitude : Float
@@ -37,20 +51,6 @@ input CDP_GeoDistanceInput {
   center : CDP_GeoPointInput
   unit : CDP_GeoDistanceUnit
   distance : Float
-}
-
-type CDP_DateFilter {
-  after : Int
-  before : Int
-  includeAfter : Boolean
-  includeBefore : Boolean
-}
-
-input CDP_DateFilterInput {
-  after : Int
-  before : Int
-  includeAfter : Boolean
-  includeBefore : Boolean
 }
 
 `;

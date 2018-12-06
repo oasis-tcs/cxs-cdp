@@ -7,7 +7,7 @@ type CDP_Segment {
 }
 
 input CDP_SegmentInput {
-  id : ID #optional, may be server-generated
+  id : ID
   view : CDP_ViewInput!
   name : String
   profiles : CDP_ProfileFilterInput

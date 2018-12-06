@@ -1,14 +1,14 @@
 exports.optimizationsSchema = `
-# Object is globally unique in its combination of id and collections
 type CDP_Object {
-    id : ID! # unique within each specified collection
-    collections : [String]! # could be URIs, e.g. schema.org (http://schema.org/Product) or reverse domain naming convention (org.acme.Product)
+    id : ID!
+    collections : [String]!
 }
 
 input CDP_ObjectInput {
-    id : ID! # unique within each specified collection
-  collections : [String]! # a way of classifying objects : page, product, article
+    id : ID!
+    collections : [String]!
 }
+
 
 type CDP_OptimizationResult {
     name : String!
@@ -20,7 +20,6 @@ type CDP_ScoredObject {
     score : Float
 }
 
-# Example : return list of products that the profile has viewed but not bought
 input CDP_OptimizationInput {
     name : String!
     objects : [CDP_ObjectInput],
@@ -28,7 +27,6 @@ input CDP_OptimizationInput {
     strategy : String # unspecified, random, scoring, best first match, worst match, a/b test ?
 }
 
-# Used to boost positively/negatively the algorithm based on event type and time span: i.e. return a list of products the profile has viewed in the last year
 input CDP_EventOccurenceBoostInput {
     eventType : String
     boost : Int # could be negative

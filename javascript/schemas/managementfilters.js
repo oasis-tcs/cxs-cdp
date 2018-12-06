@@ -23,4 +23,8 @@ input CDP_TopicFilterInput {
   id_equals : String
   displayName_regexp : String
 }
+
+# TODO?:  CDP_InterestFilterInput
+# TODO?:  CDP_PersonaFilterInput
+
 `;

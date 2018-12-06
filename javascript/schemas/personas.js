@@ -1,9 +1,12 @@
 exports.personasSchema = `
+"""
+Emulate real profiles with personas
+"""
 type CDP_Persona implements CDP_ProfileInterface {
   id : ID!
   name : String!
   view : CDP_View!
-  profileIDs : [CDP_ProfileID] # the CXS server may generated a system profile ID and expose it here
+  profileIDs : [CDP_ProfileID]
   segments(views : [CDP_ViewInput]) : [CDP_Segment]
   interests(views : [CDP_ViewInput]) : [CDP_Interest]
   consents : [CDP_Consent]
@@ -13,10 +16,10 @@ type CDP_Persona implements CDP_ProfileInterface {
 }
 
 input CDP_PersonaInput {
-  id : ID #optional, may be server-generated
+  id : ID
   name : String!
   view : CDP_ViewInput!
-  profileIDs : [CDP_ProfileIDInput] # the CXS server may generated a system profile ID and expose it here
+  profileIDs : [CDP_ProfileIDInput]
   segments : [String]
   interests : [CDP_InterestInput]
   consents : [CDP_ConsentInput]

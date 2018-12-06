@@ -1,27 +1,34 @@
 exports.profilePropertiesSchema = `
-# Type is dynamically generated from profilePropertyTypes
+"""
+This type is dynamically generated from the defined profilePropertyTypes. firstName, lastName, sample_Location and sample_Address are just examples of how this might look if these profileProperties were actually defined.
+"""
 type CDP_ProfileProperties {
-  # the following are just examples to make GraphQL JS schema parser happy otherwise we have an empty type
   firstName : String
   lastName : String
   sample_Location : Sample_Location
   sample_Address : Sample_Address
 }
 
-# Sample generated from ProfilePropertyType
+"""
+Sample type generated from ProfilePropertyType definition
+"""
 type Sample_Location {
   latitude : Float,
   longitude : Float
 }
 
-# Sample generated from ProfilePropertyType
+"""
+Sample type generated from ProfilePropertyType definition
+"""
 type Sample_StreetNumber {
   streetNumber : Int,
   prefix : String,
   postfix : String
 }
 
-# Sample of nested PropertyType
+"""
+Sample type generated from ProfilePropertyType definition
+"""
 type Sample_Address {
   streetName : String,
   sample_StreetNumber : Sample_StreetNumber,

@@ -81,4 +81,6 @@ type CDP_InterestConnection {
   edges : [CDP_InterestEdge]
   pageInfo : PageInfo
 }
+
+# TODO: Missing Personas pagination
 `;

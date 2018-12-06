@@ -1,6 +1,5 @@
 exports.listsSchema = `
 type CDP_List {
-  # The ID cannot change and is usually server generated
   id : ID!
   view: CDP_View!
   name : String!

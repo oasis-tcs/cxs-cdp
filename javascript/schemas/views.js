@@ -1,5 +1,5 @@
 exports.viewsSchema = `
-# Management objects are always associated with a view
+
 type CDP_View {
   name: ID!
 }
