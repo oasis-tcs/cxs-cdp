@@ -1,11 +1,22 @@
-# Context Server GraphQL API
-The new GraphQL API for the OASIS Context Server specification, including sample test implementation
-in Javascript
+# Customer Data Platform GraphQL API
+The new GraphQL API for the OASIS CXS Customer Data Platform specification, including sample test implementation
+in Javascript.
+
+This work is being done by the OASIS Context Server Technical Committee (see https://www.oasis-open.org/committees/tc_home.php?wg_abbrev=cxs), and the new (upcoming) specification was renamed to the Customer Data Platform specification as this term has emerged recently as a standard denomination for the work started initially as the Context Server.
 
 ## Status
 
-Early Javascript are now available. They mostly serve as shells for the work on the actual API specification and 
-should not be considered stable.
+The GraphQL API is mostly defined, most of the work in now going into producing the actual specification document (written in ASCIIDoc format in the docs/ subdirectory).
+
+## Specification document generation
+
+Simply launch the generation of the specification document into HTML by using the following command:
+
+    ./gradlew asciidoctor
+    
+This will generate the HTML version of the ASCII Doctor specification in the following directory:
+
+    build/docs
 
 ## JavaScript server
 
