@@ -1,4 +1,4 @@
-# Customer Data Platform GraphQL API
+# Customer Data Platform GraphQL API OASIS Standard
 The new GraphQL API for the OASIS CXS Customer Data Platform specification, including sample test implementation
 in Javascript.
 
