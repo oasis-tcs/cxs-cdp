@@ -4,6 +4,10 @@ in Javascript.
 
 This work is being done by the OASIS Context Server Technical Committee (see https://www.oasis-open.org/committees/tc_home.php?wg_abbrev=cxs), and the new (upcoming) specification was renamed to the Customer Data Platform specification as this term has emerged recently as a standard denomination for the work started initially as the Context Server.
 
+You can find work-in-progress snapshots of the current draft being work on at the following location:
+
+    https://sergehuber.github.io/cdp/index.html
+
 ## Status
 
 The GraphQL API is mostly defined, most of the work in now going into producing the actual specification document (written in ASCIIDoc format in the docs/ subdirectory).
