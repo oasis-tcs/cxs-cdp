@@ -1,7 +1,6 @@
 exports.eventTypesSchema = `
 # EVENT-RELATED TYPES
 # ----------------------------------------------------------------------------
-#
 # Example event types include :
 # - Updating profile properties, needs to match the profile properties definitions
 # - Updating consent ( see http://ec.europa.eu/ipg/basics/legal/cookies/index_en.htm )
@@ -28,31 +27,45 @@ exports.eventTypesSchema = `
 # - Session end
 # - Opt-in / opt-out of a list
 
-
+"""
+Every event consists of a specific EventType with a specific set of properties.
+Available EventTypes is implementation specific, but a set of standard EventTypes must be implemented.
+It is recommended to support plugins/extension or other ways to add custom events to a CDP server.
+"""
 type CDP_EventType {
   name : String!
   properties : [CDP_PropertyTypeInterface]
 }
 
+"TODO: Do we need/support creating eventTypes on the fly? Used to register new EventTypes. Name must be a valid GraphQL field name and should be prefixed"
 input CDP_EventTypeInput {
-  name : ID! # must be in a format that's acceptable as a GraphQL field name (/[_A-Za-z][_0-9A-Za-z]*/) , and we recommend to prefix it to avoid conflicts, something like acme_pageView, acme_click. The "CDP_" prefix is reserved for built-in CXS event types
+  name : ID!
   properties : [CDP_PropertyTypeInput]
 }
 
-# Where does the stuff below fit in??
-# Event properties will be updated based on the properties defined by CXS server event handlers
+"TODO: Does this make any sense, aren't the eventprops specific per event type? EventProperties lists will be updated based on the properties defined by CXS server event handlers"
 type CDP_EventProperties {
-  # we provide some samples properties here because GraphQL doesn't allow empty types, but these are not mandatory
-  like : String
+  placeholder : EmptyTypeWorkAround
 }
 
-# This pre-defined event? type is used to update profile properties
+"CDP standard eventType used to update a single profiles concent"
+input CDP_UpdateConsentInput {
+  consent : CDP_ConsentInput
+}
+
+"CDP standard eventType used to update profile list memberships"
+input CDP_UpdateListInput {
+  joinLists : [CDP_ListInput]
+  leaveLists : [CDP_ListInput]
+}
+
+"CDP standard eventType used to update profile properties"
 input CDP_UpdateProfileInput {
   updateProperties : CDP_ProfilePropertiesInput
   removeProperties : [String]
 }
 
-# Sample input types generated from ProfilePropertyType definitions
+"Sample input type generated from available ProfilePropertyTypes"
 input CDP_ProfilePropertiesInput {
   firstName : String
   lastName : String
@@ -60,12 +73,13 @@ input CDP_ProfilePropertiesInput {
   address : Sample_AddressInput
 }
 
+"Sample input type generated for location PropertyType"
 input Sample_LocationInput {
   latitude : Float,
   longitude : Float
 }
 
-# Sample of nested PropertyType
+"Sample of nested PropertyType"
 input Sample_AddressInput {
   streetName : String,
   streetNumber : Sample_StreetNumberInput,
@@ -76,22 +90,13 @@ input Sample_AddressInput {
   country : String
 }
 
+"Sample PropertyType"
 input Sample_StreetNumberInput {
   streetNumber : Int,
   prefix : String,
   postfix : String
 }
 
-# This pre-defined event?  type is used to update a single profile consent
-input CDP_UpdateConsentInput {
-  consent : CDP_ConsentInput
-}
-
-# TODO: Pre-defined propertyType used to update profile list membership
-input CDP_UpdateListInput {
-  joinLists : [CDP_ListInput]
-  leaveLists : [CDP_ListInput]
-}
 
 extend type CDP_Query {
   getEventTypes : [CDP_EventType]

@@ -228,6 +228,15 @@ This chapter describes the API in detail.
 
 NOTE: The most efficient way to expore the GraphQL API is by starting the sample CDP server TODO
 
+*Scalars*
+
+GraphQL provides several basic value types that are used extensively in this specification, for instance Int and String.
+However, the CDP specification is also handling other value types in a similar fashion. As such, the following scalars have been added:
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/cdpglobal.js[lines=5..16]
+----
 
 === Clients
 
@@ -741,25 +750,51 @@ input crmLeadUpdate {
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/events.js[lines=2..40]
+include::{sourcedir}/schemas/eventtypes.js[lines=35..38]
 ----
 
-
-==== ARE THESE EVENT TYPES?
-
-TODO, is this correctly placed?
+==== CDP_EventTypeInput
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/eventtypes.js[lines=42..64]
+include::{sourcedir}/schemas/eventtypes.js[lines=40..44]
 ----
+
+==== CDP_EventProperties
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/eventtypes.js[lines=46..49]
+----
+
+==== CDP_UpdateConsentInput
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/eventtypes.js[lines=52..54]
+----
+
+==== CDP_UpdateListInput
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/eventtypes.js[lines=57..60]
+----
+
+==== CDP_UpdateProfileInput
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/eventtypes.js[lines=63..66]
+----
+
 
 ==== CDP_Query
 
 .Event type queries
 [source,graphql]
 ----
-include::{sourcedir}/schemas/eventtypes.js[lines=97..97]
+include::{sourcedir}/schemas/eventtypes.js[lines=102..102]
 ----
 
 ==== CDP_Mutation
@@ -767,7 +802,7 @@ include::{sourcedir}/schemas/eventtypes.js[lines=97..97]
 .Event type mutations
 [source,graphql]
 ----
-include::{sourcedir}/schemas/eventtypes.js[lines=101..102]
+include::{sourcedir}/schemas/eventtypes.js[lines=106..107]
 ----
 
 === Consents
