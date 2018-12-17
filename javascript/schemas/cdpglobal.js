@@ -6,11 +6,11 @@ exports.cdpGlobalSchema = `
 scalar JSON
 "Since GraphQL doesn't allow that by default"
 scalar EmptyTypeWorkAround
-"Uses RFC-3339 representation, see https://github.com/graphql-java/graphql-java-extended-scalars for example implementation "
+"Uses RFC-3339 representation, for example 1996-12-19, see https://github.com/graphql-java/graphql-java-extended-scalars for example implementation "
 scalar Date
-"Uses RFC-3339 representation, see https://github.com/graphql-java/graphql-java-extended-scalars for example implementation "
+"Uses RFC-3339 representation, for example 16:39:57-08:00, see https://github.com/graphql-java/graphql-java-extended-scalars for example implementation "
 scalar Time
-"Uses RFC-3339 representation, see https://github.com/graphql-java/graphql-java-extended-scalars for example implementation "
+"Uses RFC-3339 representation, for example 1996-12-19T16:39:57-08:00, see https://github.com/graphql-java/graphql-java-extended-scalars for example implementation "
 scalar DateTime
 "Uses a string representation of lat,lon"
 scalar GeoPoint
