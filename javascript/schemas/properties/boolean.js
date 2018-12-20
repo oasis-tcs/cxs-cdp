@@ -1,24 +1,21 @@
-exports.datePropertyTypesSchema = `
-"""
-Dates are in ISO-8601 format equivalent to Java 8 Instants.
-"""
-type CDP_DatePropertyType implements CDP_PropertyTypeInterface {
+exports.booleanPropertySchema = `
+type CDP_BooleanProperty implements CDP_PropertyInterface {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String]
   systemTags : [String]
   personalData : Boolean
-  defaultValue : String
+  defaultValue : Boolean
 }
 
-input CDP_DatePropertyTypeInput {
+input CDP_BooleanPropertyInput {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String]
   systemTags : [String]
   personalData : Boolean
-  defaultValue : String
+  defaultValue : Boolean
 }
 `;

@@ -3,13 +3,11 @@ interface CDP_Event {
   id: ID!
   source : CDP_Source
   client : CDP_Client
-  eventType: CDP_EventType!
   profileID: CDP_ProfileID!
   profile : CDP_Profile!
   object: String!
   location: String
   timestamp: String # ISO-8601 format Java 8 Instant equivalent
-  properties : CDP_EventProperties
 }
 
 # The actual payload will be dynamically generated based on the root properties defined by the CXS event

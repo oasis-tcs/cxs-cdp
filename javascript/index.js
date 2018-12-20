@@ -1,21 +1,15 @@
 const { ApolloServer } = require('apollo-server');
 const { cdpGlobalSchema } = require('./schemas/cdpglobal');
-const { booleanPropertyTypesSchema } = require('./schemas/booleanpropertytypes');
 const { consentsSchema } = require('./schemas/consents');
 const { clientsSchema } = require('./schemas/client');
-const { datePropertyTypesSchema } = require('./schemas/datepropertytypes');
 const { eventsSchema } = require('./schemas/events');
 const { eventFiltersSchema } = require('./schemas/eventfilters');
 const { eventTypesSchema } = require('./schemas/eventtypes');
 const { filtersSchema } = require('./schemas/filters');
-const { floatPropertyTypesSchema } = require('./schemas/floatpropertytypes');
-const { geoPointPropertyTypesSchema } = require('./schemas/geopointpropertytypes');
-const { identifierPropertyTypesSchema } = require('./schemas/identifierpropertytypes');
-const { intPropertyTypesSchema } = require('./schemas/intpropertytypes');
 const { listsSchema } = require('./schemas/lists');
 const { optimizationsSchema } = require('./schemas/optimizations');
 const { paginationSchema } = require('./schemas/pagination');
-const { propertyTypesSchema } = require('./schemas/propertytypes');
+const { propertyTypesSchema } = require('./schemas/properties');
 const { profilesSchema } = require('./schemas/profiles');
 const { profilePropertiesSchema } = require('./schemas/profileproperties');
 const { profileFiltersSchema } = require('./schemas/profilefilters');
@@ -24,8 +18,14 @@ const { interestsSchema } = require('./schemas/interests');
 const { sourcesSchema } = require('./schemas/sources');
 const { managementFiltersSchema } = require('./schemas/managementfilters');
 const { segmentsSchema } = require('./schemas/segments');
-const { stringPropertyTypesSchema } = require('./schemas/stringpropertytypes');
-const { setPropertyTypesSchema } = require('./schemas/setpropertytypes');
+const { datePropertySchema } = require('./schemas/properties/date');
+const { booleanPropertySchema } = require('./schemas/properties/boolean');
+const { floatPropertySchema } = require('./schemas/properties/float');
+const { geoPointPropertySchema } = require('./schemas/properties/geopoint');
+const { identifierPropertySchema } = require('./schemas/properties/identifier');
+const { intPropertySchema } = require('./schemas/properties/int');
+const { stringPropertySchema } = require('./schemas/properties/string');
+const { setPropertySchema } = require('./schemas/properties/set');
 const { sessionsSchema } = require('./schemas/sessions');
 const { topicsSchema } = require('./schemas/topics');
 const { viewsSchema } = require('./schemas/views');
@@ -54,14 +54,14 @@ const typeDefs = [
     filtersSchema,
     paginationSchema,
     propertyTypesSchema,
-    identifierPropertyTypesSchema,
-    stringPropertyTypesSchema,
-    intPropertyTypesSchema,
-    floatPropertyTypesSchema,
-    datePropertyTypesSchema,
-    booleanPropertyTypesSchema,
-    geoPointPropertyTypesSchema,
-    setPropertyTypesSchema,
+    identifierPropertySchema,
+    stringPropertySchema,
+    intPropertySchema,
+    floatPropertySchema,
+    datePropertySchema,
+    booleanPropertySchema,
+    geoPointPropertySchema,
+    setPropertySchema,
     viewsSchema
 ];
 

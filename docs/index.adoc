@@ -451,7 +451,7 @@ Simplifies use and provides strong typing in GraphQL.
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/propertytypes.js[lines=5..12]
+include::{sourcedir}/schemas/properties.js[lines=5..12]
 ----
 
 ID:: must be in a format that's acceptable as a GraphQL field name (/[_A-Za-z][_0-9A-Za-z]*/) , and we recommend to prefix it to avoid conflicts, i.e acme_pageView, acme_click. "cdp_" is reserved.
@@ -469,21 +469,21 @@ Only one field may be used at a time, all other fields must be null.
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/propertytypes.js[lines=17..26]
+include::{sourcedir}/schemas/properties.js[lines=17..26]
 ----
 
 ==== CDP_BooleanPropertyType
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/booleanpropertytypes.js[lines=2..10]
+include::{sourcedir}/schemas/properties/boolean.js[lines=2..10]
 ----
 
 ==== CDP_BooleanPropertyTypeInput
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/booleanpropertytypes.js[lines=12..20]
+include::{sourcedir}/schemas/properties/boolean.js[lines=12..20]
 ----
 
 
@@ -491,14 +491,14 @@ include::{sourcedir}/schemas/booleanpropertytypes.js[lines=12..20]
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/datepropertytypes.js[lines=5..13]
+include::{sourcedir}/schemas/properties/date.js[lines=5..13]
 ----
 
 ==== CDP_DatePropertyTypeInput
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/datepropertytypes.js[lines=15..23]
+include::{sourcedir}/schemas/properties/date.js[lines=15..23]
 ----
 
 
@@ -506,14 +506,14 @@ include::{sourcedir}/schemas/datepropertytypes.js[lines=15..23]
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/floatpropertytypes.js[lines=2..12]
+include::{sourcedir}/schemas/properties/float.js[lines=2..12]
 ----
 
 ==== CDP_FloatPropertyTypeInput
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/floatpropertytypes.js[lines=14..24]
+include::{sourcedir}/schemas/properties/float.js[lines=14..24]
 ----
 
 
@@ -521,28 +521,28 @@ include::{sourcedir}/schemas/floatpropertytypes.js[lines=14..24]
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/geopointpropertytypes.js[lines=5..13]
+include::{sourcedir}/schemas/properties/geopoint.js[lines=5..13]
 ----
 
 ==== CDP_GeoPointPropertyTypeInput
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/geopointpropertytypes.js[lines=15..23]
+include::{sourcedir}/schemas/properties/geopoint.js[lines=15..23]
 ----
 
 ==== CDP_IdentifierPropertyType
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/identifierpropertytypes.js[lines=5..14]
+include::{sourcedir}/schemas/properties/identifier.js[lines=5..14]
 ----
 
 ==== CDP_IdentifierPropertyTypeInput
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/identifierpropertytypes.js[lines=16..25]
+include::{sourcedir}/schemas/properties/identifier.js[lines=16..25]
 ----
 
 
@@ -550,14 +550,14 @@ include::{sourcedir}/schemas/identifierpropertytypes.js[lines=16..25]
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/intpropertytypes.js[lines=2..12]
+include::{sourcedir}/schemas/properties/int.js[lines=2..12]
 ----
 
 ==== CDP_IntPropertyTypeInput
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/intpropertytypes.js[lines=14..24]
+include::{sourcedir}/schemas/properties/int.js[lines=14..24]
 ----
 
 
@@ -565,14 +565,14 @@ include::{sourcedir}/schemas/intpropertytypes.js[lines=14..24]
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/stringpropertytypes.js[lines=2..11]
+include::{sourcedir}/schemas/properties/string.js[lines=2..11]
 ----
 
 ==== CDP_StringPropertyTypeInput
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/stringpropertytypes.js[lines=13..22]
+include::{sourcedir}/schemas/properties/string.js[lines=13..22]
 ----
 
 
@@ -580,14 +580,14 @@ include::{sourcedir}/schemas/stringpropertytypes.js[lines=13..22]
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/setpropertytypes.js[lines=5..13]
+include::{sourcedir}/schemas/properties/set.js[lines=5..13]
 ----
 
 ==== CDP_SetPropertyTypeInput
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/setpropertytypes.js[lines=15..23]
+include::{sourcedir}/schemas/properties/set.js[lines=15..23]
 ----
 
 

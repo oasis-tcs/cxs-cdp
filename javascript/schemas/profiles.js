@@ -22,7 +22,6 @@ interface CDP_ProfileInterface {
   consents : [CDP_Consent]
   lists(views : [CDP_ViewInput]) : [CDP_List]
   properties : CDP_ProfileProperties
-  propertyTypes : [CDP_PropertyTypeInterface]
 }
 
 type CDP_Profile implements CDP_ProfileInterface {
@@ -37,18 +36,17 @@ type CDP_Profile implements CDP_ProfileInterface {
   optimize(parameters : [CDP_OptimizationInput]) : [CDP_OptimizationResult]
   recommend(parameters : [CDP_RecommendationInput]) : [CDP_RecommendationResult]
   properties : CDP_ProfileProperties
-  propertyTypes : [CDP_PropertyTypeInterface]
 }
 
 extend type CDP_Query {
   getProfile(profileID : CDP_ProfileIDInput, createIfMissing: Boolean) : CDP_Profile
   findProfiles(filter: CDP_ProfileFilterInput, orderBy: [CDP_OrderByInput], first: Int, after: String, last: Int, before: String) : CDP_ProfileConnection
-  getProfileProperties : CDP_PropertyTypeConnection
+  getProfileProperties : CDP_PropertyConnection
 }
 
 extend type CDP_Mutation {
-  createOrUpdateProfileProperties(propertyTypes : [CDP_PropertyTypeInput]) : Boolean
-  deleteProfileProperties(propertyTypeName : ID!) : Boolean
+  createOrUpdateProfileProperties(properties : [CDP_PropertyInput]) : Boolean
+  deleteProfileProperties(propertyNames : [ID]!) : Boolean
   deleteProfile(profileID : CDP_ProfileIDInput) : CDP_Profile
 }
 

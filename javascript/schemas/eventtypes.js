@@ -27,27 +27,6 @@ exports.eventTypesSchema = `
 # - Session end
 # - Opt-in / opt-out of a list
 
-"""
-Every event consists of a specific EventType with a specific set of properties.
-Available EventTypes is implementation specific, but a set of standard EventTypes must be implemented.
-It is recommended to support plugins/extension or other ways to add custom events to a CDP server.
-"""
-type CDP_EventType {
-  name : String!
-  properties : [CDP_PropertyTypeInterface]
-}
-
-"TODO: Do we need/support creating eventTypes on the fly? Used to register new EventTypes. Name must be a valid GraphQL field name and should be prefixed"
-input CDP_EventTypeInput {
-  name : ID!
-  properties : [CDP_PropertyTypeInput]
-}
-
-"TODO: Does this make any sense, aren't the eventprops specific per event type? EventProperties lists will be updated based on the properties defined by CXS server event handlers"
-type CDP_EventProperties {
-  placeholder : EmptyTypeWorkAround
-}
-
 "CDP standard eventType used to update a single profiles concent"
 input CDP_UpdateConsentInput {
   consent : CDP_ConsentInput
@@ -95,16 +74,6 @@ input Sample_StreetNumberInput {
   streetNumber : Int,
   prefix : String,
   postfix : String
-}
-
-
-extend type CDP_Query {
-  getEventTypes : [CDP_EventType]
-}
-
-extend type CDP_Mutation {
-  createOrUpdateEventType(eventType : CDP_EventTypeInput) : CDP_EventType
-  deleteEventType(eventName : ID!) : Boolean
 }
 
 `;

@@ -17,13 +17,13 @@ type CDP_EventConnection {
   pageInfo : PageInfo
 }
 
-type CDP_PropertyTypeEdge {
-  node : CDP_PropertyTypeInterface
+type CDP_PropertyEdge {
+  node : CDP_PropertyInterface
   cursor : String!
 }
 
-type CDP_PropertyTypeConnection {
-  edges : [CDP_PropertyTypeEdge]
+type CDP_PropertyConnection {
+  edges : [CDP_PropertyEdge]
   pageInfo : PageInfo
 }
 

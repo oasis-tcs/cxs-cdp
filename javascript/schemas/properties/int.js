@@ -1,25 +1,25 @@
-exports.floatPropertyTypesSchema = `
-type CDP_FloatPropertyType implements CDP_PropertyTypeInterface {
+exports.intPropertySchema = `
+type CDP_IntProperty implements CDP_PropertyInterface {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String]
   systemTags : [String]
   personalData : Boolean
-  minValue : Float
-  maxValue : Float
-  defaultValue : Float
+  minValue : Int
+  maxValue : Int
+  defaultValue : Int
 }
 
-input CDP_FloatPropertyTypeInput {
+input CDP_IntPropertyInput {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String]
   systemTags : [String]
   personalData : Boolean
-  minValue : Float
-  maxValue : Float
-  defaultValue : Float
+  minValue : Int
+  maxValue : Int
+  defaultValue : Int
 }
 `;

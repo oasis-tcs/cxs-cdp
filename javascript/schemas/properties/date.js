@@ -1,26 +1,24 @@
-exports.identifierPropertyTypesSchema = `
+exports.datePropertySchema = `
 """
-The identifier property type is a string that is used as an identifier
+Dates are in ISO-8601 format equivalent to Java 8 Instants.
 """
-type CDP_IdentifierPropertyType implements CDP_PropertyTypeInterface {
+type CDP_DateProperty implements CDP_PropertyInterface {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String]
   systemTags : [String]
   personalData : Boolean
-  regexp : String
   defaultValue : String
 }
 
-input CDP_IdentifierPropertyTypeInput {
+input CDP_DatePropertyInput {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String]
   systemTags : [String]
   personalData : Boolean
-  regexp : String
   defaultValue : String
 }
 `;

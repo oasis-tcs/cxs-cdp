@@ -1,8 +1,8 @@
-exports.geoPointPropertyTypesSchema = `
+exports.geoPointPropertySchema = `
 """
 Geopoints map to a String in lat,lon format
 """
-type CDP_GeoPointPropertyType implements CDP_PropertyTypeInterface {
+type CDP_GeoPointProperty implements CDP_PropertyInterface {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int
@@ -12,7 +12,7 @@ type CDP_GeoPointPropertyType implements CDP_PropertyTypeInterface {
   defaultValue : String
 }
 
-input CDP_GeoPointPropertyTypeInput {
+input CDP_GeoPointPropertyInput {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int

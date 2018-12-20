@@ -1,21 +1,23 @@
-exports.booleanPropertyTypesSchema = `
-type CDP_BooleanPropertyType implements CDP_PropertyTypeInterface {
+exports.stringPropertySchema = `
+type CDP_StringProperty implements CDP_PropertyInterface {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String]
   systemTags : [String]
   personalData : Boolean
-  defaultValue : Boolean
+  regexp : String
+  defaultValue : String
 }
 
-input CDP_BooleanPropertyTypeInput {
+input CDP_StringPropertyInput {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String]
   systemTags : [String]
   personalData : Boolean
-  defaultValue : Boolean
+  regexp : String
+  defaultValue : String
 }
 `;

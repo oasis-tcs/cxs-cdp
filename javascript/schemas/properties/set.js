@@ -1,24 +1,24 @@
-exports.setPropertyTypesSchema = `
+exports.setPropertySchema = `
 """
 Enables creation of nested property types.
 """
-type CDP_SetPropertyType implements CDP_PropertyTypeInterface {
+type CDP_SetProperty implements CDP_PropertyInterface {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String]
   systemTags : [String]
   personalData : Boolean
-  properties : [CDP_PropertyTypeInterface]
+  properties : [CDP_PropertyInterface]
 }
 
-input CDP_SetPropertyTypeInput {
+input CDP_SetPropertyInput {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String]
   systemTags : [String]
   personalData : Boolean
-  properties : [CDP_PropertyTypeInput]
+  properties : [CDP_PropertyInput]
 }
 `;

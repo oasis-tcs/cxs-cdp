@@ -12,7 +12,6 @@ type CDP_Persona implements CDP_ProfileInterface {
   consents : [CDP_Consent]
   lists(views : [CDP_ViewInput]) : [CDP_List]
   properties : CDP_ProfileProperties
-  propertyTypes : [CDP_PropertyTypeInterface]
 }
 
 input CDP_PersonaInput {

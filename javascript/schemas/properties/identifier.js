@@ -1,5 +1,8 @@
-exports.stringPropertyTypesSchema = `
-type CDP_StringPropertyType implements CDP_PropertyTypeInterface {
+exports.identifierPropertySchema = `
+"""
+The identifier property type is a string that is used as an identifier
+"""
+type CDP_IdentifierProperty implements CDP_PropertyInterface {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int
@@ -10,7 +13,7 @@ type CDP_StringPropertyType implements CDP_PropertyTypeInterface {
   defaultValue : String
 }
 
-input CDP_StringPropertyTypeInput {
+input CDP_IdentifierPropertyInput {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int
