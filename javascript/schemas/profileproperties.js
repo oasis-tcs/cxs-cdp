@@ -1,6 +1,6 @@
 exports.profilePropertiesSchema = `
 """
-This type is dynamically generated from the defined profilePropertyTypes. firstName, lastName, sample_Location and sample_Address are just examples of how this might look if these profileProperties were actually defined.
+This type is dynamically generated from the defined ProfilePropertiess. firstName, lastName, sample_Location and sample_Address are just examples of how this might look if these profileProperties were actually defined.
 """
 type CDP_ProfileProperties {
   firstName : String
@@ -10,7 +10,7 @@ type CDP_ProfileProperties {
 }
 
 """
-Sample type generated from ProfilePropertyType definition
+Sample type generated from ProfileProperties definition
 """
 type Sample_Location {
   latitude : Float,
@@ -18,7 +18,7 @@ type Sample_Location {
 }
 
 """
-Sample type generated from ProfilePropertyType definition
+Sample type generated from ProfileProperties definition
 """
 type Sample_StreetNumber {
   streetNumber : Int,
@@ -27,7 +27,7 @@ type Sample_StreetNumber {
 }
 
 """
-Sample type generated from ProfilePropertyType definition
+Sample type generated from ProfileProperties definition
 """
 type Sample_Address {
   streetName : String,

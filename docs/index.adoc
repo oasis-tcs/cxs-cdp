@@ -593,16 +593,16 @@ include::{sourcedir}/schemas/setpropertytypes.js[lines=15..23]
 
 
 
-=== ProfilePropertyTypes
+=== ProfilePropertiess
 
 To create a schema for <<Profiles>>, we need a globally defined set of propertyTypes.
 
-Collectively, all profilePropertyTypes defines the schema of properties that can be used by any profile in the Customer Data Platform.
+Collectively, all ProfilePropertiess defines the schema of properties that can be used by any profile in the Customer Data Platform.
 
 This enables administrators and developers to build and maintain a consistent data model for profiles across different <<Clients>>.
-Any data imported to the system must be mapped to a corresponding ProfilePropertyType.
+Any data imported to the system must be mapped to a corresponding ProfileProperties.
 
-A profilePropertyType is technically a PropertyType, where the name must be unique for all profilePropertyTypes.
+A ProfileProperties is technically a PropertyType, where the name must be unique for all ProfilePropertiess.
 
 ==== CDP_ProfileProperties
 
@@ -697,21 +697,7 @@ EventTypes require a unique name, preferably using a namespace to avoid conflict
 The event input type is dynamically updated to include all the property definitions that were
 added to the context server. Here is an example of what it could look like after a while:
 
-.Sample EventInput with 3 custom event types registered
-[source,JSON]
-----
-input EventInput {
-  _profileID: ProfileIDInput!
-  _object: String! # do we need it ?
-  _location: [GeoPointInput] # optional
-  _timestamp: Int
-  profileUpdate : profileUpdateInput,
-  pageView : PageViewInput,
-  crmLeadUpdate : crmLeadUpdateInput
-}
-----
-
-.Sample EventType for Page Views
+.Sample EventTypeInput for Page Views
 [source,ruby]
 ----
 input PageViewInput {
@@ -722,7 +708,7 @@ input PageViewInput {
 }
 ----
 
-.Sample EventType for profile update
+.Sample EventTypeInput for profile update
 [source,ruby]
 ----
 input profileUpdateInput : {
@@ -734,7 +720,7 @@ input profileUpdateInput : {
 }
 ----
 
-.Sample EventType for crm Lead updates
+.Sample EventTypeInput for crm updates
 [source,javascript]
 ----
 input crmLeadUpdate {
@@ -751,13 +737,6 @@ input crmLeadUpdate {
 [source,graphql]
 ----
 include::{sourcedir}/schemas/eventtypes.js[lines=35..38]
-----
-
-==== CDP_EventTypeInput
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/eventtypes.js[lines=40..44]
 ----
 
 ==== CDP_EventProperties

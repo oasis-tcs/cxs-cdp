@@ -1,5 +1,5 @@
 exports.eventsSchema = `
-type CDP_Event {
+interface CDP_Event {
   id: ID!
   source : CDP_Source
   client : CDP_Client
@@ -70,9 +70,10 @@ input CDP_EventInput {
   cdp_UpdateConsent : CDP_UpdateConsentInput
   cdp_UpdateLists : CDP_UpdateListInput
   cdp_UpdateSessionState : CDP_UpdateSessionStateInput
-  # Here below will be the generated event field based on the registered event types
-  # Example of a generated event type
+  # Examples of available eventTypes will be listed as fields below:
   # pageView : PageViewInput
+  # profileUpdate : profileUpdateInput,
+  # crmUpdate : crmUpdateInput
 }
 
 extend type CDP_Query {

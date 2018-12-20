@@ -65,7 +65,7 @@ input CDP_UpdateProfileInput {
   removeProperties : [String]
 }
 
-"Sample input type generated from available ProfilePropertyTypes"
+"Sample input type generated from available ProfilePropertiess"
 input CDP_ProfilePropertiesInput {
   firstName : String
   lastName : String

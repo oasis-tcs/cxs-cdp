@@ -43,12 +43,12 @@ type CDP_Profile implements CDP_ProfileInterface {
 extend type CDP_Query {
   getProfile(profileID : CDP_ProfileIDInput, createIfMissing: Boolean) : CDP_Profile
   findProfiles(filter: CDP_ProfileFilterInput, orderBy: [CDP_OrderByInput], first: Int, after: String, last: Int, before: String) : CDP_ProfileConnection
-  getProfilePropertyTypes : CDP_PropertyTypeConnection
+  getProfileProperties : CDP_PropertyTypeConnection
 }
 
 extend type CDP_Mutation {
-  createOrUpdateProfilePropertyTypes(propertyTypes : [CDP_PropertyTypeInput]) : Boolean
-  deleteProfilePropertyType(propertyTypeName : ID!) : Boolean
+  createOrUpdateProfileProperties(propertyTypes : [CDP_PropertyTypeInput]) : Boolean
+  deleteProfileProperties(propertyTypeName : ID!) : Boolean
   deleteProfile(profileID : CDP_ProfileIDInput) : CDP_Profile
 }
 
