@@ -13,9 +13,9 @@ image::images/OASISLogo-v2.0.jpg["Oasis Open Logo"]
 [discrete]
 == Not Yet Published (18 October 2018)
 
+////
 [discrete]
 === Specification URIs:
-////
 This Version:
 
   * http://docs.oasis-open.org/cxs/cdp/v1.0/csprd01/cdp-v1.0-csprd01.adoc (Authoritative)
@@ -656,7 +656,8 @@ type Sample_Address {
   postalCode : String,
   countrySubvisions : [String]
   country : String
-}----
+}
+----
 
 ==== CDP_Query
 
@@ -813,58 +814,57 @@ Consents are given and revoked through events. This means that the CDP specifica
 
 TODO:
 
+[source,graphql]
 ----
+Do Not Track is a special case, because it cannot be handled using the content management since we cannot
+track the user connect to the context server in any way. In this case, profile ID cookies should never be
+generated, and each new request will be treated as a separate visit.
 
-# Do Not Track is a special case, because it cannot be handled using the content management since we cannot
-# track the user connect to the context server in any way. In this case, profile ID cookies should never be
-# generated, and each new request will be treated as a separate visit.
-#
-# Tracking is seperated from cookie identification. For example we could have a form that has an opt-in checkbox
-# to "remember" the user, but NOT tracking his behavior, so that when he fills another form, pre-fill could happen,
-# or a single form submission could be handled.
-#
-# https://onetrust.com/nobody-likes-cookie-pop-ups-browser-based-consent-eprivacy-regulation/
-#
-# Can we leverage OAuth 2 autorization scopes here ? Consent types are very similar to OAuth 2 authorization scopes.
-#
-# Examples:
-# {
-#   sourceId : "jahia.com",
-#   type: {name:"send-to-salesforce"},
-#   grant: ALLOW
-#   grantDate : 3498734899
-#   # no revoke date means it will not expire or defaults to system or legal standard (GDPR)
-# }
-# {
-#   sourceId : "jahia.com",
-#   type : {name:"newsletter-subscription-latestNews"},
-#   grant: DENY
-#   grantDate : 3498734899
-#   # no revoke date means it will not expire or defaults to system or legal standard (GDPR)
-# }
-#
-# Consent Types may include:
-# - tracking
-# - list membership
-# - newsletter membership
-# - access to camera
-# - access to friends / contacts data
-# - access to medical records
-# - send sms
-# - call you
-# - send personal data to third parties
-# - send anonymous data to third parties
+Tracking is seperated from cookie identification. For example we could have a form that has an opt-in checkbox
+to "remember" the user, but NOT tracking his behavior, so that when he fills another form, pre-fill could happen,
+or a single form submission could be handled.
 
-# CXS Consent types include:
-# - allow tracking
-# -
-# (for GDPR controllers / processors ?)
+    https://onetrust.com/nobody-likes-cookie-pop-ups-browser-based-consent-eprivacy-regulation/
 
-# Consent types are not defined in the specification, only the format of the type identifier
-# should use a URI convention. Some URIs could actually be URLs and point to real resource that would give the
-# semantics of the consent type. Types are not globally unique, a combination of view and types are globally unique
-# and context server implementations may use "global" or "system" views to share types.
+Can we leverage OAuth 2 autorization scopes here ? Consent types are very similar to OAuth 2 authorization scopes.
 
+Examples:
+{
+  sourceId : "jahia.com",
+  type: {name:"send-to-salesforce"},
+  grant: ALLOW
+  grantDate : 3498734899
+  # no revoke date means it will not expire or defaults to system or legal standard (GDPR)
+}
+{
+  sourceId : "jahia.com",
+  type : {name:"newsletter-subscription-latestNews"},
+  grant: DENY
+  grantDate : 3498734899
+  # no revoke date means it will not expire or defaults to system or legal standard (GDPR)
+}
+
+Consent Types may include:
+- tracking
+- list membership
+- newsletter membership
+- access to camera
+- access to friends / contacts data
+- access to medical records
+- send sms
+- call you
+- send personal data to third parties
+- send anonymous data to third parties
+
+CXS Consent types include:
+- allow tracking
+-
+(for GDPR controllers / processors ?)
+
+Consent types are not defined in the specification, only the format of the type identifier
+should use a URI convention. Some URIs could actually be URLs and point to real resource that would give the
+semantics of the consent type. Types are not globally unique, a combination of view and types are globally unique
+and context server implementations may use "global" or "system" views to share types.
 ----
 
 ==== CDP_ConsentStatus
