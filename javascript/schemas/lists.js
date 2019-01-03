@@ -13,6 +13,12 @@ input CDP_ListInput {
   name : String!
 }
 
+"CDP standard eventType used to update profile list memberships"
+input CDP_UpdateListEvent {
+  joinLists : [CDP_ListInput]
+  leaveLists : [CDP_ListInput]
+}
+
 extend type CDP_Query {
   getList(listID : ID) : CDP_List
   findLists(filter: CDP_ListFilterInput, orderBy: [CDP_OrderByInput], first: Int, after: String, last: Int, before: String) : CDP_ListConnection

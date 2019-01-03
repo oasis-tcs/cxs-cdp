@@ -27,19 +27,9 @@ exports.eventTypesSchema = `
 # - Session end
 # - Opt-in / opt-out of a list
 
-"CDP standard eventType used to update a single profiles concent"
-input CDP_UpdateConsentInput {
-  consent : CDP_ConsentInput
-}
-
-"CDP standard eventType used to update profile list memberships"
-input CDP_UpdateListInput {
-  joinLists : [CDP_ListInput]
-  leaveLists : [CDP_ListInput]
-}
 
 "CDP standard eventType used to update profile properties"
-input CDP_UpdateProfileInput {
+input CDP_UpdateProfileEvent {
   updateProperties : CDP_ProfilePropertiesInput
   removeProperties : [String]
 }

@@ -2,7 +2,7 @@ exports.geoPointPropertySchema = `
 """
 Geopoints map to a String in lat,lon format
 """
-type CDP_GeoPointProperty implements CDP_PropertyInterface {
+type CDP_GeoPointProperty implements CDP_Property {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int

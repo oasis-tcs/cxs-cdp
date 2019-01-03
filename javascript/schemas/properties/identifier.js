@@ -2,7 +2,7 @@ exports.identifierPropertySchema = `
 """
 The identifier property type is a string that is used as an identifier
 """
-type CDP_IdentifierProperty implements CDP_PropertyInterface {
+type CDP_IdentifierProperty implements CDP_Property{
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int

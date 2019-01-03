@@ -350,14 +350,14 @@ NOTE: Specification implementers are encouraged to implement interfaces for impo
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profileproperties.js[lines=5..8]
+include::{sourcedir}/schemas/profiles.js[lines=5..8]
 ----
 
 ==== CDP_ProfileIDInput
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profileproperties.js[lines=10..13]
+include::{sourcedir}/schemas/profiles.js[lines=10..13]
 ----
 
 * *id* ID must be unique within the source
@@ -377,7 +377,7 @@ include::{sourcedir}/schemas/profiles.js[lines=18..26]
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profiles.js[lines=28..41]
+include::{sourcedir}/schemas/profiles.js[lines=27..39]
 ----
 
 
@@ -401,7 +401,7 @@ include::{sourcedir}/schemas/profileproperties.js[lines=12..40]
 .Profile queries
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profiles.js[lines=39..41]
+include::{sourcedir}/schemas/profiles.js[lines=42..44]
 ----
 
 ==== CDP_Mutation
@@ -409,7 +409,7 @@ include::{sourcedir}/schemas/profiles.js[lines=39..41]
 .Profile mutations
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profiles.js[lines=45..47]
+include::{sourcedir}/schemas/profiles.js[lines=48..50]
 ----
 
 
@@ -593,16 +593,16 @@ include::{sourcedir}/schemas/properties/set.js[lines=15..23]
 
 
 
-=== ProfilePropertiess
+=== ProfileProperties
 
 To create a schema for <<Profiles>>, we need a globally defined set of propertyTypes.
 
-Collectively, all ProfilePropertiess defines the schema of properties that can be used by any profile in the Customer Data Platform.
+Collectively, all ProfileProperties defines the schema of properties that can be used by any profile in the Customer Data Platform.
 
 This enables administrators and developers to build and maintain a consistent data model for profiles across different <<Clients>>.
 Any data imported to the system must be mapped to a corresponding ProfileProperties.
 
-A ProfileProperties is technically a PropertyType, where the name must be unique for all ProfilePropertiess.
+A ProfileProperties is technically a PropertyType, where the name must be unique for all ProfileProperties.
 
 ==== CDP_ProfileProperties
 
@@ -670,7 +670,14 @@ As such, sources are comparable to siteID's in Google Analytics.
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/events.js[lines=2..76]
+include::{sourcedir}/schemas/events.js[lines=2..11]
+----
+
+==== CDP_EventInput
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/events.js[lines=18..34]
 ----
 
 ==== CDP_Query
@@ -678,7 +685,7 @@ include::{sourcedir}/schemas/events.js[lines=2..76]
 .Event queries
 [source,graphql]
 ----
-include::{sourcedir}/schemas/events.js[lines=79..80]
+include::{sourcedir}/schemas/events.js[lines=37..38]
 ----
 
 ==== CDP_Mutation
@@ -686,21 +693,25 @@ include::{sourcedir}/schemas/events.js[lines=79..80]
 .Event mutations
 [source,graphql]
 ----
-include::{sourcedir}/schemas/events.js[lines=84..84]
+include::{sourcedir}/schemas/events.js[lines=42..42]
 ----
 
 === EventTypes
 
-To uniquely separate events, an event must be associated with a specific EventType.
-EventTypes require a unique name, preferably using a namespace to avoid conflicts i.e. CDP_nearBeacon or company_Whatever
+An event must be of a specific type.
+EventTypes are implementation specific, with the exception of the standard EventTypes.
 
-The event input type is dynamically updated to include all the property definitions that were
-added to the context server. Here is an example of what it could look like after a while:
+The API must include all EventTypes that are available for the specific CDP implementation.
+Implementers are encouraged to make EventTypes pluggable, for flexibility.
+
+It is recommended that pluggable EventTypes are registered with a prefix, to avoid naming conflicts.
+
+Here are examples of custom EventTypes:
 
 .Sample EventTypeInput for Page Views
-[source,ruby]
+[source,GraphQL]
 ----
-input PageViewInput {
+input PageViewEventInput {
   pageID : String,
   pageUrl : String,
   referrer : String,
@@ -709,9 +720,9 @@ input PageViewInput {
 ----
 
 .Sample EventTypeInput for profile update
-[source,ruby]
+[source,GraphQL]
 ----
-input profileUpdateInput : {
+input profileUpdateEventInput : {
   firstName : String,
   lastName : String,
   email : String,
@@ -732,57 +743,14 @@ input crmLeadUpdate {
 }
 ----
 
-==== CDP_EventType
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/eventtypes.js[lines=35..38]
-----
-
-==== CDP_EventProperties
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/eventtypes.js[lines=46..49]
-----
-
-==== CDP_UpdateConsentInput
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/eventtypes.js[lines=52..54]
-----
-
-==== CDP_UpdateListInput
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/eventtypes.js[lines=57..60]
-----
 
 ==== CDP_UpdateProfileInput
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/eventtypes.js[lines=63..66]
+include::{sourcedir}/schemas/eventtypes.js[lines=42..45]
 ----
 
-
-==== CDP_Query
-
-.Event type queries
-[source,graphql]
-----
-include::{sourcedir}/schemas/eventtypes.js[lines=102..102]
-----
-
-==== CDP_Mutation
-
-.Event type mutations
-[source,graphql]
-----
-include::{sourcedir}/schemas/eventtypes.js[lines=106..107]
-----
 
 === Consents
 
@@ -849,12 +817,44 @@ TODO:
 
 ----
 
-==== CDP_Consent
+==== CDP_ConsentStatus
+
+Uniquely specifies the status of any given Consent
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/consents.js[lines=2..27]
+include::{sourcedir}/schemas/consents.js[lines=2..6]
 ----
+
+
+==== CDP_Consent
+
+CDP_Consent represents a persisted Consent, always attached to a specific profile.
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/consents.js[lines=13..23]
+----
+
+==== CDP_ConsentInput
+
+TODO: What are Tokens, and how are they used?
+TODO: Write about "type"
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/consents.js[lines=25..30]
+----
+
+==== CDP_UpdateConsentEvent
+
+Standard EventType to create or update Consents.
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/consents.js[lines=33..35]
+----
+
 
 === Interests
 
@@ -1213,12 +1213,22 @@ id:: Cannot change and is usually server generated
 include::{sourcedir}/schemas/lists.js[lines=10..14]
 ----
 
+
+==== CDP_UpdateListEvent
+
+Standard Event to update profile membership for specified lists
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/eventtypes.js[lines=17..20]
+----
+
 ==== CDP_Query
 
 .List queries
 [source,graphql]
 ----
-include::{sourcedir}/schemas/lists.js[lines=17..18]
+include::{sourcedir}/schemas/lists.js[lines=23..24]
 ----
 
 ==== CDP_Mutation
@@ -1226,7 +1236,7 @@ include::{sourcedir}/schemas/lists.js[lines=17..18]
 .List mutations
 [source,graphql]
 ----
-include::{sourcedir}/schemas/lists.js[lines=22..25]
+include::{sourcedir}/schemas/lists.js[lines=28..31]
 ----
 
 

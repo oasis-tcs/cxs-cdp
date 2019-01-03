@@ -1,5 +1,5 @@
 exports.stringPropertySchema = `
-type CDP_StringProperty implements CDP_PropertyInterface {
+type CDP_StringProperty implements CDP_Property {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int

@@ -7,8 +7,42 @@ interface CDP_Event {
   profile : CDP_Profile!
   object: String!
   location: String
-  timestamp: String # ISO-8601 format Java 8 Instant equivalent
+  timestamp: String
 }
+
+"""
+Event wrapper object to handle missing input inheritance in GraphQL
+NB! For optimization reasons, a single EventInput may contain multiple events,
+but only one of each type. ID is optional, with the exception of importing
+"""
+input CDP_EventInput {
+  id: ID
+  cdp_ClientID : String
+  cdp_SourceID : String
+  cdp_ProfileID: CDP_ProfileIDInput!
+  cdp_Object: CDP_ObjectInput!
+  cdp_Location: GeoPoint
+  cdp_Timestamp: Int
+  cdp_UpdateProfileEvent : CDP_UpdateProfileEvent
+  cdp_UpdateConsentEvent : CDP_UpdateConsentEvent
+  cdp_UpdateListsEvent : CDP_UpdateListEvent
+  cdp_UpdateSessionStateEvent : CDP_UpdateSessionStateEvent
+  # Sample custom EventTypes below:
+  # my_pageView : MY_PageViewEventInput
+  # my_addedToCart : MY_addedToCartEventInput,
+  # other_crmUpdate : OTHER_crmUpdateEventInput
+}
+
+extend type CDP_Query {
+  getEvent(id : String!) : CDP_Event
+  findEvents(filter : CDP_EventFilterInput, orderBy : [CDP_OrderByInput], first: Int, after: String, last: Int, before: String) : CDP_EventConnection
+}
+
+extend type CDP_Mutation {
+  processEvents(events: [CDP_EventInput]!) : Int
+}
+
+
 
 # The actual payload will be dynamically generated based on the root properties defined by the CXS event
 # property types or predefined property types. These root properties will usually be set property types,
@@ -54,32 +88,4 @@ interface CDP_Event {
 #   },
 # }
 #
-
-input CDP_EventInput {
-  id: ID # optional, usually server-generated but could be interesting to import events
-  cdp_ClientID : String
-  cdp_SourceID : String
-  cdp_ProfileID: CDP_ProfileIDInput!
-  cdp_Object: CDP_ObjectInput!
-  cdp_Location: GeoPoint # optional
-  cdp_Timestamp: Int # optional because the server can generate it if it's missing
-  # Built-in predefined event types
-  cdp_UpdateProfile : CDP_UpdateProfileInput
-  cdp_UpdateConsent : CDP_UpdateConsentInput
-  cdp_UpdateLists : CDP_UpdateListInput
-  cdp_UpdateSessionState : CDP_UpdateSessionStateInput
-  # Examples of available eventTypes will be listed as fields below:
-  # pageView : PageViewInput
-  # profileUpdate : profileUpdateInput,
-  # crmUpdate : crmUpdateInput
-}
-
-extend type CDP_Query {
-  getEvent(id : String!) : CDP_Event
-  findEvents(filter : CDP_EventFilterInput, orderBy : [CDP_OrderByInput], first: Int, after: String, last: Int, before: String) : CDP_EventConnection
-}
-
-extend type CDP_Mutation {
-  processEvents(events: [CDP_EventInput]!) : Int
-}
 `;

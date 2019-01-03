@@ -6,7 +6,7 @@ enum CDP_SessionState {
   RESUME
 }
 
-input CDP_UpdateSessionStateInput {
+input CDP_UpdateSessionStateEvent {
   newState : CDP_SessionState
 }
 `;

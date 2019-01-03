@@ -5,11 +5,16 @@ enum CDP_ConsentStatus {
     REVOKED
 }
 
+"""
+Token: Similar to OAuth 2 authorization tokens to access the consent without the profile, also useful to delete the consent
+Type: Should be a Url or other meaningful identifier "//mycompany.com/consents/newsletters/weekly", "//crmcompany.com/consents/push-to-crm", "//oasis_open.org/cxs/consents/send-to-third-parties"
+"""
+
 type CDP_Consent {
-  token : ID! # similar to OAuth 2 authorization tokens to access the consent without the profile, also useful to delete the consent
+  token : ID!
   source : CDP_Source
   client : CDP_Client
-  type : String! # "//mycompany.com/consents/newsletters/weekly", "//crmcompany.com/consents/push-to-crm", "//oasis_open.org/cxs/consents/send-to-third-parties"
+  type : String!
   status : CDP_ConsentStatus!
   statusDate : String
   revokeDate : String
@@ -18,11 +23,14 @@ type CDP_Consent {
 }
 
 input CDP_ConsentInput {
-  sourceId : String
-  clientId : String
-  type : String! # "//mycompany.com/consents/newsletters/weekly", "//crmcompany.com/consents/push-to-crm", "//oasis_open.org/cxs/consents/send-to-third-parties"
+  type : String!
   status : String,
   statusDate : String,
   revokeDate : String
+}
+
+"Standard EventType used to create or update a concent"
+input CDP_UpdateConsentEvent {
+  consent : CDP_ConsentInput
 }
 `;

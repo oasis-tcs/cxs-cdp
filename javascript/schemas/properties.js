@@ -2,7 +2,7 @@ exports.propertyTypesSchema = `
 """
 TODO: Nice description on why we have this interface
 """
-interface CDP_PropertyInterface {
+interface CDP_Property {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int

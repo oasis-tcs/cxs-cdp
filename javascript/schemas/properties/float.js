@@ -1,5 +1,5 @@
 exports.floatPropertySchema = `
-type CDP_FloatProperty implements CDP_PropertyInterface {
+type CDP_FloatProperty implements CDP_Property {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int

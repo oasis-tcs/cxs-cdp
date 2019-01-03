@@ -18,7 +18,7 @@ type CDP_EventConnection {
 }
 
 type CDP_PropertyEdge {
-  node : CDP_PropertyInterface
+  node : CDP_Property
   cursor : String!
 }
 

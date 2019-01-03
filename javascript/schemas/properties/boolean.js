@@ -1,5 +1,5 @@
 exports.booleanPropertySchema = `
-type CDP_BooleanProperty implements CDP_PropertyInterface {
+type CDP_BooleanProperty implements CDP_Property {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int
