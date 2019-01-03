@@ -4,14 +4,12 @@ const { consentsSchema } = require('./schemas/consents');
 const { clientsSchema } = require('./schemas/client');
 const { eventsSchema } = require('./schemas/events');
 const { eventFiltersSchema } = require('./schemas/eventfilters');
-const { eventTypesSchema } = require('./schemas/eventtypes');
 const { filtersSchema } = require('./schemas/filters');
 const { listsSchema } = require('./schemas/lists');
 const { optimizationsSchema } = require('./schemas/optimizations');
 const { paginationSchema } = require('./schemas/pagination');
 const { propertyTypesSchema } = require('./schemas/properties');
 const { profilesSchema } = require('./schemas/profiles');
-const { profilePropertiesSchema } = require('./schemas/profileproperties');
 const { profileFiltersSchema } = require('./schemas/profilefilters');
 const { personasSchema } = require('./schemas/personas');
 const { interestsSchema } = require('./schemas/interests');
@@ -40,9 +38,7 @@ const typeDefs = [
     eventsSchema,
     eventFiltersSchema,
     optimizationsSchema,
-    eventTypesSchema,
     profilesSchema,
-    profilePropertiesSchema,
     profileFiltersSchema,
     interestsSchema,
     personasSchema,

@@ -15,7 +15,7 @@ image::images/OASISLogo-v2.0.jpg["Oasis Open Logo"]
 
 [discrete]
 === Specification URIs:
-
+////
 This Version:
 
   * http://docs.oasis-open.org/cxs/cdp/v1.0/csprd01/cdp-v1.0-csprd01.adoc (Authoritative)
@@ -30,7 +30,7 @@ Latest Version:
   * http://docs.oasis-open.org/cxs/cdp/v1.0/cdp-v1.0.txt (Authoritative)
   * http://docs.oasis-open.org/cxs/cdp/v1.0/cdp-v1.0.html
   * http://docs.oasis-open.org/cxs/cdp/v1.0/cdp-v1.0.pdf
-
+////
 
 [discrete]
 === Technical Committee:
@@ -344,8 +344,6 @@ NOTE: Profiles are not created like many other objects, but are rather composed 
 NOTE: Specification implementers are encouraged to implement interfaces for importing profilesSchema??
 
 
-
-
 ==== CDP_ProfileID
 
 [source,graphql]
@@ -380,19 +378,11 @@ include::{sourcedir}/schemas/profiles.js[lines=18..26]
 include::{sourcedir}/schemas/profiles.js[lines=27..39]
 ----
 
-
-==== CDP_ProfileProperties
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/profileproperties.js[lines=5..10]
-----
-
-Below are the the generated types of the sample ProfileProperties listed above
+==== CDP_UpdateProfileEventInput
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profileproperties.js[lines=12..40]
+include::{sourcedir}/schemas/profiles.js[lines=42..45]
 ----
 
 
@@ -401,7 +391,7 @@ include::{sourcedir}/schemas/profileproperties.js[lines=12..40]
 .Profile queries
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profiles.js[lines=42..44]
+include::{sourcedir}/schemas/profiles.js[lines=47..51]
 ----
 
 ==== CDP_Mutation
@@ -409,7 +399,7 @@ include::{sourcedir}/schemas/profiles.js[lines=42..44]
 .Profile mutations
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profiles.js[lines=48..50]
+include::{sourcedir}/schemas/profiles.js[lines=53..57]
 ----
 
 
@@ -444,7 +434,7 @@ A propertyType essentially specifies:
 Since the CDP api is defined using GraphQL,
 the API is dynamically updated when the propertyTypes are changed.
 
-==== CDP_PropertyTypeInterface
+==== CDP_Property
 
 TODO: Defines the basic implementations for each valueType.
 Simplifies use and provides strong typing in GraphQL.
@@ -462,7 +452,7 @@ systemTags:: TODO: address, social.
 personalData:: Default = true.
 
 
-==== CDP_PropertyTypeInput
+==== CDP_PropertyInput
 
 This type is a workaround for missing inheritance in GraphQL.
 Only one field may be used at a time, all other fields must be null.
@@ -472,14 +462,14 @@ Only one field may be used at a time, all other fields must be null.
 include::{sourcedir}/schemas/properties.js[lines=17..26]
 ----
 
-==== CDP_BooleanPropertyType
+==== CDP_BooleanProperty
 
 [source,graphql]
 ----
 include::{sourcedir}/schemas/properties/boolean.js[lines=2..10]
 ----
 
-==== CDP_BooleanPropertyTypeInput
+==== CDP_BooleanPropertyInput
 
 [source,graphql]
 ----
@@ -487,14 +477,14 @@ include::{sourcedir}/schemas/properties/boolean.js[lines=12..20]
 ----
 
 
-==== CDP_DatePropertyType
+==== CDP_DateProperty
 
 [source,graphql]
 ----
 include::{sourcedir}/schemas/properties/date.js[lines=5..13]
 ----
 
-==== CDP_DatePropertyTypeInput
+==== CDP_DatePropertyInput
 
 [source,graphql]
 ----
@@ -502,14 +492,14 @@ include::{sourcedir}/schemas/properties/date.js[lines=15..23]
 ----
 
 
-==== CDP_FloatPropertyType
+==== CDP_FloatProperty
 
 [source,graphql]
 ----
 include::{sourcedir}/schemas/properties/float.js[lines=2..12]
 ----
 
-==== CDP_FloatPropertyTypeInput
+==== CDP_FloatPropertyInput
 
 [source,graphql]
 ----
@@ -517,28 +507,28 @@ include::{sourcedir}/schemas/properties/float.js[lines=14..24]
 ----
 
 
-==== CDP_GeoPointPropertyType
+==== CDP_GeoPointProperty
 
 [source,graphql]
 ----
 include::{sourcedir}/schemas/properties/geopoint.js[lines=5..13]
 ----
 
-==== CDP_GeoPointPropertyTypeInput
+==== CDP_GeoPointPropertyInput
 
 [source,graphql]
 ----
 include::{sourcedir}/schemas/properties/geopoint.js[lines=15..23]
 ----
 
-==== CDP_IdentifierPropertyType
+==== CDP_IdentifierProperty
 
 [source,graphql]
 ----
 include::{sourcedir}/schemas/properties/identifier.js[lines=5..14]
 ----
 
-==== CDP_IdentifierPropertyTypeInput
+==== CDP_IdentifierPropertyInput
 
 [source,graphql]
 ----
@@ -546,14 +536,14 @@ include::{sourcedir}/schemas/properties/identifier.js[lines=16..25]
 ----
 
 
-==== CDP_IntPropertyType
+==== CDP_IntProperty
 
 [source,graphql]
 ----
 include::{sourcedir}/schemas/properties/int.js[lines=2..12]
 ----
 
-==== CDP_IntPropertyTypeInput
+==== CDP_IntPropertyInput
 
 [source,graphql]
 ----
@@ -561,14 +551,14 @@ include::{sourcedir}/schemas/properties/int.js[lines=14..24]
 ----
 
 
-==== CDP_StringPropertyType
+==== CDP_StringProperty
 
 [source,graphql]
 ----
 include::{sourcedir}/schemas/properties/string.js[lines=2..11]
 ----
 
-==== CDP_StringPropertyTypeInput
+==== CDP_StringPropertyInput
 
 [source,graphql]
 ----
@@ -576,33 +566,28 @@ include::{sourcedir}/schemas/properties/string.js[lines=13..22]
 ----
 
 
-==== CDP_SetPropertyType
+==== CDP_SetProperty
 
 [source,graphql]
 ----
 include::{sourcedir}/schemas/properties/set.js[lines=5..13]
 ----
 
-==== CDP_SetPropertyTypeInput
+==== CDP_SetPropertyInput
 
 [source,graphql]
 ----
 include::{sourcedir}/schemas/properties/set.js[lines=15..23]
 ----
 
-
-
-
 === ProfileProperties
 
-To create a schema for <<Profiles>>, we need a globally defined set of propertyTypes.
+To create a schema for <<Profiles>>, we need a globally defined set of properties.
 
 Collectively, all ProfileProperties defines the schema of properties that can be used by any profile in the Customer Data Platform.
 
 This enables administrators and developers to build and maintain a consistent data model for profiles across different <<Clients>>.
 Any data imported to the system must be mapped to a corresponding ProfileProperties.
-
-A ProfileProperties is technically a PropertyType, where the name must be unique for all ProfileProperties.
 
 ==== CDP_ProfileProperties
 
@@ -613,11 +598,11 @@ CDP must also specify a way to provide subscriptions on profile modifications so
 The flow looks like this :
 Real Event --> Source -> Mapping -> Profile
 
-Profile merges are optional in the CXS specification. They may be supported by using a property defined as an identifier as a merge key (multiple merge keys may of course exist) to merge multiple profiles. The resulting merged profile MUST contain all the source profile IDs of the merged profiles as well as the merged profile data. The original profiles that were merged may be flagged or deleted, this is implementation specific.
+Profile merges are optional in the CDP specification. They may be supported by using a property defined as an identifier as a merge key (multiple merge keys may of course exist) to merge multiple profiles. The resulting merged profile MUST contain all the source profile IDs of the merged profiles as well as the merged profile data. The original profiles that were merged may be flagged or deleted, this is implementation specific.
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profileproperties.js[lines=2..9]
+include::{sourcedir}/schemas/profiles.js[lines=30..33]
 ----
 
 ==== CDP_ProfilePropertiesInput
@@ -626,9 +611,52 @@ TODO: Is this actually available? If so we don't need events to update profiles?
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profileproperties.js[lines=11..17]
+include::{sourcedir}/schemas/profiles.js[lines=36..39]
 ----
 
+TODO Explain how the property types generated the fields in the CDP_ProfileProperties using the samples below
+
+[source,graphql]
+----
+"""
+This type is dynamically generated from the defined ProfileProperties. firstName, lastName, sample_Location and sample_Address are just examples of how this might look if these profileProperties were actually defined.
+"""
+type CDP_ProfileProperties {
+  firstName : String
+  lastName : String
+  sample_Location : Sample_Location
+  sample_Address : Sample_Address
+}
+
+"""
+Sample type generated from ProfileProperties definition
+"""
+type Sample_Location {
+  latitude : Float,
+  longitude : Float
+}
+
+"""
+Sample type generated from ProfileProperties definition
+"""
+type Sample_StreetNumber {
+  streetNumber : Int,
+  prefix : String,
+  postfix : String
+}
+
+"""
+Sample type generated from ProfileProperties definition
+"""
+type Sample_Address {
+  streetName : String,
+  sample_StreetNumber : Sample_StreetNumber,
+  citySubDivisions : [String]
+  city : String,
+  postalCode : String,
+  countrySubvisions : [String]
+  country : String
+}----
 
 ==== CDP_Query
 
@@ -743,13 +771,35 @@ input crmLeadUpdate {
 }
 ----
 
+TODO Cleanup the list of example event types
 
-==== CDP_UpdateProfileInput
+Example event types include :
 
-[source,graphql]
-----
-include::{sourcedir}/schemas/eventtypes.js[lines=42..45]
-----
+- Updating profile properties, needs to match the profile properties definitions
+- Updating consent ( see http://ec.europa.eu/ipg/basics/legal/cookies/index_en.htm )
+- Transaction (generic)
+- Like (“user likes a product”)
+- Dislike (“visitor dislikes a comment”)
+- Abuse, “user reports abuse on a page”
+- Rate (score in percent) “user rates product 4 out of 5 stars”
+- Vote
+- Download (“user downloaded a digital product”)
+- Register/Submission
+- Login
+- Logout
+- RequestFriendship
+- AcceptFriendship
+- DenyFriendship
+- Click
+- View
+- Contribute (comment, blog etc?)
+- Conversion (purchase, download, signs up for a service
+- Session start
+- Session paused
+- Session resumed
+- Session end
+- Opt-in / opt-out of a list
+
 
 
 === Consents
@@ -1220,7 +1270,7 @@ Standard Event to update profile membership for specified lists
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/eventtypes.js[lines=17..20]
+include::{sourcedir}/schemas/lists.js[lines=17..20]
 ----
 
 ==== CDP_Query

@@ -1,13 +1,13 @@
 exports.eventsSchema = `
 interface CDP_Event {
   id: ID!
-  source : CDP_Source
-  client : CDP_Client
-  profileID: CDP_ProfileID!
-  profile : CDP_Profile!
-  object: String!
-  location: String
-  timestamp: String
+  _source : CDP_Source
+  _client : CDP_Client
+  _profileID: CDP_ProfileID!
+  _profile : CDP_Profile!
+  _object: String!
+  _location: String
+  _timestamp: DateTime
 }
 
 """
@@ -17,16 +17,16 @@ but only one of each type. ID is optional, with the exception of importing
 """
 input CDP_EventInput {
   id: ID
-  cdp_ClientID : String
-  cdp_SourceID : String
-  cdp_ProfileID: CDP_ProfileIDInput!
-  cdp_Object: CDP_ObjectInput!
-  cdp_Location: GeoPoint
-  cdp_Timestamp: Int
-  cdp_UpdateProfileEvent : CDP_UpdateProfileEvent
-  cdp_UpdateConsentEvent : CDP_UpdateConsentEvent
-  cdp_UpdateListsEvent : CDP_UpdateListEvent
-  cdp_UpdateSessionStateEvent : CDP_UpdateSessionStateEvent
+  _clientID : String
+  _sourceID : String
+  _profileID: CDP_ProfileIDInput!
+  _object: CDP_ObjectInput!
+  _location: GeoPoint
+  _timestamp: DateTime
+  _updateProfileEvent : CDP_UpdateProfileEventInput
+  _updateConsentEvent : CDP_UpdateConsentEventInput
+  _updateListsEvent : CDP_UpdateListEventInput
+  _updateSessionStateEvent : CDP_UpdateSessionStateEventInput
   # Sample custom EventTypes below:
   # my_pageView : MY_PageViewEventInput
   # my_addedToCart : MY_addedToCartEventInput,
@@ -42,50 +42,4 @@ extend type CDP_Mutation {
   processEvents(events: [CDP_EventInput]!) : Int
 }
 
-
-
-# The actual payload will be dynamically generated based on the root properties defined by the CXS event
-# property types or predefined property types. These root properties will usually be set property types,
-# allowing for complex event payloads
-#
-# Example event inputs
-#
-# Update profile example
-#
-# {
-#   _profileID : {sourceID : "salesforce", id: "12345"},
-#   _timestamp : "1970-01-01T00:00:00Z",
-#   _object: "12345"
-#   profileUpdate : {
-#       firstName : "Serge",
-#       lastName : "Huber
-#   }
-# }
-#
-# Page view example
-#
-# {
-#   _profileID : {sourceID : "web", id: "12345"},
-#   _timestamp : "1970-01-01T00:00:00Z",
-#   _object: "pageID"
-#   _location : "41.12,-71.34",
-#   pageView : {
-#       url : "/test/test/test.html",
-#       referrer : "http://www.cnn.com"
-#   },
-# }
-#
-# Location tracking event (for example using beacons)
-#
-# {
-#   _profileID : {sourceID : "walmartApp", id: "12345"},
-#   _timestamp : "1970-01-01T00:00:00Z",
-#   _object: "regionID"
-#   _location : "41.12,-71.34",
-#   regionChange : {
-#       type : "enter" / "exit"
-#       groupName : "walmart-geneva"
-#   },
-# }
-#
 `;

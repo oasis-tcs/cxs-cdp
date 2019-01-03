@@ -30,7 +30,7 @@ input CDP_ConsentInput {
 }
 
 "Standard EventType used to create or update a concent"
-input CDP_UpdateConsentEvent {
+input CDP_UpdateConsentEventInput {
   consent : CDP_ConsentInput
 }
 `;

@@ -24,6 +24,20 @@ interface CDP_ProfileInterface {
   properties : CDP_ProfileProperties
 }
 
+"""
+This type is dynamically generated from the defined ProfileProperties. firstName, lastName, sample_Location and sample_Address are just examples of how this might look if these profileProperties were actually defined.
+"""
+type CDP_ProfileProperties {
+  "Please disregard the underscore field, it is only there because GraphQL schema doesn't allow empty types"
+  _ : EmptyTypeWorkAround
+}
+
+"Input type generated from available ProfileProperties"
+input CDP_ProfilePropertiesInput {
+  "Please disregard the underscore field, it is only there because GraphQL schema doesn't allow empty types"
+  _ : EmptyTypeWorkAround
+}
+
 type CDP_Profile implements CDP_ProfileInterface {
   profileIDs : [CDP_ProfileID]
   events(filter : CDP_EventFilterInput, first : Int, last: Int, after : String, before: String) : CDP_EventConnection
@@ -36,6 +50,12 @@ type CDP_Profile implements CDP_ProfileInterface {
   optimize(parameters : [CDP_OptimizationInput]) : [CDP_OptimizationResult]
   recommend(parameters : [CDP_RecommendationInput]) : [CDP_RecommendationResult]
   properties : CDP_ProfileProperties
+}
+
+"CDP standard eventType used to update profile properties"
+input CDP_UpdateProfileEventInput {
+  updateProperties : CDP_ProfilePropertiesInput
+  removeProperties : [String]
 }
 
 extend type CDP_Query {

@@ -14,7 +14,7 @@ input CDP_ListInput {
 }
 
 "CDP standard eventType used to update profile list memberships"
-input CDP_UpdateListEvent {
+input CDP_UpdateListEventInput {
   joinLists : [CDP_ListInput]
   leaveLists : [CDP_ListInput]
 }
