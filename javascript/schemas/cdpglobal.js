@@ -4,7 +4,7 @@ exports.cdpGlobalSchema = `
 # ----------------------------------------------------------------------------
 "For values and arguments that cannot be defined structurally"
 scalar JSON
-"Since GraphQL doesn't allow that by default"
+"This scalar is simply used to mark types as empty, since GraphQL doesn't allow that by default. Please ignore any fields using this scalar as they are not intended to be exposed"
 scalar EmptyTypeWorkAround
 "Uses RFC-3339 representation, for example 1996-12-19, see https://github.com/graphql-java/graphql-java-extended-scalars for example implementation "
 scalar Date

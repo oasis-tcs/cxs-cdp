@@ -248,7 +248,7 @@ In any case, it should not be possible for unauthorized clients to access the Cu
 
 Examples of clients are:
 
-* Cookie-based tracker for website(s)
+* Cookie-based (Javascript or other) tracker for website(s)
 * Integration with your CRM
 * Integration with your Identity System
 
