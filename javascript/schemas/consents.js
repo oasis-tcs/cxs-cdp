@@ -10,7 +10,7 @@ type CDP_Consent {
   token : ID!
   source : CDP_Source
   client : CDP_Client
-  "Should be a Url or other meaningful identifier "//mycompany.com/consents/newsletters/weekly", "//crmcompany.com/consents/push-to-crm", "//oasis_open.org/cxs/consents/send-to-third-parties""
+  "Should be a Url or other meaningful identifier '//mycompany.com/consents/newsletters/weekly', '//crmcompany.com/consents/push-to-crm', '//oasis_open.org/cxs/consents/send-to-third-parties'"
   type : String!
   status : CDP_ConsentStatus!
   statusDate : String
