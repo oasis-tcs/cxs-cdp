@@ -224,6 +224,8 @@ in different fashions but they will be remembered by the CDP for future displays
 The Customer Data Platform (CDP) standard is built around a set of concepts, domain objects and services for interacting with them.
 This is represented through a strongly typed API defined through GraphQL Types, Queries, Mutations and Subscriptions.
 
+Each section in the API reference will usually start with a description of the domain objects and then include the normative GraphQL types, queries and mutations relevant to the domain objects.
+
 This chapter describes the API in detail.
 
 NOTE: The most efficient way to expore the GraphQL API is by starting the sample CDP server TODO
@@ -259,8 +261,6 @@ For instance, if a client is used to track visitors across multiple websites, it
 NOTE: The standard does not specify Queries or Mutations for creating or retrieving Clients in the CDP specification, as this is considered an implementation-specific feature.
 For any CDP implementation, a Client must be pre-defined in the CDP server before it can access the API.
 
-NOTE: Queries, mutations and subscriptions for Clients are not defined by the standard, and as such implementation specific
-
 ==== CDP_Client
 
 [source,graphql]
@@ -273,6 +273,9 @@ include::{sourcedir}/schemas/client.js[lines=2..6]
 Sources are used to secure unique identifier per client.
 For instance, if a CRM is used as a source it will have unique identifiers for its respective profile records.
 As the CDP server collects data from multiple records, the combination of source and identifier provides a globally unique, but consistent identifier for CDP to process.
+Sources provide a way to identify the exact origin of events beyond the client.
+As such, sources are comparable to siteID's in Google Analytics.
+
 
 ==== CDP_Source
 
@@ -288,7 +291,7 @@ include::{sourcedir}/schemas/sources.js[lines=2..5]
 include::{sourcedir}/schemas/sources.js[lines=7..10]
 ----
 
-* *source* The "system" source ID is reserved for internal use by CDP server (TODO call this CDP instead?).
+* *id* The "system" source ID is reserved for internal use by CDP server (TODO call this CDP instead?).
 * *thirdParty* Optional, indicates that the source is a third party (useful for privacy regulations such as GDPR)
 
 
@@ -375,14 +378,14 @@ include::{sourcedir}/schemas/profiles.js[lines=18..26]
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profiles.js[lines=27..39]
+include::{sourcedir}/schemas/profiles.js[lines=41..53]
 ----
 
 ==== CDP_UpdateProfileEventInput
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profiles.js[lines=42..45]
+include::{sourcedir}/schemas/profiles.js[lines=55..59]
 ----
 
 
@@ -391,7 +394,7 @@ include::{sourcedir}/schemas/profiles.js[lines=42..45]
 .Profile queries
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profiles.js[lines=47..51]
+include::{sourcedir}/schemas/profiles.js[lines=62..63]
 ----
 
 ==== CDP_Mutation
@@ -399,7 +402,7 @@ include::{sourcedir}/schemas/profiles.js[lines=47..51]
 .Profile mutations
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profiles.js[lines=53..57]
+include::{sourcedir}/schemas/profiles.js[lines=70..70]
 ----
 
 
@@ -580,14 +583,14 @@ include::{sourcedir}/schemas/properties/set.js[lines=5..13]
 include::{sourcedir}/schemas/properties/set.js[lines=15..23]
 ----
 
-=== ProfileProperties
+=== Profile properties
 
 To create a schema for <<Profiles>>, we need a globally defined set of properties.
 
-Collectively, all ProfileProperties defines the schema of properties that can be used by any profile in the Customer Data Platform.
+Collectively, all Profile properties define the schema of properties that can be used by any profile in the Customer Data Platform.
 
 This enables administrators and developers to build and maintain a consistent data model for profiles across different <<Clients>>.
-Any data imported to the system must be mapped to a corresponding ProfileProperties.
+Any data imported to the system must be mapped to a corresponding Profile properties.
 
 ==== CDP_ProfileProperties
 
@@ -661,10 +664,17 @@ type Sample_Address {
 
 ==== CDP_Query
 
-
+[source,graphql]
+----
+include::{sourcedir}/schemas/profiles.js[lines=64..64]
+----
 
 ==== CDP_Mutation
 
+[source,graphql]
+----
+include::{sourcedir}/schemas/profiles.js[lines=68..69]
+----
 
 === Events
 Events are what drives the Customer Data Platform forward.
@@ -883,17 +893,18 @@ CDP_Consent represents a persisted Consent, always attached to a specific profil
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/consents.js[lines=13..23]
+include::{sourcedir}/schemas/consents.js[lines=8..20]
 ----
-
-==== CDP_ConsentInput
 
 TODO: What are Tokens, and how are they used?
 TODO: Write about "type"
 
+==== CDP_ConsentInput
+
+
 [source,graphql]
 ----
-include::{sourcedir}/schemas/consents.js[lines=25..30]
+include::{sourcedir}/schemas/consents.js[lines=22..27]
 ----
 
 ==== CDP_UpdateConsentEvent
@@ -902,7 +913,7 @@ Standard EventType to create or update Consents.
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/consents.js[lines=33..35]
+include::{sourcedir}/schemas/consents.js[lines=29..32]
 ----
 
 
