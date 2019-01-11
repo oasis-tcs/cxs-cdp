@@ -449,7 +449,7 @@ include::{sourcedir}/schemas/profiles.js[lines=80..84]
 === Properties
 
 A Property is essentially data stored in a key-value format.
-A single property can hold a single value, or an array of values.
+A single property can hold a single value, or an ordered array of values.
 Each property has a specific valueType to limit what kind of values it may hold.
 These are ``Identifier``,``String``, ``Int``, ``Float``, ``Date``, ``Boolean``, ``GeoPoint`` and ``Set``.
 
@@ -971,6 +971,7 @@ Example interests for products from a car manufacturer might be:
 *  Model S = 0.1
 *  Model 3 = 0.3
 *  Model X = 0.9
+*  Model Y = 1.0
 
 
 ==== CDP_Interest
@@ -989,6 +990,11 @@ Filters are widely used in CDP, and enable querying profiles, events, and other 
 Filters are designed to be easy to use for administrators and marketeers in visual user interfaces, but also in terms of technical implementation.
 
 Filters are essentially composed from basic property comparison expressions, and may be chained with the operators AND and OR, where AND is used by default.
+GraphQL fields will be generated the following way:
+
+    PROPERTYNAME + "_" + OPERATOR
+
+For each operator available on the property value type a GraphQL field will be generated.
 
 A single filter may only operate on a specified CDP object (i.e. profile or event).
 
