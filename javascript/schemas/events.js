@@ -23,10 +23,10 @@ input CDP_EventInput {
   _object: CDP_ObjectInput!
   _location: GeoPoint
   _timestamp: DateTime
-  _updateProfileEvent : CDP_UpdateProfileEventInput
+  _profileUpdateEvent : CDP_ProfileUpdateEventInput
   _updateConsentEvent : CDP_UpdateConsentEventInput
   _updateListsEvent : CDP_UpdateListEventInput
-  _updateSessionStateEvent : CDP_UpdateSessionStateEventInput
+  _sessionStateEvent : CDP_SessionStateEventInput
   # Sample custom EventTypes below:
   # my_pageView : MY_PageViewEventInput
   # my_addedToCart : MY_addedToCartEventInput,

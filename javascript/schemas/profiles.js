@@ -52,8 +52,21 @@ type CDP_Profile implements CDP_ProfileInterface {
   properties : CDP_ProfileProperties
 }
 
+type CDP_ProfileUpdateEvent implements CDP_Event {
+  id: ID!
+  _source : CDP_Source
+  _client : CDP_Client
+  _profileID: CDP_ProfileID!
+  _profile : CDP_Profile!
+  _object: String!
+  _location: String
+  _timestamp: DateTime
+  updateProperties : CDP_ProfilePropertiesInput
+  removeProperties : [String]
+}
+
 "CDP standard eventType used to update profile properties"
-input CDP_UpdateProfileEventInput {
+input CDP_ProfileUpdateEventInput {
   updateProperties : CDP_ProfilePropertiesInput
   removeProperties : [String]
 }

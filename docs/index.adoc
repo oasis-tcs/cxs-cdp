@@ -230,15 +230,41 @@ This chapter describes the API in detail.
 
 NOTE: The most efficient way to expore the GraphQL API is by starting the sample CDP server TODO
 
-*Scalars*
+=== Scalars
 
 GraphQL provides several basic value types that are used extensively in this specification, for instance Int and String.
 However, the CDP specification is also handling other value types in a similar fashion. As such, the following scalars have been added:
 
-[source,graphql]
-----
-include::{sourcedir}/schemas/cdpglobal.js[lines=5..16]
-----
+
+==== JSON
+For values and arguments that cannot be defined structurally
+
+  Scalar JSON
+
+==== Date
+For consistent representation of dates. Based on RFC-3339, for example 1996-12-19, see https://github.com/graphql-java/graphql-java-extended-scalars for example implementation
+
+  Scalar Date
+
+==== Time
+For consistent representation of time. Based on RFC-3339, for example 16:39:57-08:00, see https://github.com/graphql-java/graphql-java-extended-scalars for example implementation
+
+  Scalar Time
+
+==== DateTime
+For consistent representation of date and time. Based on RFC-3339, for example 1996-12-19T16:39:57-08:00, see https://github.com/graphql-java/graphql-java-extended-scalars for example implementation
+
+  Scalar DateTime
+
+==== GeoPoint
+Uses a string representation of lat,lon
+
+  Scalar GeoPoint
+
+==== EmptyTypeWorkAround
+TODO: GraphQL types cannot be empty,   is this required by actual implementations??
+
+
 
 === Clients
 
@@ -324,11 +350,19 @@ TODO: Mandatory/Automatic/????
 include::{sourcedir}/schemas/sessions.js[lines=2..7]
 ----
 
-==== CDP_UpdateSessionStateInput
+
+==== CDP_sessionStateEvent
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/sessions.js[lines=9..11]
+include::{sourcedir}/schemas/sessions.js[lines=9..19]
+----
+
+==== CDP_sessionStateEventInput
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/sessions.js[lines=21..23]
 ----
 
 
@@ -381,20 +415,26 @@ include::{sourcedir}/schemas/profiles.js[lines=18..26]
 include::{sourcedir}/schemas/profiles.js[lines=41..53]
 ----
 
-==== CDP_UpdateProfileEventInput
+==== CDP_ProfileUpdateEvent
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profiles.js[lines=55..59]
+include::{sourcedir}/schemas/profiles.js[lines=55..66]
 ----
 
+==== CDP_ProfileUpdateEventInput
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/profiles.js[lines=69..72]
+----
 
 ==== CDP_Query
 
 .Profile queries
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profiles.js[lines=62..63]
+include::{sourcedir}/schemas/profiles.js[lines=74..78]
 ----
 
 ==== CDP_Mutation
@@ -402,7 +442,7 @@ include::{sourcedir}/schemas/profiles.js[lines=62..63]
 .Profile mutations
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profiles.js[lines=70..70]
+include::{sourcedir}/schemas/profiles.js[lines=80..84]
 ----
 
 

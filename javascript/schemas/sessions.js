@@ -6,7 +6,7 @@ enum CDP_SessionState {
   RESUME
 }
 
-type CDP_UpdateSessionStateEvent implements CDP_Event {
+type CDP_SessionStateEvent implements CDP_Event {
   id: ID!
   _source : CDP_Source
   _client : CDP_Client
@@ -18,7 +18,7 @@ type CDP_UpdateSessionStateEvent implements CDP_Event {
   state : CDP_SessionState
 }
 
-input CDP_UpdateSessionStateEventInput {
-  newState : CDP_SessionState
+input CDP_SessionStateEventInput {
+  state : CDP_SessionState
 }
 `;
