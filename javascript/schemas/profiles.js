@@ -16,40 +16,25 @@ input CDP_ProfileIDInput {
 Common interface for both profiles and personas
 """
 interface CDP_ProfileInterface {
-  profileIDs : [CDP_ProfileID]
-  segments(views : [CDP_ViewInput]) : [CDP_Segment]
-  interests(views : [CDP_ViewInput]) : [CDP_Interest]
-  consents : [CDP_Consent]
-  lists(views : [CDP_ViewInput]) : [CDP_List]
-  properties : CDP_ProfileProperties
-}
-
-"""
-This type is dynamically generated from the defined ProfileProperties. firstName, lastName, sample_Location and sample_Address are just examples of how this might look if these profileProperties were actually defined.
-"""
-type CDP_ProfileProperties {
-  "Please disregard the underscore field, it is only there because GraphQL schema doesn't allow empty types"
-  _ : EmptyTypeWorkAround
-}
-
-"Input type generated from available ProfileProperties"
-input CDP_ProfilePropertiesInput {
-  "Please disregard the underscore field, it is only there because GraphQL schema doesn't allow empty types"
-  _ : EmptyTypeWorkAround
+  _profileIDs : [CDP_ProfileID]
+  _segments(views : [CDP_ViewInput]) : [CDP_Segment]
+  _interests(views : [CDP_ViewInput]) : [CDP_Interest]
+  _consents : [CDP_Consent]
+  _lists(views : [CDP_ViewInput]) : [CDP_List]
 }
 
 type CDP_Profile implements CDP_ProfileInterface {
-  profileIDs : [CDP_ProfileID]
-  events(filter : CDP_EventFilterInput, first : Int, last: Int, after : String, before: String) : CDP_EventConnection
-  lastEvents(count : Int, profileID : CDP_ProfileIDInput) : CDP_EventConnection
-  segments(views : [CDP_ViewInput]) : [CDP_Segment]
-  interests(views : [CDP_ViewInput]) : [CDP_Interest]
-  consents : [CDP_Consent]
-  lists(views : [CDP_ViewInput]) : [CDP_List]
-  matches(namedFilters : [CDP_NamedFilterInput]) : [CDP_FilterMatch]
-  optimize(parameters : [CDP_OptimizationInput]) : [CDP_OptimizationResult]
-  recommend(parameters : [CDP_RecommendationInput]) : [CDP_RecommendationResult]
-  properties : CDP_ProfileProperties
+  _profileIDs : [CDP_ProfileID]
+  _events(filter : CDP_EventFilterInput, first : Int, last: Int, after : String, before: String) : CDP_EventConnection
+  _lastEvents(count : Int, profileID : CDP_ProfileIDInput) : CDP_EventConnection
+  _segments(views : [CDP_ViewInput]) : [CDP_Segment]
+  _interests(views : [CDP_ViewInput]) : [CDP_Interest]
+  _consents : [CDP_Consent]
+  _lists(views : [CDP_ViewInput]) : [CDP_List]
+  _matches(namedFilters : [CDP_NamedFilterInput]) : [CDP_FilterMatch]
+  _optimize(parameters : [CDP_OptimizationInput]) : [CDP_OptimizationResult]
+  _recommend(parameters : [CDP_RecommendationInput]) : [CDP_RecommendationResult]
+  # fields will be added here according to registered profile properties  
 }
 
 type CDP_ProfileUpdateEvent implements CDP_Event {
@@ -61,14 +46,14 @@ type CDP_ProfileUpdateEvent implements CDP_Event {
   _object: String!
   _location: String
   _timestamp: DateTime
-  updateProperties : CDP_ProfilePropertiesInput
-  removeProperties : [String]
+  # fields will be added here according to registered profile properties. To remove a property value pass a null value
 }
 
 "CDP standard eventType used to update profile properties"
 input CDP_ProfileUpdateEventInput {
-  updateProperties : CDP_ProfilePropertiesInput
-  removeProperties : [String]
+  "Please disregard the underscore field, it is only there because GraphQL schema doesn't allow empty types"
+  _ : EmptyTypeWorkAround
+  # input fields will be added here according to registered profile properties  
 }
 
 extend type CDP_Query {

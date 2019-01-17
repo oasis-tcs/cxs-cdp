@@ -219,6 +219,10 @@ In the above illustration, this use case is implemented by using a CMS to delive
 are hidden by default. After that, the CDP is asked whether the profile is in variant A or B, which might be implemented
 in different fashions but they will be remembered by the CDP for future displays.
 
+== Domain objects
+
+TODO Quickly describe domain objects (1-2 lines per object)
+
 == API Reference
 
 The Customer Data Platform (CDP) standard is built around a set of concepts, domain objects and services for interacting with them.
@@ -733,7 +737,7 @@ include::{sourcedir}/schemas/profiles.js[lines=69..72]
 .Profile queries
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profiles.js[lines=75..77]
+include::{sourcedir}/schemas/profiles.js[lines=75..76]
 ----
 
 ==== CDP_Mutation
@@ -741,20 +745,16 @@ include::{sourcedir}/schemas/profiles.js[lines=75..77]
 .Profile mutations
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profiles.js[lines=81..83]
+include::{sourcedir}/schemas/profiles.js[lines=83..83]
 ----
 
-
-
-=== Profile properties
+=== Profile properties definition
 
 Each deployment of CDP will be unique in how data are collected, and what data is stored per profile.
 Profile properties enable us to define all custom properties required by an organization.
 
 Administrators and developers may define and maintain a consistent data model for profiles across different <<Clients>> and <<Sources>>.
 Any data to be recorded in a profile must be mapped to a corresponding profile property.
-
-==== CDP_ProfileProperties
 
 Profiles are normally updated through events.
 The history of external or internal profile modifications is accessible through the profile update events.
@@ -766,21 +766,6 @@ Real Event --> Source -> Mapping -> Profile
 Profile merges are optional in the CDP specification. They may be supported by using a property defined as an identifier as a merge key (multiple merge keys may of course exist) to merge multiple profiles. The resulting merged profile MUST contain all the source profile IDs of the merged profiles as well as the merged profile data. The original profiles that were merged may be flagged or deleted, this is implementation specific.
 
 TODO: Use sample instead?
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/profiles.js[lines=30..33]
-----
-
-==== CDP_ProfilePropertiesInput
-
-TODO: Is this actually available? How do we create new properties with it?
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/profiles.js[lines=36..39]
-----
-
 
 ==== CDP_ProfileUpdateEvent {
 
@@ -850,14 +835,14 @@ type Sample_Address {
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profiles.js[lines=75..77]
+include::{sourcedir}/schemas/profiles.js[lines=77..77]
 ----
 
 ==== CDP_Mutation
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profiles.js[lines=81..83]
+include::{sourcedir}/schemas/profiles.js[lines=81..82]
 ----
 
 
