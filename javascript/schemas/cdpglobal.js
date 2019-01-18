@@ -38,19 +38,8 @@ type CDP_Mutation {
 }
 
 type CDP_Subscription {
-  eventListener(profileID : CDP_ProfileIDInput, filter: CDP_EventFilterInput) : CDP_Event!
-  profileListener(profileID: CDP_ProfileIDInput) : CDP_Profile
-  # jobListener(jobID: String) : JobStatus
+  "Please disregard the underscore field, it is only there because GraphQL schema doesn't allow empty types"
+  _ : EmptyTypeWorkAround
 }
-
-
-# Roles are predefined in the CXS server implementation, no API is provided to manipulate them: system-admin, system-public, system-authenticated, acme-admin, test-admin
-type CDP_Role {
-  id : ID!
-  name : String!
-  displayName : String
-  view : CDP_View!
-}
-
 
 `;

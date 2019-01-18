@@ -4,8 +4,6 @@ type CDP_BooleanProperty implements CDP_Property {
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String]
-  systemTags : [String]
-  personalData : Boolean
   defaultValue : Boolean
 }
 
@@ -14,8 +12,6 @@ input CDP_BooleanPropertyInput {
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String]
-  systemTags : [String]
-  personalData : Boolean
   defaultValue : Boolean
 }
 `;

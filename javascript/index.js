@@ -23,8 +23,10 @@ const { geoPointPropertySchema } = require('./schemas/properties/geopoint');
 const { identifierPropertySchema } = require('./schemas/properties/identifier');
 const { intPropertySchema } = require('./schemas/properties/int');
 const { stringPropertySchema } = require('./schemas/properties/string');
+const { enumerationPropertySchema } = require('./schemas/properties/enum');
 const { setPropertySchema } = require('./schemas/properties/set');
 const { sessionsSchema } = require('./schemas/sessions');
+const { objectsSchema } = require('./schemas/objects');
 const { topicsSchema } = require('./schemas/topics');
 const { viewsSchema } = require('./schemas/views');
 
@@ -34,6 +36,7 @@ const typeDefs = [
     cdpGlobalSchema,
     clientsSchema,
     sessionsSchema,
+    objectsSchema,
     consentsSchema,
     eventsSchema,
     eventFiltersSchema,
@@ -57,6 +60,7 @@ const typeDefs = [
     datePropertySchema,
     booleanPropertySchema,
     geoPointPropertySchema,
+    enumerationPropertySchema,
     setPropertySchema,
     viewsSchema
 ];

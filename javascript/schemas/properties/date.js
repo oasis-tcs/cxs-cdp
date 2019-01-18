@@ -7,8 +7,6 @@ type CDP_DateProperty implements CDP_Property {
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String]
-  systemTags : [String]
-  personalData : Boolean
   defaultValue : String
 }
 
@@ -17,8 +15,6 @@ input CDP_DatePropertyInput {
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String]
-  systemTags : [String]
-  personalData : Boolean
   defaultValue : String
 }
 `;

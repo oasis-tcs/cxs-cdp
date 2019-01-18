@@ -7,8 +7,6 @@ interface CDP_Property {
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String]
-  systemTags : [String]
-  personalData : Boolean
 }
 
 """
@@ -22,6 +20,7 @@ input CDP_PropertyInput {
   date : CDP_DatePropertyInput
   boolean : CDP_BooleanPropertyInput
   geopoint : CDP_GeoPointPropertyInput
+  enumeration : CDP_EnumerationPropertyInput
   set : CDP_SetPropertyInput
 }
 `;

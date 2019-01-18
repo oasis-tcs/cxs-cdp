@@ -6,7 +6,7 @@ type CDP_EventFilter {
   _sourceId_equals : String
   _clientId_equals: String
   _profileId_equals : String
-  _location_distance : CDP_GeoDistance
+  _location_distance : CDP_GeoDistanceFilter
   _timestamp_between : CDP_DateFilter
   # generated event types will be listed here
 }
@@ -18,7 +18,7 @@ input CDP_EventFilterInput {
   _sourceId_equals : String
   _clientId_equals: String
   _profileId_equals : String
-  _location_distance : CDP_GeoDistanceInput
+  _location_distance : CDP_GeoDistanceFilterInput
   _timestamp_between : CDP_DateFilterInput
   # generated event types will be listed here
 }

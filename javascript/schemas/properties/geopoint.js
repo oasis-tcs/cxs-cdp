@@ -7,8 +7,6 @@ type CDP_GeoPointProperty implements CDP_Property {
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String]
-  systemTags : [String]
-  personalData : Boolean
   defaultValue : String
 }
 
@@ -17,8 +15,6 @@ input CDP_GeoPointPropertyInput {
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String]
-  systemTags : [String]
-  personalData : Boolean
   defaultValue : String
 }
 `;

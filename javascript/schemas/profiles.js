@@ -43,8 +43,8 @@ type CDP_ProfileUpdateEvent implements CDP_Event {
   _client : CDP_Client
   _profileID: CDP_ProfileID!
   _profile : CDP_Profile!
-  _object: String!
-  _location: String
+  _object: CDP_Object!
+  _location: GeoPoint
   _timestamp: DateTime
   # fields will be added here according to registered profile properties. To remove a property value pass a null value
 }
@@ -68,8 +68,8 @@ extend type CDP_Mutation {
   deleteProfile(profileID : CDP_ProfileIDInput) : CDP_Profile
 }
 
-
-
-
+extend type CDP_Subscription {
+  profileListener(filter: CDP_ProfileFilterInput) : CDP_Profile
+}
 
 `;

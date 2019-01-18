@@ -7,8 +7,6 @@ type CDP_SetProperty implements CDP_Property {
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String]
-  systemTags : [String]
-  personalData : Boolean
   properties : [CDP_Property]
 }
 
@@ -17,8 +15,6 @@ input CDP_SetPropertyInput {
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String]
-  systemTags : [String]
-  personalData : Boolean
   properties : [CDP_PropertyInput]
 }
 `;

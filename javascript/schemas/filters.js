@@ -24,21 +24,21 @@ input CDP_DateFilterInput {
   includeBefore : Boolean
 }
 
-enum CDP_GeoDistanceUnit {
+enum CDP_GeoDistanceFilterUnit {
   METERS,
   KILOMETERS,
   MILES
 }
 
-type CDP_GeoDistance {
+type CDP_GeoDistanceFilter {
   center : GeoPoint
-  unit : CDP_GeoDistanceUnit
+  unit : CDP_GeoDistanceFilterUnit
   distance : Float
 }
 
-input CDP_GeoDistanceInput {
+input CDP_GeoDistanceFilterInput {
   center : GeoPoint
-  unit : CDP_GeoDistanceUnit
+  unit : CDP_GeoDistanceFilterUnit
   distance : Float
 }
 

@@ -5,8 +5,8 @@ interface CDP_Event {
   _client : CDP_Client
   _profileID: CDP_ProfileID!
   _profile : CDP_Profile!
-  _object: String!
-  _location: String
+  _object: CDP_Object!
+  _location: GeoPoint
   _timestamp: DateTime
 }
 
@@ -40,6 +40,10 @@ extend type CDP_Query {
 
 extend type CDP_Mutation {
   processEvents(events: [CDP_EventInput]!) : Int
+}
+
+extend type CDP_Subscription {
+  eventListener(filter: CDP_EventFilterInput) : CDP_Event!
 }
 
 `;

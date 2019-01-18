@@ -221,7 +221,16 @@ in different fashions but they will be remembered by the CDP for future displays
 
 == Domain objects
 
-TODO Quickly describe domain objects (1-2 lines per object)
+TODO Quickly describe main domain objects (1-2 lines per object)
+
+- Profiles
+- Events
+- Segments
+- Lists
+- Personas
+- Clients
+- Sources
+- Views
 
 == API Reference
 
@@ -232,7 +241,7 @@ Each section in the API reference will usually start with a description of the d
 
 This chapter describes the API in detail.
 
-NOTE: The most efficient way to expore the GraphQL API is by starting the sample CDP server TODO
+NOTE: The most efficient way to explore the GraphQL API is by starting the sample CDP server TODO
 
 === Scalars
 
@@ -265,10 +274,6 @@ Uses a string representation of lat,lon
 
   Scalar GeoPoint
 
-==== EmptyTypeWorkAround
-TODO: GraphQL types cannot be empty,   is this required by actual implementations??
-
-
 === Properties
 
 To properly store and query data CDP needs a way to describe the data dynamically.
@@ -276,25 +281,28 @@ To properly store and query data CDP needs a way to describe the data dynamicall
 A Property represents data stored in a key-value format.
 A single property can hold a single value, or an ordered array of values.
 Each property has a specific valueType to limit what kind of values it may hold.
-These are ``Identifier``,``String``, ``Int``, ``Float``, ``Date``, ``Boolean``, ``GeoPoint`` and ``Set``.
+These are ``Identifier``,``String``, ``Int``, ``Float``, ``Date``, ``Boolean``, ``GeoPoint``, ``Enumeration`` and ``Set``.
 
 Below are some examples of properties:
 
-* someString : "Serge"
-* someDate : "1996-12-19"
-* someInteger : 1337
-* location : "lat,lon"
-* arrayOfStrings : ["This", "is", "nice"]
-* setOfProperties : {prompt : "hello", response : "yo"}
+* fullName(String) : "Jane Doe"
+* birthDate(Date) : "2003-07-01"
+* someInteger(Integer) : 1337
+* gender(Enumeration) : FEMALE
+* location(GeoPoint) : "lat,lon"
+* arrayOfStrings([String]) : ["This", "is", "nice"]
+* setOfProperties(Set) : {prompt : "hello", response : "yo"}
 
-The valueType Set is special, as it enables nested properties and a tree-structure of properties.
+In the case of the enumeration value type, a GraphQL enum type will be generated based on the registered possible values for the property.
+
+The Set value type is special, as it enables nested properties and a tree-structure of properties.
 I.e. from the example above: "setOfProperties.response" would hold the value "yo"
 
 A property consists of:
 * the property name
-* the valueType of the property (Identifier, String, Int, Float, Date, Boolean, GeoPoint and Set)
-* minimum occurences of values (a property may hold one or more values)
-* maximum occurences
+* the valueType of the property (Identifier, String, Int, Float, Date, Boolean, GeoPoint, Enumeration and Set)
+* minimum occurrences of values (a property may hold one or more values)
+* maximum occurrences
 
 Since the CDP api is defined using strongly typed GraphQL,
 the API is dynamically updated when properties are added or changed.
@@ -311,10 +319,7 @@ include::{sourcedir}/schemas/properties.js[lines=5..12]
 ID:: must be in a format that's acceptable as a GraphQL field name (/[_A-Za-z][_0-9A-Za-z]*/) , and we recommend to prefix it to avoid conflicts, i.e acme_pageView, acme_click. "cdp_" is reserved.
 minOccurences:: Default = 0. For minOccurrences > 1 the property can hold multiple values in preserved order. minOccurences = 1 indicates the property is mandatory.
 maxOccurences:: Default = 1. maxOccurences = 0 indicates no limit. maxOccurences must be higher than minOccurences.
-tags:: TODO: User generated tags.
-systemTags:: TODO: address, social.
-personalData:: Default = true.
-
+tags:: System defined/generated tags. E.g: hidden, readOnly, personalData
 
 ==== CDP_PropertyInput
 
@@ -429,6 +434,19 @@ include::{sourcedir}/schemas/properties/string.js[lines=2..11]
 include::{sourcedir}/schemas/properties/string.js[lines=13..22]
 ----
 
+==== CDP_EnumerationProperty
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/properties/enum.js[lines=5..12]
+----
+
+==== CDP_EnumerationPropertyInput
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/properties/enum.js[lines=14..21]
+----
 
 ==== CDP_SetProperty
 
@@ -463,20 +481,20 @@ The following comparison operators are available:
 
 .Operator availability for property value types
 [options="header"]
-|=============================================================
-|Operators |Identifier|String|Int|Float|Date|Boolean|GeoPoint|
-|equals    |x         |x     |x  |x    |x   |x      |x       |
-|startsWith|          |x     |   |     |    |       |        |
-|endsWith  |          |x     |   |     |    |       |        |
-|contains  |          |x     |   |     |    |       |        |
-|regexp*   |          |x     |   |     |    |       |        |
-|lt        |          |      |x  |x    |x   |       |        |
-|lte       |          |      |x  |x    |x   |       |        |
-|gt        |          |      |x  |x    |x   |       |        |
-|gte       |          |      |x  |x    |x   |       |        |
-|distance  |          |      |   |     |    |       |x       |
-|between*  |          |      |x  |x    |x   |       |        |
-|=============================================================
+|=========================================================================
+|Operators |Identifier|String|Int|Float|Date|Boolean|GeoPoint|Enumeration|
+|equals    |x         |x     |x  |x    |x   |x      |x       |x          |
+|startsWith|          |x     |   |     |    |       |        |           |
+|endsWith  |          |x     |   |     |    |       |        |           |
+|contains  |          |x     |   |     |    |       |        |           |
+|regexp*   |          |x     |   |     |    |       |        |           |
+|lt        |          |      |x  |x    |x   |       |        |           |
+|lte       |          |      |x  |x    |x   |       |        |           |
+|gt        |          |      |x  |x    |x   |       |        |           |
+|gte       |          |      |x  |x    |x   |       |        |           |
+|distance  |          |      |   |     |    |       |x       |           |
+|between*  |          |      |x  |x    |x   |       |        |           |
+|=========================================================================
 
 * optional operators
 
@@ -554,15 +572,19 @@ include::{sourcedir}/schemas/filters.js[lines=13..18]
 include::{sourcedir}/schemas/filters.js[lines=20..25]
 ----
 
-==== TODO
-
-What are these?
+==== CDP_GeoDistanceFilter
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/filters.js[lines=27..43]
+include::{sourcedir}/schemas/filters.js[lines=27..37]
 ----
 
+==== CDP_GeoDistanceFilterInput
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/filters.js[lines=39..43]
+----
 
 
 
@@ -617,7 +639,7 @@ include::{sourcedir}/schemas/sources.js[lines=2..5]
 include::{sourcedir}/schemas/sources.js[lines=7..10]
 ----
 
-* *id* The "system" source ID is reserved for internal use by CDP server (TODO call this CDP instead?).
+* *id* The "system" source ID is reserved for internal use by the CDP.
 * *thirdParty* Optional, indicates that the source is a third party (useful for privacy regulations such as GDPR)
 
 
@@ -637,39 +659,220 @@ include::{sourcedir}/schemas/sources.js[lines=12..14]
 include::{sourcedir}/schemas/sources.js[lines=16..19]
 ----
 
-=== Sessions
-When individuals interact, clients may enrich the data associated with interaction by specifying sessions.
-For instance, a session may start when a user loads a specific app, and end when he closes it.
+=== Objects
 
-TODO: Mandatory/Automatic/????
+Objects are representations of anything users interact with. For example: a web page, a product or another person
+Objects are used in <<Events>> to specify what the <<Profiles>> is interacting with and also used in <<Optimizations>>. Objects may optionally be part of one or multiple collections, that are used to classify them. By placing objects into collections, optimizations may be done within a single collection (e.g. : recommending products).
 
-==== CDP_SessionState
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/sessions.js[lines=2..7]
-----
-
-
-==== CDP_sessionStateEvent
+==== CDP_Object
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/sessions.js[lines=9..19]
+include::{sourcedir}/schemas/objects.js[lines=2..5]
 ----
 
-==== CDP_sessionStateEventInput
+id:: Unique within each specified collection
+collection:: A way of classifying objects. Use URIs, e.g. schema.org (http://schema.org/Product) or reverse domain naming convention (org.acme.Product)
+
+==== CDP_ObjectInput
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/sessions.js[lines=21..23]
+include::{sourcedir}/schemas/objects.js[lines=7..10]
 ----
 
+=== Events
+Events are what drives the Customer Data Platform forward.
+Events are collected from different Clients, such as a specific website, beacons, commerce systems or a CRM.
+
+A single Client might still produce many different profiles for a "real person".
+For instance - if a visitor uses different devices on a single web page, each device will produce a new profile, with a unique profileID.
+
+The Customer Data Platform is essentially interested in "User behavioral events".
+An event could be anything from someone clicking a link, to performing a transaction or consenting to use of his/hers information.
+Events are streamed or delivered from authorized <<Clients>> to the Customer Data Platform.
+
+As an example: Imagine an e-commerce site with a client that collect events from its visitors.
+When a visitor browses the site with his laptop, the client assigns a cookie to his/her browser and starts feeding events to the CDP API.
+As the visitor click on some product links, and maybe fills in a form that includes e-mail. CDP will gradually populate a profile, using the cookie value as an ID.
+At a later point, the same visitor picks up a different device and returns to the site. As the client cannot know this is the same individual, a new cookie is generated, and a new profile starts to build up.
+
+A single client may be used to track <<Events>> from a number of different websites, where each website can be tagged with a source.
+Sources provide a way to identify the exact origin of the events beyond the client.
+As such, sources are comparable to siteID's in Google Analytics.
+
+==== CDP_Event
+
+Events make use of type inheritance.
+To avoid name space conflicts, all standard event fields are prefixed with ´´_´´.
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/events.js[lines=2..11]
+----
+
+==== CDP_EventInput
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/events.js[lines=18..34]
+----
+
+==== CDP_Query
+
+.Event queries
+[source,graphql]
+----
+include::{sourcedir}/schemas/events.js[lines=37..38]
+----
+
+==== CDP_Mutation
+
+.Event mutations
+[source,graphql]
+----
+include::{sourcedir}/schemas/events.js[lines=42..42]
+----
+
+==== CDP_Subscriptions
+
+.Event subscriptions
+[source,graphql]
+----
+include::{sourcedir}/schemas/events.js[lines=46..46]
+----
+
+=== EventTypes
+
+An event must be of a specific type.
+EventTypes are implementation specific, with the exception of the standard EventTypes.
+
+The API must include all EventTypes that are available for the specific CDP implementation.
+Implementers are encouraged to make EventTypes pluggable, for flexibility.
+
+It is recommended that pluggable EventTypes are registered with a prefix, to avoid naming conflicts.
+
+Here are examples of custom EventTypes:
+
+.Sample EventTypeInput for Page Views
+[source,GraphQL]
+----
+input PageViewEventInput {
+  pageID : String,
+  language : String,
+  pageUrl : String,
+  referrer : String,
+  userAgent : String
+}
+----
+
+.Sample EventTypeInput for crm updates
+[source,javascript]
+----
+input crmLeadUpdate {
+  leadStatus : String,
+  leadID : String,
+  firstName : String,
+  lastName : String,
+  email : String
+}
+----
+
+Example event types include :
+
+- Updating profile properties, needs to match the profile properties definitions (built-in)
+- Session start/paused/resumed/stopped (built-in)
+- Updating consent ( see http://ec.europa.eu/ipg/basics/legal/cookies/index_en.htm ) (built-in)
+- Opt-in / opt-out of a list (built-in)
+- Transaction (generic)
+- Like (“user likes a product”)
+- Dislike (“visitor dislikes a comment”)
+- Abuse, “user reports abuse on a page”
+- Rate (score in percent) “user rates product 4 out of 5 stars”
+- Vote
+- Download (“user downloaded a digital product”)
+- Register/Submission
+- Login
+- Logout
+- RequestFriendship
+- AcceptFriendship
+- DenyFriendship
+- Click
+- View
+- Contribute (comment, blog etc?)
+- Conversion (purchase, download, signs up for a service
+
+=== Event processing samples
+
+==== Registering a page view
+
+.Mutation
+[source,GraphQL]
+----
+mutation profileUpdateExample($events: [CDP_EventInput]!) {
+  cdp {
+    processEvents(events: $events)
+  }
+}
+----
+
+.Mutation variables
+[source,GraphQL]
+----
+{"events": [
+  {
+    "_profileID": {
+      "id": "1234567890",
+      "source": {"id": "jahia.com"}},
+    "_object": { "id": "//jahia.com/aboutUs", "collections": ["http://schema.org/WebPage"]},
+    "pageViewEvent": {
+      "language" : "en"
+    }
+  }
+]}
+----
+
+
+=== EventFilters
+
+EventFilters are a specific version of filters for querying events.
+
+Example: Filter for identifying events of type `transaction` within the last 30 days.
+
+  {
+    "properties" : {
+        "timestamp_between" : { "after" : "2018-06-28T05:25:28+00:00", "before" : "2018-06-28T06:25:28+00:00", includeBefore : false, includeAfter : true },
+        "cdp_UpdateProfile" : {
+          "updateProperties": {
+            "firstName_startsWith" : "T"
+            "lastName_endsWith" : "d"
+          }
+        }
+    },
+    "eventOccurrence": { "eventId": "transaction",   "count": 1,  "afterTime": "now-30d" }}
+  }
+
+
+==== CDP_EventFilter
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/eventfilters.js[lines=2..12]
+----
+
+
+==== CDP_EventFilterInput
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/eventfilters.js[lines=14..24]
+----
 
 
 === Profiles
 Profiles are in many ways the essence of CDP.
-A Customer Data Platform dynamically builds profiles from events that occur over time.
+A Customer Data Platform dynamically builds profiles from events that occur over time, transparently creating profiles
+when events are received.
 
 A Profile can be created from an anonymous visitor on a webpage, or populated from an identity system or maybe a CRM - or the combination of all of them.
 
@@ -677,10 +880,16 @@ Different <<Clients>> like a website tracking script, CRM or identity system can
 
 The Customer Data Platform is responsible for building profiles based on the provided identifiers and the stream of events coming from each Client.
 
-NOTE: Profiles are not created like many other objects, but are rather composed through a chain of events.
+==== Profile merges
 
-NOTE: Specification implementers are encouraged to implement interfaces for importing profilesSchema??
+As such, Customer Data Platforms implementations SHOULD support profile merges.
 
+As profiles evolve over time, the Customer Data Platform may discover that two profiles actually represent the same individual i.e. if the same e-mail address is registered in both profiles, or if the user in on both his devices. This may then result in a profile merge.
+During a profile merge, the Customer Data Platform will link two (or more) separate profiles together.
+In order to keep event history and avoid re-processing of data, the merge process must not affect the existing and unique profileIDs.
+This is why profiles are defined to have multiple profileIDs.
+
+Example: As such, when visitors on a website are tracked through a cookie (defining the profileID), the cookie will remain the same even if the profile is merged.
 
 ==== CDP_ProfileID
 
@@ -705,31 +914,30 @@ This interface is also used by <<Personas>>
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profiles.js[lines=18..26]
+include::{sourcedir}/schemas/profiles.js[lines=18..24]
 ----
 
-* *profileIDs* A single profile may consist of multiple id's as profiles are being merged. TODO:?? The CXS server may generate a system profile ID and expose it here
-
+profileIDs:: A single profile may consist of multiple id's as profiles are being merged. The CDP may also generate a system profile ID and expose it here
 
 ==== CDP_Profile
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profiles.js[lines=41..53]
+include::{sourcedir}/schemas/profiles.js[lines=26..38]
 ----
 
 ==== CDP_ProfileUpdateEvent
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profiles.js[lines=55..66]
+include::{sourcedir}/schemas/profiles.js[lines=40..50]
 ----
 
 ==== CDP_ProfileUpdateEventInput
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profiles.js[lines=69..72]
+include::{sourcedir}/schemas/profiles.js[lines=53..57]
 ----
 
 ==== CDP_Query
@@ -737,7 +945,7 @@ include::{sourcedir}/schemas/profiles.js[lines=69..72]
 .Profile queries
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profiles.js[lines=75..76]
+include::{sourcedir}/schemas/profiles.js[lines=60..61]
 ----
 
 ==== CDP_Mutation
@@ -745,10 +953,18 @@ include::{sourcedir}/schemas/profiles.js[lines=75..76]
 .Profile mutations
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profiles.js[lines=83..83]
+include::{sourcedir}/schemas/profiles.js[lines=68..68]
 ----
 
-=== Profile properties definition
+==== CDP_Subscription
+
+.Profile subscriptions
+[source,graphql]
+----
+include::{sourcedir}/schemas/profiles.js[lines=72..72]
+----
+
+=== Profile properties
 
 Each deployment of CDP will be unique in how data are collected, and what data is stored per profile.
 Profile properties enable us to define all custom properties required by an organization.
@@ -756,7 +972,16 @@ Profile properties enable us to define all custom properties required by an orga
 Administrators and developers may define and maintain a consistent data model for profiles across different <<Clients>> and <<Sources>>.
 Any data to be recorded in a profile must be mapped to a corresponding profile property.
 
-Profiles are normally updated through events.
+The specification does not define a set of standard profile properties. However, implementors are recommended to consider including standard properties such as :
+
+- full name : string
+- primary email : identifier
+- primary phone number : identifier
+- date of birth : date
+- gender : string
+- etc.
+
+Profiles are updated through events.
 The history of external or internal profile modifications is accessible through the profile update events.
 CDP must also specify a way to provide subscriptions on profile modifications so that external systems can retrieve the profile modifications.
 
@@ -766,25 +991,6 @@ Real Event --> Source -> Mapping -> Profile
 Profile merges are optional in the CDP specification. They may be supported by using a property defined as an identifier as a merge key (multiple merge keys may of course exist) to merge multiple profiles. The resulting merged profile MUST contain all the source profile IDs of the merged profiles as well as the merged profile data. The original profiles that were merged may be flagged or deleted, this is implementation specific.
 
 TODO: Use sample instead?
-
-==== CDP_ProfileUpdateEvent {
-
-TODO
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/profiles.js[lines=55..66]
-----
-
-==== CDP_ProfileUpdateEventInput {
-
-TODO
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/profiles.js[lines=69..72]
-----
-
 
 TODO Explain how the property types generated the fields in the CDP_ProfileProperties using the samples below
 
@@ -835,14 +1041,14 @@ type Sample_Address {
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profiles.js[lines=77..77]
+include::{sourcedir}/schemas/profiles.js[lines=62..62]
 ----
 
 ==== CDP_Mutation
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profiles.js[lines=81..82]
+include::{sourcedir}/schemas/profiles.js[lines=66..67]
 ----
 
 
@@ -896,185 +1102,33 @@ include::{sourcedir}/schemas/profilefilters.js[lines=33..40]
 include::{sourcedir}/schemas/profilefilters.js[lines=42..49]
 ----
 
+=== Sessions
+When individuals interact, clients may enrich the data associated with interaction by specifying sessions.
+For instance, a session may start when a user loads a specific app, and end when he closes it.
 
+The CDP_SessionStateEventInput is used to signify the beginning, pause, resume or end of a session.
 
-
-=== Events
-Events are what drives the Customer Data Platform forward.
-Events are collected from different Clients, such as a specific website, beacons, commerce systems or a CRM.
-
-A single Client might still produce many different profiles for a "real person".
-For instance - if a visitor uses different devices on a single web page, each device will produce a new profile, with a unique profileID.
-
-As such, Customer Data Platforms implementations SHOULD support profile merges.
-
-As profiles evolve over time, the Customer Data Platform may discover that two profiles actually represent the same individual i.e. if the same e-mail address is registered in both profiles, or if the user in on both his devices. This may then result in a profile merge.
-During a profile merge, the Customer Data Platform will link two (or more) separate profiles together.
-In order to keep event history and avoid re-processing of data, the merge process must not affect the existing and unique profileIDs.
-This is why profiles are defined to have multiple profileIDs.
-
-Example: As such, when visitors on a website are tracked through a cookie (defining the profileID), the cookie will remain the same even if the profile is merged.
-
-The Customer Data Platform is essentially interested in "User behavioral events".
-An event could be anything from someone clicking a link, to performing a transaction or consenting to use of his/hers information.
-Events are streamed or delivered from authorized <<Clients>> to the Customer Data Platform.
-
-As an example: Imagine an e-commerce site with a client that collect events from its visitors.
-When a visitor browses the site with his laptop, the client assigns a cookie to his/her browser and starts feeding events to the CDP API.
-As the visitor click on some product links, and maybe fills in a form that includes e-mail. CDP will gradually populate a profile, using the cookie value as an ID.
-At a later point, the same visitor picks up a different device and returns to the site. As the client cannot know this is the same individual, a new cookie is generated, and a new profile starts to build up.
-
-A single client may be used to track <<Events>> from a number of different websites, where each website can be tagged with a source.
-Sources provide a way to identify the exact origin of the events beyond the client.
-As such, sources are comparable to siteID's in Google Analytics.
-
-==== CDP_Event
-
-Events make use of type inheritance.
-To avoid name space conflicts, all standard event fields are prefixed with ´´_´´.
+==== CDP_SessionState
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/events.js[lines=2..11]
+include::{sourcedir}/schemas/sessions.js[lines=2..7]
 ----
 
-==== CDP_EventInput
+
+==== CDP_SessionStateEvent
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/events.js[lines=18..34]
+include::{sourcedir}/schemas/sessions.js[lines=9..19]
 ----
 
-==== CDP_Query
-
-.Event queries
-[source,graphql]
-----
-include::{sourcedir}/schemas/events.js[lines=37..38]
-----
-
-==== CDP_Mutation
-
-.Event mutations
-[source,graphql]
-----
-include::{sourcedir}/schemas/events.js[lines=42..42]
-----
-
-=== EventTypes
-
-An event must be of a specific type.
-EventTypes are implementation specific, with the exception of the standard EventTypes.
-
-The API must include all EventTypes that are available for the specific CDP implementation.
-Implementers are encouraged to make EventTypes pluggable, for flexibility.
-
-It is recommended that pluggable EventTypes are registered with a prefix, to avoid naming conflicts.
-
-Here are examples of custom EventTypes:
-
-.Sample EventTypeInput for Page Views
-[source,GraphQL]
-----
-input PageViewEventInput {
-  pageID : String,
-  pageUrl : String,
-  referrer : String,
-  userAgent : String
-}
-----
-
-.Sample EventTypeInput for profile update
-[source,GraphQL]
-----
-input profileUpdateEventInput : {
-  firstName : String,
-  lastName : String,
-  email : String,
-  address : AddressInput,
-  twitter : String
-}
-----
-
-.Sample EventTypeInput for crm updates
-[source,javascript]
-----
-input crmLeadUpdate {
-  leadStatus : String,
-  leadID : String,
-  firstName : String,
-  lastName : String,
-  email : String
-}
-----
-
-TODO Cleanup the list of example event types
-
-Example event types include :
-
-- Updating profile properties, needs to match the profile properties definitions
-- Updating consent ( see http://ec.europa.eu/ipg/basics/legal/cookies/index_en.htm )
-- Transaction (generic)
-- Like (“user likes a product”)
-- Dislike (“visitor dislikes a comment”)
-- Abuse, “user reports abuse on a page”
-- Rate (score in percent) “user rates product 4 out of 5 stars”
-- Vote
-- Download (“user downloaded a digital product”)
-- Register/Submission
-- Login
-- Logout
-- RequestFriendship
-- AcceptFriendship
-- DenyFriendship
-- Click
-- View
-- Contribute (comment, blog etc?)
-- Conversion (purchase, download, signs up for a service
-- Session start
-- Session paused
-- Session resumed
-- Session end
-- Opt-in / opt-out of a list
-
-
-=== EventFilters
-
-EventFilters are a specific version of filters for querying events.
-
-Example: Filter for identifying events of type `transaction` within the last 30 days.
-
-  {
-    "properties" : {
-        "timestamp_between" : { "after" : "2018-06-28T05:25:28+00:00", "before" : "2018-06-28T06:25:28+00:00", includeBefore : false, includeAfter : true },
-        "cdp_UpdateProfile" : {
-          "updateProperties": {
-            "firstName_startsWith" : "T"
-            "lastName_endsWith" : "d"
-          }
-        }
-    },
-    "eventOccurrence": { "eventId": "transaction",   "count": 1,  "afterTime": "now-30d" }}
-  }
-
-
-==== CDP_EventFilter
+==== CDP_SessionStateEventInput
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/eventfilters.js[lines=2..12]
+include::{sourcedir}/schemas/sessions.js[lines=21..23]
 ----
-
-
-==== CDP_EventFilterInput
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/eventfilters.js[lines=14..24]
-----
-
-
-
 
 === Consents
 
@@ -1084,22 +1138,6 @@ As such, consents are inherently more important to ensure you are using and stor
 Consents hold an identifier that uniquely identifies the consent across your systems.
 
 Consents are given and revoked through events. This means that the CDP specification defines reserved property types for granting and revoking consents.
-
-TODO:
-
-[source,graphql]
-----
-Do Not Track is a special case, because it cannot be handled using the content management since we cannot
-track the user connect to the context server in any way. In this case, profile ID cookies should never be
-generated, and each new request will be treated as a separate visit.
-
-Tracking is seperated from cookie identification. For example we could have a form that has an opt-in checkbox
-to "remember" the user, but NOT tracking his behavior, so that when he fills another form, pre-fill could happen,
-or a single form submission could be handled.
-
-    https://onetrust.com/nobody-likes-cookie-pop-ups-browser-based-consent-eprivacy-regulation/
-
-Can we leverage OAuth 2 autorization scopes here ? Consent types are very similar to OAuth 2 authorization scopes.
 
 Examples:
 {
@@ -1129,16 +1167,15 @@ Consent Types may include:
 - send personal data to third parties
 - send anonymous data to third parties
 
-CXS Consent types include:
-- allow tracking
--
-(for GDPR controllers / processors ?)
-
 Consent types are not defined in the specification, only the format of the type identifier
 should use a URI convention. Some URIs could actually be URLs and point to real resource that would give the
 semantics of the consent type. Types are not globally unique, a combination of view and types are globally unique
 and context server implementations may use "global" or "system" views to share types.
-----
+
+It is not in the scope of this specification to define how authentication and consents interact but it is expect that
+CDP implementations secure consent modifications. Also, tracking consents processing is not specified but it is highly
+recommended that implementations provide some mechanism to ease the pain of implementing tracking management with minimal
+end-user disturbance.
 
 ==== CDP_ConsentStatus
 
@@ -1177,6 +1214,103 @@ Standard EventType to create or update Consents.
 [source,graphql]
 ----
 include::{sourcedir}/schemas/consents.js[lines=30..32]
+----
+
+=== Views
+
+Views provide a way of grouping administrative objects in the Customer Data Platform.
+<<Profiles>>, <<Events>> and <<Consents>> are all collected and stored globally,
+but other items are typically handled by administrators or marketeers, and benefit from being grouped into different views to simplify handling.
+
+<<Lists>>, <<Segments>>, <<Topics>> and <<Personas>> are all tagged with Views.
+
+
+==== CDP_View
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/views.js[lines=2..5]
+----
+
+==== CDP_ViewInput
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/views.js[lines=7..9]
+----
+
+
+==== CDP_Query
+
+.View queries
+[source,graphql]
+----
+include::{sourcedir}/schemas/views.js[lines=12..12]
+----
+
+==== CDP_Mutation
+
+.View mutations
+[source,graphql]
+----
+include::{sourcedir}/schemas/views.js[lines=16..17]
+----
+
+
+=== Topics
+
+Topics represent the core entities of the business that is using the Customer Data Platform.
+The Customer Data Platform aims to find correlation between profiles and the topics.
+When such correlations are identified, it is called <<Interests>>.
+
+CDP Administrators need to maintain a list of topics in order to obtain profile interests.
+Profile interests is typically a core objective of Marketing activities, and targeting users with better content.
+
+Example Topics for a car manufacturer might for instance be:
+
+* "Model S"
+* "Model 3"
+* "Model X"
+
+TODO: What about localization?
+
+
+==== CDP_Topic
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/topics.js[lines=2..6]
+----
+
+==== CDP_TopicInput
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/topics.js[lines=8..12]
+----
+
+==== CDP_TopicFilterInput
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/managementfilters.js[lines=19..25]
+----
+
+
+==== CDP_Query
+
+.Topic queries
+[source,graphql]
+----
+include::{sourcedir}/schemas/topics.js[lines=15..16]
+----
+
+==== CDP_Mutation
+
+.Topic mutations
+[source,graphql]
+----
+include::{sourcedir}/schemas/topics.js[lines=20..21]
 ----
 
 
@@ -1220,46 +1354,6 @@ include::{sourcedir}/schemas/interests.js[lines=7..10]
 ----
 
 
-
-=== Views
-
-Views provide a way of grouping administrative objects in the Customer Data Platform.
-<<Profiles>>, <<Events>> and <<Consents>> are all collected and stored globally,
-but other items are typically handled by administrators or marketeers, and benefit from being grouped into different views to simplify handling.
-
-<<Lists>>, <<Segments>>, <<Topics>> and <<Personas>> are all tagged with Views.
-
-
-==== CDP_View
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/views.js[lines=2..5]
-----
-
-==== CDP_ViewInput
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/views.js[lines=7..9]
-----
-
-
-==== CDP_Query
-
-.View queries
-[source,graphql]
-----
-include::{sourcedir}/schemas/views.js[lines=12..12]
-----
-
-==== CDP_Mutation
-
-.View mutations
-[source,graphql]
-----
-include::{sourcedir}/schemas/views.js[lines=16..17]
-----
 
 
 
@@ -1415,86 +1509,9 @@ include::{sourcedir}/schemas/segments.js[lines=22..23]
 ----
 
 
-=== Topics
-
-Topics represent the core entities of the business that is using the Customer Data Platform.
-The Customer Data Platform aims to find correlation between profiles and the topics.
-When such correlations are identified, it is called <<Interests>>.
-
-CDP Administrators need to maintain a list of topics in order to obtain profile interests.
-Profile interests is typically a core objective of Marketing activities, and targeting users with better content.
-
-Example Topics for a car manufacturer might for instance be:
-
-* "Model S"
-* "Model 3"
-* "Model X"
-
-TODO: What about localization?
-
-
-==== CDP_Topic
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/topics.js[lines=2..6]
-----
-
-==== CDP_TopicInput
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/topics.js[lines=8..12]
-----
-
-==== CDP_TopicFilterInput
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/managementfilters.js[lines=19..25]
-----
-
-
-==== CDP_Query
-
-.Topic queries
-[source,graphql]
-----
-include::{sourcedir}/schemas/topics.js[lines=15..16]
-----
-
-==== CDP_Mutation
-
-.Topic mutations
-[source,graphql]
-----
-include::{sourcedir}/schemas/topics.js[lines=20..21]
-----
-
-
-
-
 === Optimization
 
 TODO: write an introduction to optimization
-
-==== CDP_Object
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/optimizations.js[lines=2..5]
-----
-
-id:: Unique within each specified collection
-collection:: TODO: Verify this - A way of classifying objects. Use URIs, e.g. schema.org (http://schema.org/Product) or reverse domain naming convention (org.acme.Product)
-
-
-==== CDP_ObjectInput
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/optimizations.js[lines=7..10]
-----
 
 ==== CDP_OptimizationResult
 

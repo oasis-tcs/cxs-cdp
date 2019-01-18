@@ -4,8 +4,6 @@ type CDP_StringProperty implements CDP_Property {
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String]
-  systemTags : [String]
-  personalData : Boolean
   regexp : String
   defaultValue : String
 }
@@ -15,8 +13,6 @@ input CDP_StringPropertyInput {
   minOccurrences : Int
   maxOccurrences : Int
   tags : [String]
-  systemTags : [String]
-  personalData : Boolean
   regexp : String
   defaultValue : String
 }

@@ -12,8 +12,8 @@ type CDP_SessionStateEvent implements CDP_Event {
   _client : CDP_Client
   _profileID: CDP_ProfileID!
   _profile : CDP_Profile!
-  _object: String!
-  _location: String
+  _object: CDP_Object!
+  _location: GeoPoint
   _timestamp: DateTime
   state : CDP_SessionState
 }

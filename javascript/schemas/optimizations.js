@@ -1,13 +1,13 @@
 exports.optimizationsSchema = `
-type CDP_Object {
-    id : ID!
-    collections : [String]!
-}
 
-input CDP_ObjectInput {
-    id : ID!
-    collections : [String]!
-}
+
+
+
+
+
+
+
+
 
 
 type CDP_OptimizationResult {
