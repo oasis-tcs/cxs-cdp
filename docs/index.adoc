@@ -241,17 +241,19 @@ Each section in the API reference will usually start with a description of the d
 
 This chapter describes the API in detail.
 
-
-GraphQL requests are usually composed of two parts : query and variables.
+GraphQL requests are usually composed of two parts : `operations` and `variables`.
 
 Throughout this document we will provide GraphQL request examples in the following form:
 
-    operation:
-        GraphQL query, mutation or subscript
-    variables:
-        JSON structure
+operation::
 
-Here's an example of a query operation:
+    GraphQL query, mutation or subscription
+
+variables::
+
+    JSON structure
+
+Here's an example of a `query operation:
 
     query getExistingProfile($profileId : CDP_ProfileIDInput) {
       cdp {
@@ -265,7 +267,7 @@ Here's an example of a query operation:
 
 What the above query does is retrieve all the profileIDs for a existing profile (that's why we set the createIfMissing
 argument to false). We also define a variable called $profileId that must be passed in the "variables" section of the
-GraphQL request. Here's an example of the varible part:
+GraphQL request. Here's an example of the `variables part:
 
     {
       "profileId": {
