@@ -885,19 +885,36 @@ EventFilters are a specific version of filters for querying events.
 
 Example: Filter for identifying events of type `transaction` within the last 30 days.
 
-  {
-    "properties" : {
-        "timestamp_between" : { "after" : "2018-06-28T05:25:28+00:00", "before" : "2018-06-28T06:25:28+00:00", includeBefore : false, includeAfter : true },
-        "cdp_UpdateProfile" : {
-          "updateProperties": {
-            "firstName_startsWith" : "T"
-            "lastName_endsWith" : "d"
+operation::
+
+    query findEvents($filter: CDP_EventFilterInput) {
+      cdp {
+        findEvents(filter: $filter) {
+          edges {
+            node {
+              __typename
+            }
           }
         }
-    },
-    "eventOccurrence": { "eventId": "transaction",   "count": 1,  "afterTime": "now-30d" }}
-  }
+      }
+    }
 
+variables::
+
+    {
+      "filter" : {
+       "_timestamp_between" : {
+         "after" : "2018-06-28T05:25:28+00:00",
+         "before" : "2018-06-28T06:25:28+00:00",
+         "includeBefore": false,
+         "includeAfter": false
+       },
+       "_profileUpdateEvent" : {
+         "firstName_startsWith" : "T",
+         "lastName_endsWith" : "d"
+       }
+      }
+    }
 
 ==== CDP_EventFilter
 
@@ -1103,15 +1120,14 @@ include::{sourcedir}/schemas/profiles.js[lines=66..67]
 Profile Filters are slightly more complex than <<EventFilters>>.
 As profileFilter are composed from both searching profile properties, and events related to the profile.
 
+TODO provide profile filter example
+
 ==== CDP_ProfileFilter
 
 [source,graphql]
 ----
 include::{sourcedir}/schemas/profilefilters.js[lines=2..8]
 ----
-
-asString:: Example: profile.test = 'testValue' AND eventOccurrence('pageView') = 10
-
 
 ==== CDP_ProfileFilterInput
 

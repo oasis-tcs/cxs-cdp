@@ -1,6 +1,5 @@
 exports.profileFiltersSchema = `
 type CDP_ProfileFilter {
-  asString : String # optional ?
   properties : CDP_ProfilePropertiesFilter
   segments : [String]
   consents : [String]
@@ -8,7 +7,6 @@ type CDP_ProfileFilter {
 }
 
 input CDP_ProfileFilterInput {
-  asString : String
   properties : CDP_ProfilePropertiesFilterInput
   segments : [String]
   consents : [String]

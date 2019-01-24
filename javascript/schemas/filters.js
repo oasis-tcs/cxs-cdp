@@ -11,15 +11,15 @@ input CDP_OrderByInput {
 }
 
 type CDP_DateFilter {
-  after : Int
-  before : Int
+  after : DateTime
+  before : DateTime
   includeAfter : Boolean
   includeBefore : Boolean
 }
 
 input CDP_DateFilterInput {
-  after : Int
-  before : Int
+  after : DateTime
+  before : DateTime
   includeAfter : Boolean
   includeBefore : Boolean
 }
