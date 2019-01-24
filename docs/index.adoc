@@ -241,7 +241,17 @@ Each section in the API reference will usually start with a description of the d
 
 This chapter describes the API in detail.
 
-GraphQL requests are usually composed of two parts : query and variables. Here's an example of a query :
+
+GraphQL requests are usually composed of two parts : query and variables.
+
+Throughout this document we will provide GraphQL request examples in the following form:
+
+    operation:
+        GraphQL query, mutation or subscript
+    variables:
+        JSON structure
+
+Here's an example of a query operation:
 
     query getExistingProfile($profileId : CDP_ProfileIDInput) {
       cdp {
@@ -266,13 +276,6 @@ GraphQL request. Here's an example of the varible part:
 
 As illustrated above, the variables may contain complex JSON structure that represent the values for the objects that
 are passed as GraphQL arguments.
-
-Throughout this document we will provide GraphQL request examples in the following form:
-
-    query:
-        GraphQL query or mutation
-    variables:
-        JSON structure
 
 NOTE: The most efficient way to explore the GraphQL API is by starting the sample CDP server TODO
 
