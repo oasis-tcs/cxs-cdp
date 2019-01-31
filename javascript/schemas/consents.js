@@ -11,23 +11,32 @@ type CDP_Consent {
   client : CDP_Client
   type : String!
   status : CDP_ConsentStatus!
-  statusDate : String
-  revokeDate : String
+  lastUpdate : DateTime
+  expiration : DateTime
   profile : CDP_ProfileInterface
   events : CDP_EventConnection
 }
 
-
-
-input CDP_ConsentInput {
+type CDP_UpdateConsentEvent implements CDP_EventInterface {
+  id: ID!
+  _source : CDP_Source
+  _client : CDP_Client
+  _profileID: CDP_ProfileID!
+  _profile : CDP_Profile!
+  _object: CDP_Object!
+  _location: GeoPoint
+  _timestamp: DateTime
   type : String!
   status : String,
-  statusDate : String,
-  revokeDate : String
+  lastUpdate : DateTime,
+  expiration : DateTime
 }
 
-"Standard EventType used to create or update a concent"
+"Standard EventType used to create or update a consent"
 input CDP_UpdateConsentEventInput {
-  consent : CDP_ConsentInput
+  type : String!
+  status : String,
+  lastUpdate : DateTime,
+  expiration : DateTime
 }
 `;

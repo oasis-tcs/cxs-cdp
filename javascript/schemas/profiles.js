@@ -37,7 +37,7 @@ type CDP_Profile implements CDP_ProfileInterface {
   # fields will be added here according to registered profile properties  
 }
 
-type CDP_ProfileUpdateEvent implements CDP_Event {
+type CDP_ProfileUpdateEvent implements CDP_EventInterface {
   id: ID!
   _source : CDP_Source
   _client : CDP_Client

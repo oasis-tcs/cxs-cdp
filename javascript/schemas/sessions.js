@@ -6,7 +6,7 @@ enum CDP_SessionState {
   RESUME
 }
 
-type CDP_SessionStateEvent implements CDP_Event {
+type CDP_SessionStateEvent implements CDP_EventInterface {
   id: ID!
   _source : CDP_Source
   _client : CDP_Client

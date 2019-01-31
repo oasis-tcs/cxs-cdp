@@ -8,7 +8,7 @@ type PageInfo {
 }
 
 type CDP_EventEdge {
-  node : CDP_Event
+  node : CDP_EventInterface
   cursor : String!
 }
 
@@ -18,7 +18,7 @@ type CDP_EventConnection {
 }
 
 type CDP_PropertyEdge {
-  node : CDP_Property
+  node : CDP_PropertyInterface
   cursor : String!
 }
 

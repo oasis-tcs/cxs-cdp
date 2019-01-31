@@ -1,5 +1,5 @@
 exports.eventsSchema = `
-interface CDP_Event {
+interface CDP_EventInterface {
   id: ID!
   _source : CDP_Source
   _client : CDP_Client
@@ -34,7 +34,7 @@ input CDP_EventInput {
 }
 
 extend type CDP_Query {
-  getEvent(id : String!) : CDP_Event
+  getEvent(id : String!) : CDP_EventInterface
   findEvents(filter : CDP_EventFilterInput, orderBy : [CDP_OrderByInput], first: Int, after: String, last: Int, before: String) : CDP_EventConnection
 }
 
@@ -43,7 +43,7 @@ extend type CDP_Mutation {
 }
 
 extend type CDP_Subscription {
-  eventListener(filter: CDP_EventFilterInput) : CDP_Event!
+  eventListener(filter: CDP_EventFilterInput) : CDP_EventInterface!
 }
 
 `;

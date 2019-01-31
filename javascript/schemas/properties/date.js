@@ -2,7 +2,7 @@ exports.datePropertySchema = `
 """
 Dates are in ISO-8601 format equivalent to Java 8 Instants.
 """
-type CDP_DateProperty implements CDP_Property {
+type CDP_DateProperty implements CDP_PropertyInterface {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int

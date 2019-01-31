@@ -1,5 +1,5 @@
 exports.intPropertySchema = `
-type CDP_IntProperty implements CDP_Property {
+type CDP_IntProperty implements CDP_PropertyInterface {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int

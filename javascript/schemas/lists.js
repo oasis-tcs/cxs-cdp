@@ -13,6 +13,19 @@ input CDP_ListInput {
   name : String!
 }
 
+type CDP_UpdateListEvent implements CDP_EventInterface {
+  id: ID!
+  _source : CDP_Source
+  _client : CDP_Client
+  _profileID: CDP_ProfileID!
+  _profile : CDP_Profile!
+  _object: CDP_Object!
+  _location: GeoPoint
+  _timestamp: DateTime
+  joinLists : [CDP_List]
+  leaveLists : [CDP_List]
+}
+
 "CDP standard eventType used to update profile list memberships"
 input CDP_UpdateListEventInput {
   joinLists : [CDP_ListInput]

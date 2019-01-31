@@ -21,8 +21,16 @@ input CDP_PersonaInput {
   _profileIDs : [CDP_ProfileIDInput]
   _segments : [String]
   _interests : [CDP_InterestInput]
-  _consents : [CDP_ConsentInput]
+  _consents : [CDP_PersonaConsentInput]
   # fields will be added here according to registered profile properties  
+}
+
+# Used to update personas
+input CDP_PersonaConsentInput {
+  type : String!
+  status : String,
+  statusDate : String,
+  revokeDate : String
 }
 
 extend type CDP_Query {
