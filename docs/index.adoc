@@ -1133,35 +1133,35 @@ include::{sourcedir}/schemas/profilefilters.js[lines=2..8]
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profilefilters.js[lines=10..16]
+include::{sourcedir}/schemas/profilefilters.js[lines=9..14]
 ----
 
 ==== CDP_ProfilePropertiesFilter
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profilefilters.js[lines=21..25]
+include::{sourcedir}/schemas/profilefilters.js[lines=19..23]
 ----
 
 ==== CDP_ProfilePropertiesFilterInput
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profilefilters.js[lines=35..40]
+include::{sourcedir}/schemas/profilefilters.js[lines=25..29]
 ----
 
 ==== CDP_ProfileEventsFilter
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profilefilters.js[lines=33..40]
+include::{sourcedir}/schemas/profilefilters.js[lines=31..38]
 ----
 
 ==== CDP_ProfileEventsFilterInput
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profilefilters.js[lines=42..49]
+include::{sourcedir}/schemas/profilefilters.js[lines=40..47]
 ----
 
 === Sessions
@@ -1255,11 +1255,13 @@ CDP_Consent represents a persisted Consent, always attached to a specific profil
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/consents.js[lines=8..20]
+include::{sourcedir}/schemas/consents.js[lines=8..18]
 ----
 
-TODO: What are Tokens, and how are they used?
-TODO: Write about "type"
+Token:: Similar to OAuth 2 authorization tokens to access the consent without the profile, also useful to delete the consent
+
+Type:: Should be a Url or other meaningful identifier like ``//mycompany.com/consents/newsletters/weekly``, ``//crmcompany.com/consents/push-to-crm`` or ``//oasis_open.org/cxs/consents/send-to-third-parties``
+
 
 ==== CDP_ConsentInput
 
@@ -1599,6 +1601,8 @@ Example : return list of products that the profile has viewed but not bought
 include::{sourcedir}/schemas/optimizations.js[lines=23..28]
 ----
 
+Strategy:: Any strategy supported by the algorithm. Unspecified, random, scoring, best first match, worst match, a/b test
+
 ==== CDP_EventOccurenceBoostInput
 
 Used to boost positively/negatively the algorithm based on event type and time span: i.e. return a list of products the profile has viewed in the last year
@@ -1608,6 +1612,7 @@ Used to boost positively/negatively the algorithm based on event type and time s
 include::{sourcedir}/schemas/optimizations.js[lines=30..35]
 ----
 
+Boost:: Can also be a negative value
 
 ==== CDP_AlgorithmInput
 
@@ -1615,6 +1620,11 @@ include::{sourcedir}/schemas/optimizations.js[lines=30..35]
 ----
 include::{sourcedir}/schemas/optimizations.js[lines=37..40]
 ----
+
+Name::  Name of algorith, examples may be similarity, bought-Together, bought-byOthers, viewed-byOthers, trending, related
+
+Parameters::
+JSON object supported by the specified algorithm. Algorithm must validate object itself. Parameters can be used to filter the results of the recommendation algorithm or any other custom processing that is supported by the implementation.
 
 ==== CDP_RecommendationResult
 
@@ -1629,6 +1639,12 @@ include::{sourcedir}/schemas/optimizations.js[lines=42..45]
 ----
 include::{sourcedir}/schemas/optimizations.js[lines=47..53]
 ----
+
+objectID:: Optional since we might just want to use collections to retrieve recommendations
+
+collections:: Collections we want to use to retrieve recommendations
+
+size:: Maximum number of results to retrieve
 
 == Security Considerations
 

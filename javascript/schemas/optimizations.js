@@ -24,19 +24,19 @@ input CDP_OptimizationInput {
     name : String!
     objects : [CDP_ObjectInput],
     eventOccurenceBoosts : [CDP_EventOccurenceBoostInput]
-    strategy : String # unspecified, random, scoring, best first match, worst match, a/b test ?
+    strategy : String
 }
 
 input CDP_EventOccurenceBoostInput {
     eventType : String
-    boost : Int # could be negative
+    boost : Int
     fromDate : String
     toDate : String
 }
 
 input CDP_AlgorithmInput {
-    name : String! # similarity, bought-Together, bought-byOthers, viewed-byOthers, trending, related
-    parameters : JSON # parameters can be used to filter the results of the recommendation algorithm or any other custom processing that is supported by the implementation. Parameters are specific to the algorithm.
+    name : String!
+    parameters : JSON
 }
 
 type CDP_RecommendationResult {
@@ -46,9 +46,9 @@ type CDP_RecommendationResult {
 
 input CDP_RecommendationInput {
     name : String!
-    objectID : ID # this is optional since we might just want to use collections to retrieve recommendations
-    collections : [String] # collections we want to use to retrieve recommendations
-    size : Int # maximum number of results to retrieve
+    objectID : ID
+    collections : [String]
+    size : Int
     algorithm : CDP_AlgorithmInput
 }
 `;
