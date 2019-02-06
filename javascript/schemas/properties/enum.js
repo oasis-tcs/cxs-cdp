@@ -2,7 +2,7 @@ exports.enumerationPropertySchema = `
 """
 The enumeration property type is a collection of unique strings that contain the possible values for the enumeration property type
 """
-type CDP_EnumerationProperty implements CDP_PropertyInterface {
+type CDP_EnumProperty implements CDP_PropertyInterface {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int
@@ -10,7 +10,7 @@ type CDP_EnumerationProperty implements CDP_PropertyInterface {
   values : [String]
 }
 
-input CDP_EnumerationPropertyInput {
+input CDP_EnumPropertyInput {
   name : ID!
   minOccurrences : Int
   maxOccurrences : Int

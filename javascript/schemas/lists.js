@@ -7,13 +7,14 @@ type CDP_List {
   inactive(first: Int, after: String, last: Int, before: String) : CDP_ProfileConnection
 }
 
+"The id optional only when creating a list and can be server generated. For all other operations it is required"
 input CDP_ListInput {
-  id : ID #optional and can be server generated
+  id : ID 
   view: String!
   name : String!
 }
 
-type CDP_UpdateListEvent implements CDP_EventInterface {
+type CDP_UpdateListsEvent implements CDP_EventInterface {
   id: ID!
   _source : CDP_Source
   _client : CDP_Client
@@ -22,14 +23,25 @@ type CDP_UpdateListEvent implements CDP_EventInterface {
   _object: CDP_Object!
   _location: GeoPoint
   _timestamp: DateTime
+  _topics : [CDP_Topic]  
   joinLists : [CDP_List]
   leaveLists : [CDP_List]
 }
 
 "CDP standard eventType used to update profile list memberships"
-input CDP_UpdateListEventInput {
-  joinLists : [CDP_ListInput]
-  leaveLists : [CDP_ListInput]
+input CDP_UpdateListsEventInput {
+  joinLists : [ID]
+  leaveLists : [ID]
+}
+
+type CDP_UpdateListsEventFilter {
+  joinLists_contains : [ID]
+  leaveLists_contains : [ID]
+}
+
+input CDP_UpdateListsEventFilterInput {
+  joinLists_contains : [ID]
+  leaveLists_contains : [ID]
 }
 
 extend type CDP_Query {
@@ -39,8 +51,8 @@ extend type CDP_Query {
 
 extend type CDP_Mutation {
   createOrUpdateList(list : CDP_ListInput) : CDP_List
-  addProfileToList(list : CDP_ListInput, profileID : CDP_ProfileIDInput, active : Boolean) : CDP_List
-  removeProfileFromList(list : CDP_ListInput, profileID : CDP_ProfileIDInput) : CDP_List
-  deleteList(listID : String) : CDP_List
+  addProfileToList(listID : ID, profileID : CDP_ProfileIDInput, active : Boolean) : CDP_List
+  removeProfileFromList(listID : ID, profileID : CDP_ProfileIDInput) : CDP_List
+  deleteList(listID : ID) : CDP_List
 }
 `;

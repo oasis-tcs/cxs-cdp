@@ -8,6 +8,7 @@ interface CDP_EventInterface {
   _object: CDP_Object!
   _location: GeoPoint
   _timestamp: DateTime
+  _topics : [CDP_Topic]
 }
 
 """
@@ -23,9 +24,10 @@ input CDP_EventInput {
   _object: CDP_ObjectInput!
   _location: GeoPoint
   _timestamp: DateTime
+  _topics : [ID]
   _profileUpdateEvent : CDP_ProfileUpdateEventInput
   _updateConsentEvent : CDP_UpdateConsentEventInput
-  _updateListsEvent : CDP_UpdateListEventInput
+  _updateListsEvent : CDP_UpdateListsEventInput
   _sessionStateEvent : CDP_SessionStateEventInput
   # Sample custom EventTypes below:
   # my_pageView : MY_PageViewEventInput

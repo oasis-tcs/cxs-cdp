@@ -1,7 +1,7 @@
 {
-  "name": "contextserver-graphql-api",
+  "name": "cdp-graphql-api",
   "version": "1.0.0",
-  "description": "GraphQL Implementation of the OASIS Context Server API Specification",
+  "description": "GraphQL Implementation of the OASIS Context Server TC : Customer Data Platform API Specification",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -9,16 +9,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sergehuber/contextserver-graphql-api.git"
+    "url": "git+https://github.com/sergehuber/cdp-graphql-api.git"
   },
   "author": "",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/sergehuber/contextserver-graphql-api/issues"
+    "url": "https://github.com/sergehuber/cdp-graphql-api/issues"
   },
-  "homepage": "https://github.com/sergehuber/contextserver-graphql-api#readme",
+  "homepage": "https://github.com/sergehuber/cdp-graphql-api#readme",
   "dependencies": {
-    "apollo-server": "^2.2.5",
-    "graphql": "^14.0.2"
+    "apollo-server": "^2.3.3",
+    "graphql": "^14.1.1"
   }
 }

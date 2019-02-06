@@ -20,7 +20,7 @@ input CDP_PropertyInput {
   date : CDP_DatePropertyInput
   boolean : CDP_BooleanPropertyInput
   geopoint : CDP_GeoPointPropertyInput
-  enumeration : CDP_EnumerationPropertyInput
+  enum : CDP_EnumPropertyInput
   set : CDP_SetPropertyInput
 }
 `;

@@ -46,11 +46,24 @@ type CDP_ProfileUpdateEvent implements CDP_EventInterface {
   _object: CDP_Object!
   _location: GeoPoint
   _timestamp: DateTime
+  _topics : [CDP_Topic]
   # fields will be added here according to registered profile properties. To remove a property value pass a null value
 }
 
 "CDP standard eventType used to update profile properties"
 input CDP_ProfileUpdateEventInput {
+  "Please disregard the underscore field, it is only there because GraphQL schema doesn't allow empty types"
+  _ : EmptyTypeWorkAround
+  # input fields will be added here according to registered profile properties  
+}
+
+type CDP_ProfileUpdateEventFilter {
+  "Please disregard the underscore field, it is only there because GraphQL schema doesn't allow empty types"
+  _ : EmptyTypeWorkAround
+  # fields will be added here according to registered profile properties  
+}
+
+input CDP_ProfileUpdateEventFilterInput {
   "Please disregard the underscore field, it is only there because GraphQL schema doesn't allow empty types"
   _ : EmptyTypeWorkAround
   # input fields will be added here according to registered profile properties  

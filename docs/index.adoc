@@ -432,14 +432,14 @@ include::{sourcedir}/schemas/properties/date.js[lines=5..11]
 include::{sourcedir}/schemas/properties/date.js[lines=13..19]
 ----
 
-==== CDP_EnumerationProperty
+==== CDP_EnumProperty
 
 [source,graphql]
 ----
 include::{sourcedir}/schemas/properties/enum.js[lines=5..11]
 ----
 
-==== CDP_EnumerationPropertyInput
+==== CDP_EnumPropertyInput
 
 [source,graphql]
 ----
@@ -552,29 +552,31 @@ The following comparison operators are available:
 
 .Operator availability for property value types
 [options="header"]
-|=========================================================================
-|Operators |Identifier|String|Int|Float|Date|Boolean|GeoPoint|Enumeration|
-|equals    |x         |x     |x  |x    |x   |x      |x       |x          |
-|startsWith|          |x     |   |     |    |       |        |           |
-|endsWith  |          |x     |   |     |    |       |        |           |
-|contains  |          |x     |   |     |    |       |        |           |
-|regexp*   |          |x     |   |     |    |       |        |           |
-|lt        |          |      |x  |x    |x   |       |        |           |
-|lte       |          |      |x  |x    |x   |       |        |           |
-|gt        |          |      |x  |x    |x   |       |        |           |
-|gte       |          |      |x  |x    |x   |       |        |           |
-|distance  |          |      |   |     |    |       |x       |           |
-|between*  |          |      |x  |x    |x   |       |        |           |
-|=========================================================================
+|================================================================================
+|Operators  |Identifier|String|Int|Float|Date|Boolean|GeoPoint|Enumeration|Array|
+|equals     |x         |x     |x  |x    |x   |x      |x       |x          |     |
+|startsWith*|          |x     |   |     |    |       |        |           |     |
+|endsWith*  |          |x     |   |     |    |       |        |           |     |
+|contains   |          |x     |   |     |    |       |        |           |x    |
+|regexp*    |          |x     |   |     |    |       |        |           |     |
+|lt         |          |      |x  |x    |x   |       |        |           |     |
+|lte        |          |      |x  |x    |x   |       |        |           |     |
+|gt         |          |      |x  |x    |x   |       |        |           |     |
+|gte        |          |      |x  |x    |x   |       |        |           |     |
+|distance   |          |      |   |     |    |       |x       |           |     |
+|================================================================================
 
 * optional operators
+
+The `Array` column is a special case. It can be an array of any GraphQL type. In this case only the `contains` operator
+is defined in the specification, but implementations are free to offer more advanced operators for this type.
 
 As we are expressing filters through GraphQL, filters will always be strongly typed.
 I.e. if the property "firstName" with valueType string is available, the following options can be used:
 
   firstName_equals
-  firstName_startsWith
-  firstName_endsWith
+  firstName_startsWith (optional)
+  firstName_endsWith (optional)
   firstName_contains
   firstName_regexp (optional)
 
@@ -1167,6 +1169,56 @@ Profile Filters are slightly more complex than <<EventFilters>>.
 As profileFilter are composed from both searching profile properties, and events related to the profile.
 
 TODO provide profile filter example
+
+Here is an example of a GraphQL query (with variables) that will retrieve profiles that "have joined the list with the
+id NEWSLETTER-LIST-ID since June 28th, 2018 at 5:25"
+
+operation::
+
+    query profileFilterExample(
+      $profileFilter: CDP_ProfileFilterInput
+      $orderBy: [CDP_OrderByInput]
+    ) {
+      cdp {
+        findProfiles(filter: $profileFilter, orderBy: $orderBy, first : 10) {
+          totalCount
+          edges {
+            node {
+              _profileIDs {
+                source {
+                  id
+                }
+                id
+              }
+              _segments {
+                name
+              }
+            }
+          }
+        }
+      }
+    }
+
+variables::
+
+    {
+      "profileFilter": {
+        "lists_contains" : [ "NEWSLETTER-LIST-ID" ],
+        "properties": {},
+        "events": {
+          "minimalCount": 1,
+          "eventFilter": {
+            "_timestamp_gt": "2018-06-28T05:25:28+00:00",
+            "_updateListsEvent": {
+              "joinLists_contains" : ["NEWSLETTER-LIST-ID"]
+            }
+          }
+        }
+      },
+      "orderBy": [
+        {"fieldName": "properties.firstName", "order": "ASC"}
+      ]
+    }
 
 ==== CDP_ProfileFilter
 

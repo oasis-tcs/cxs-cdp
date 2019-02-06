@@ -1,15 +1,21 @@
 exports.profileFiltersSchema = `
 type CDP_ProfileFilter {
+  profileIDs : [String]
   properties : CDP_ProfilePropertiesFilter
-  segments : [String]
-  consents : [String]
+  segments_contains : [ID]
+  consents_contains : [ID]
+  lists_contains : [ID]
+  interests : CDP_InterestFilter
   events : CDP_ProfileEventsFilter
 }
 
 input CDP_ProfileFilterInput {
+  profileIDs_contains : [String]
   properties : CDP_ProfilePropertiesFilterInput
-  segments : [String]
-  consents : [String]
+  segments_contains : [ID]
+  consents_contains : [ID]
+  lists_contains: [ID]
+  interests : CDP_InterestFilterInput
   events : CDP_ProfileEventsFilterInput
 }
 

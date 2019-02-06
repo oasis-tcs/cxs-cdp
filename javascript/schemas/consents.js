@@ -26,6 +26,7 @@ type CDP_UpdateConsentEvent implements CDP_EventInterface {
   _object: CDP_Object!
   _location: GeoPoint
   _timestamp: DateTime
+  _topics : [CDP_Topic]
   type : String!
   status : String,
   lastUpdate : DateTime,
@@ -38,5 +39,24 @@ input CDP_UpdateConsentEventInput {
   status : String,
   lastUpdate : DateTime,
   expiration : DateTime
+}
+
+"Filter for consent update events"
+type CDP_UpdateConsentEventFilter {
+  type_equals : String,
+  status_equals : String,
+  lastUpdate_equals : DateTime,
+  lastUpdate_lt : DateTime,
+  lastUpdate_lte : DateTime,
+  lastUpdate_gt : DateTime,
+  lastUpdate_gte : DateTime,
+  expiration_equals : DateTime 
+}
+
+input CDP_UpdateConsentEventFilterInput {
+  type_equals : String,
+  status_equals : String
+  lastUpdate_between : CDP_DateFilterInput,
+  expiration_between : CDP_DateFilterInput
 }
 `;

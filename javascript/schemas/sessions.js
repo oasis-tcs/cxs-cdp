@@ -15,10 +15,20 @@ type CDP_SessionStateEvent implements CDP_EventInterface {
   _object: CDP_Object!
   _location: GeoPoint
   _timestamp: DateTime
+  _topics : [CDP_Topic]
   state : CDP_SessionState
 }
 
 input CDP_SessionStateEventInput {
   state : CDP_SessionState
 }
+
+type CDP_SessionStateEventFilter {
+  state_equals : CDP_SessionState
+}
+
+input CDP_SessionStateEventFilterInput {
+  state_equals : CDP_SessionState
+}
+
 `;
