@@ -128,18 +128,63 @@ Additionally businesses now face severe legal charges if customer data is not tr
 The Customer Data Platform (CDP) specification aims to standardize exchange of customer data across systems and silos.
 This enables centralization of customer data - consequently giving control of the data back to the business, and the customers.
 
-The CDP standard builds upon four core concepts: Profiles, Events, Consents, and Clients
-
-  * Profiles represent each individual "customer". Aggregating and tracking all registered properties, including which system actually collected the data.
-  * Events represent user behavioral data / interactions performed by a customer (aka profile). A purchase, or a simple click on a link represents different events.
-  * Consents are actual permission given by a customer to the organization, with a limited View and duration
-  * Clients represent the various systems that provide and/or consume data from a Customer Data Platform, typical clients are: CRM systems, Identity Systems, Content Management Systems, E-commerce etc.
 
 The CDP standard is defined as a web-based API using GraphQL - providing a self-documented and strongly typed interface.
 
 It has been an explicit goal of the CXS committee to allow extensive customization of CDP deployments, in order to fit the need of each different organization.
 As such, the API dynamically evolves as you customize your deployment.
 
+== Domain objects
+
+Below is a high level introduction to the domain objects of the specification:
+
+=== Events
+
+Events represent user behavioral data/interactions.
+As such, events are always associated with <<Profiles>>.
+A transaction, a page view, a click on a link all represents different events.
+The targets of an interaction is known as <<Objects>>
+Events are fed to the Context Server from different sources.
+CDP implementations may define custom event types, in addition to the mandatory event types.
+
+=== Profiles
+
+Profiles represent "individuals/visitors/customers".
+Administrators may define available properties for profiles.
+As such, profiles may compose properties from a range of different sources.
+Profiles are created and updated through events.
+
+=== Objects
+
+Objects are representations of any item/person that <<Profiles>> interact with through <<Events>>.
+The interaction with objects enables the CDP provide to detect interests, perform optimizations and recommendations if implemented.
+
+=== Lists
+
+Lists enable manual or programmatic grouping of profiles.
+A list may for instance represent participation in a newsletter, a selection of profiles for a marketing campaign, or blacklisting.
+Lists also support opt-out, effectively preventing profiles from being re-added to a list.
+
+=== Segments
+
+Segments are similar to lists, but a profile's inclusion is here defined through a rule.
+More specifically, administrative users may define so-called filters that produce a set of matching <<Profiles>> based on previous events or specific properties.
+
+=== Concents
+
+<<Profiles>> may grant or revoke concents for any specific purpose defined by the CDP administrators.
+This helps organizations document and stay in compliance with legal requirements for personal data,
+as well as managing concents consistently across all systems and touch points.
+
+=== Other
+
+Other important domain objects are:
+
+Properties: Lets administrators configure custom profile properties based on a range of value types
+Clients:: A client is required in order to communicate with the CDP. Clients are responsible for uniquely identifying its profiles.
+Views:: Administrative users may compose views where objects such as lists and segments are stored, easing use for distributed organisations.
+Topics:: Topics represent top level areas of interest of the organisation. This might for instance be a product, a location or a product group.
+Filters:: A solution to consistently perform queries on the various CDP objects
 
 === Terminology
 
@@ -219,18 +264,7 @@ In the above illustration, this use case is implemented by using a CMS to delive
 are hidden by default. After that, the CDP is asked whether the profile is in variant A or B, which might be implemented
 in different fashions but they will be remembered by the CDP for future displays.
 
-== Domain objects
 
-TODO Quickly describe main domain objects (1-2 lines per object)
-
-- Profiles
-- Events
-- Segments
-- Lists
-- Personas
-- Clients
-- Sources
-- Views
 
 == API Reference
 
@@ -705,8 +739,12 @@ include::{sourcedir}/schemas/sources.js[lines=17..18]
 
 === Objects
 
-Objects are representations of anything users interact with. For example: a web page, a product or another person
-Objects are used in <<Events>> to specify what the <<Profiles>> is interacting with and also used in <<Optimizations>>. Objects may optionally be part of one or multiple collections, that are used to classify them. By placing objects into collections, optimizations may be done within a single collection (e.g. : recommending products).
+Objects are representations of anything users interact with. For example: a web page, a product or another person.
+Objects are used in <<Events>> to specify what the <<Profiles>> are interacting with. Objects are also used in <<Optimizations>>.
+
+Objects may be part of one or more collections.
+Collections are used to classify objects.
+By placing objects into collections, optimizations may execute on a reduced data set (i.e. : recommending products).
 
 ==== CDP_Object
 
@@ -991,12 +1029,20 @@ include::{sourcedir}/schemas/profiles.js[lines=26..38]
 
 ==== CDP_ProfileUpdateEvent
 
+Profiles are crated and updated through this event type.
+This event is part of the standard and must be available for any implementation of the specification.
+
 [source,graphql]
 ----
 include::{sourcedir}/schemas/profiles.js[lines=40..50]
 ----
 
 ==== CDP_ProfileUpdateEventInput
+
+This is the input equivalent, notice because of missing input type inheritance in GraphQL,
+it only contains the actual properties to update.
+
+TODO: Make this version inline rather than what we see below?
 
 [source,graphql]
 ----
@@ -1323,6 +1369,8 @@ include::{sourcedir}/schemas/views.js[lines=16..17]
 
 === Topics
 
+TODO: What/How are the relationship between a topic and events/objects defined??
+
 Topics represent the core entities of the business that is using the Customer Data Platform.
 The Customer Data Platform aims to find correlation between profiles and the topics.
 When such correlations are identified, it is called <<Interests>>.
@@ -1380,9 +1428,9 @@ include::{sourcedir}/schemas/topics.js[lines=20..21]
 
 === Interests
 
-An important use-case for the Customer Data Platform is to determine a profiles "Interests".
+An important use-case for the Customer Data Platform is to determine a profile's "Interests".
 Whenever the Customer Data Platform registers an events that are associated with one or more <<Topics>>, this will affect the profile's interest for the specific Topic.
-A profiles interest in a specific topic is measured between 0-1, where 1 is maximum. As such 0,5 would indicate a higher interest than 0,35.
+A profile's interest for a specific topic is measured between 0-1, where 1 is maximum. As such 0,5 would indicate a higher interest than 0,35.
 
 The algorithm for how a Customer Data Platform scores and interest is implementation specific
 - but implementations should also take care of automatically decreasing interest over time, unless new and relevant events occur.
