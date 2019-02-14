@@ -1067,6 +1067,55 @@ type Sample_Address {
 }
 ----
 
+This will also generate new filter fields in the <<CDP_ProfilePropertiesFilterInput>> type:
+
+[source,graphql]
+----
+type CDP_ProfilePropertiesFilter {
+  and : [CDP_ProfilePropertiesFilter]
+  or : [CDP_ProfilePropertiesFilter]
+  # generated profile properties filters will be listed below
+  firstName_equals : String,
+  firstName_contains : String
+  sample_Address : Sample_AddressFilter
+}
+
+type Sample_AddressFilter {
+  streetName_equals : String,
+  streetName_contains : String,
+  postalCode_equals : String,
+  streetName_contains : String
+}
+
+input CDP_ProfilePropertiesFilterInput {
+  and : [CDP_ProfilePropertiesFilterInput]
+  or : CDP_ProfilePropertiesFilterInput
+  # generated profile properties filters will be listed below
+  firstName_equals : String,
+  firstName_contains : String
+  sample_Address : Sample_AddressFilterInput
+}
+
+input Sample_AddressFilterInput {
+  streetName_equals : String,
+  streetName_contains : String,
+  postalCode_equals : String,
+  streetName_contains : String
+}
+----
+
+As you can see the generation system also creates filter types (input and output) and adds the "Filter" and "FilterInput"
+suffix to them. This will always happen and implementations MUST do this.
+
+Also not illustrated here, the same generation system will also add fields to the following types :
+
+* CDP_ProfileUpdateEvent
+* CDP_ProfileUpdateEventInput
+* CDP_ProfileUpdateEventFilter
+* CDP_ProfileUpdateEventFilterInput
+
+The naming and generation conventions are exactly the same as for the profiles properties.
+
 ==== Profile merges
 
 Customer Data Platforms implementations SHOULD support profile merges.
@@ -1708,6 +1757,37 @@ Example segments:
 * Frequent buyer: Profiles that have completed more than 5 transactions in the last 3 months
 * Etc
 
+Here's an example operation to create a "male" segment (it assumes a "gender" profile property has been defined).
+
+operation::
+
+[source,graphql]
+----
+mutation createMaleSegment($segment: CDP_SegmentInput) {
+  cdp {
+    createOrUpdateSegment(segment: $segment) {
+      name
+    }
+  }
+}
+----
+
+variables::
+
+[source,graphql]
+----
+{
+  "segment": {
+    "name": "male",
+    "view": {"name": "acme"},
+    "profiles": {
+      "properties": {
+        "gender_equals" : "male"
+      }
+    }
+  }
+}
+----
 
 ==== CDP_Segment
 
