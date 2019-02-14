@@ -50,13 +50,25 @@ type CDP_ConsentUpdateEventFilter {
   lastUpdate_lte : DateTime,
   lastUpdate_gt : DateTime,
   lastUpdate_gte : DateTime,
-  expiration_equals : DateTime 
+  expiration_equals : DateTime,
+  expiration_lt : DateTime,
+  expiration_lte : DateTime,
+  expiration_gt : DateTime,
+  expiration_gte : DateTime 
 }
 
 input CDP_ConsentUpdateEventFilterInput {
   type_equals : String,
   status_equals : String
-  lastUpdate_between : CDP_DateFilterInput,
-  expiration_between : CDP_DateFilterInput
+  lastUpdate_equals : DateTime,
+  lastUpdate_lt : DateTime,
+  lastUpdate_lte : DateTime,
+  lastUpdate_gt : DateTime,
+  lastUpdate_gte : DateTime,
+  expiration_equals : DateTime,
+  expiration_lt : DateTime,
+  expiration_lte : DateTime,
+  expiration_gt : DateTime,
+  expiration_gte : DateTime 
 }
 `;

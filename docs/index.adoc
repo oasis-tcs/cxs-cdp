@@ -533,7 +533,7 @@ The following comparison operators are available:
 |equals     |x         |x     |x  |x    |x   |x      |x       |x          |     |
 |startsWith*|          |x     |   |     |    |       |        |           |     |
 |endsWith*  |          |x     |   |     |    |       |        |           |     |
-|contains   |          |x     |   |     |    |       |        |           |x    |
+|contains   |          |x*    |   |     |    |       |        |           |x    |
 |regexp*    |          |x     |   |     |    |       |        |           |     |
 |lt         |          |      |x  |x    |x   |       |        |           |     |
 |lte        |          |      |x  |x    |x   |       |        |           |     |
@@ -988,10 +988,10 @@ type CDP_Profile implements CDP_ProfileInterface {
   _profileIDs : [CDP_ProfileID]
   _events(filter : CDP_EventFilterInput, first : Int, last: Int, after : String, before: String) : CDP_EventConnection
   _lastEvents(count : Int, profileID : CDP_ProfileIDInput) : CDP_EventConnection
-  _segments(views : [CDP_ViewInput]) : [CDP_Segment]
-  _interests(views : [CDP_ViewInput]) : [CDP_Interest]
+  _segments(views : [ID]) : [CDP_Segment]
+  _interests(views : [ID]) : [CDP_Interest]
   _consents : [CDP_Consent]
-  _lists(views : [CDP_ViewInput]) : [CDP_List]
+  _lists(views : [ID]) : [CDP_List]
   _matches(namedFilters : [CDP_NamedFilterInput]) : [CDP_FilterMatch]
   _optimize(parameters : [CDP_OptimizationInput]) : [CDP_OptimizationResult]
   _recommend(parameters : [CDP_RecommendationInput]) : [CDP_RecommendationResult]
@@ -1043,10 +1043,10 @@ type CDP_Profile implements CDP_ProfileInterface {
   _profileIDs : [CDP_ProfileID]
   _events(filter : CDP_EventFilterInput, first : Int, last: Int, after : String, before: String) : CDP_EventConnection
   _lastEvents(count : Int, profileID : CDP_ProfileIDInput) : CDP_EventConnection
-  _segments(views : [CDP_ViewInput]) : [CDP_Segment]
-  _interests(views : [CDP_ViewInput]) : [CDP_Interest]
+  _segments(views : [ID]) : [CDP_Segment]
+  _interests(views : [ID]) : [CDP_Interest]
   _consents : [CDP_Consent]
-  _lists(views : [CDP_ViewInput]) : [CDP_List]
+  _lists(views : [ID]) : [CDP_List]
   _matches(namedFilters : [CDP_NamedFilterInput]) : [CDP_FilterMatch]
   _optimize(parameters : [CDP_OptimizationInput]) : [CDP_OptimizationResult]
   _recommend(parameters : [CDP_RecommendationInput]) : [CDP_RecommendationResult]
@@ -1779,7 +1779,7 @@ variables::
 {
   "segment": {
     "name": "male",
-    "view": {"name": "acme"},
+    "view": "acme",
     "profiles": {
       "properties": {
         "gender_equals" : "male"

@@ -7,17 +7,17 @@ type CDP_Persona implements CDP_ProfileInterface {
   _name : String!
   _view : CDP_View!
   _profileIDs : [CDP_ProfileID]
-  _segments(views : [CDP_ViewInput]) : [CDP_Segment]
-  _interests(views : [CDP_ViewInput]) : [CDP_Interest]
+  _segments(views : [ID]) : [CDP_Segment]
+  _interests(views : [ID]) : [CDP_Interest]
   _consents : [CDP_Consent]
-  _lists(views : [CDP_ViewInput]) : [CDP_List]
+  _lists(views : [ID]) : [CDP_List]
   # fields will be added here according to registered profile properties  
 }
 
 input CDP_PersonaInput {
   id : ID
   _name : String!
-  _view : CDP_ViewInput!
+  _view : ID!
   _profileIDs : [CDP_ProfileIDInput]
   _segments : [String]
   _interests : [CDP_InterestInput]

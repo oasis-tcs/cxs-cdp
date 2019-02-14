@@ -10,7 +10,7 @@ type CDP_List {
 "The id optional only when creating a list and can be server generated. For all other operations it is required"
 input CDP_ListInput {
   id : ID 
-  view: String!
+  view: ID!
   name : String!
 }
 

@@ -8,7 +8,7 @@ type CDP_Segment {
 
 input CDP_SegmentInput {
   id : ID
-  view : CDP_ViewInput!
+  view : ID!
   name : String
   profiles : CDP_ProfileFilterInput
 }

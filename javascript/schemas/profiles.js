@@ -17,20 +17,20 @@ Common interface for both profiles and personas
 """
 interface CDP_ProfileInterface {
   _profileIDs : [CDP_ProfileID]
-  _segments(views : [CDP_ViewInput]) : [CDP_Segment]
-  _interests(views : [CDP_ViewInput]) : [CDP_Interest]
+  _segments(views : [ID]) : [CDP_Segment]
+  _interests(views : [ID]) : [CDP_Interest]
   _consents : [CDP_Consent]
-  _lists(views : [CDP_ViewInput]) : [CDP_List]
+  _lists(views : [ID]) : [CDP_List]
 }
 
 type CDP_Profile implements CDP_ProfileInterface {
   _profileIDs : [CDP_ProfileID]
   _events(filter : CDP_EventFilterInput, first : Int, last: Int, after : String, before: String) : CDP_EventConnection
   _lastEvents(count : Int, profileID : CDP_ProfileIDInput) : CDP_EventConnection
-  _segments(views : [CDP_ViewInput]) : [CDP_Segment]
-  _interests(views : [CDP_ViewInput]) : [CDP_Interest]
+  _segments(views : [ID]) : [CDP_Segment]
+  _interests(views : [ID]) : [CDP_Interest]
   _consents : [CDP_Consent]
-  _lists(views : [CDP_ViewInput]) : [CDP_List]
+  _lists(views : [ID]) : [CDP_List]
   _matches(namedFilters : [CDP_NamedFilterInput]) : [CDP_FilterMatch]
   _optimize(parameters : [CDP_OptimizationInput]) : [CDP_OptimizationResult]
   _recommend(parameters : [CDP_RecommendationInput]) : [CDP_RecommendationResult]

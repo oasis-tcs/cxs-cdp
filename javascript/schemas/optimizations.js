@@ -1,15 +1,4 @@
 exports.optimizationsSchema = `
-
-
-
-
-
-
-
-
-
-
-
 type CDP_OptimizationResult {
     name : String!
     scoredObjects : [CDP_ScoredObject]

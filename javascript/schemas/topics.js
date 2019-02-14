@@ -7,7 +7,7 @@ type CDP_Topic {
 
 input CDP_TopicInput {
   id : ID
-  view : String!
+  view : ID!
   name: String!
 }
 
