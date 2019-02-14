@@ -15,9 +15,9 @@ type CDP_EventFilter {
   _timestamp_gte : DateTime
   _topics_equals : String
   _profileUpdateEvent : CDP_ProfileUpdateEventFilter
-  _updateConsentEvent : CDP_UpdateConsentEventFilter
-  _updateListsEvent : CDP_UpdateListsEventFilter
-  _sessionStateEvent : CDP_SessionStateEventFilter
+  _consentUpdateEvent : CDP_ConsentUpdateEventFilter
+  _listsUpdateEvent : CDP_ListsUpdateEventFilter
+  _sessionEvent : CDP_SessionEventFilter
   # generated event types will be listed here
 }
 
@@ -36,9 +36,9 @@ input CDP_EventFilterInput {
   _timestamp_gt : DateTime
   _timestamp_gte : DateTime
   _profileUpdateEvent : CDP_ProfileUpdateEventFilterInput
-  _updateConsentEvent : CDP_UpdateConsentEventFilterInput
-  _updateListsEvent : CDP_UpdateListsEventFilterInput
-  _sessionStateEvent : CDP_SessionStateEventFilterInput
+  _consentUpdateEvent : CDP_ConsentUpdateEventFilterInput
+  _listsUpdateEvent : CDP_ListsUpdateEventFilterInput
+  _sessionEvent : CDP_SessionEventFilterInput
   # generated event types will be listed here
 }
 `;

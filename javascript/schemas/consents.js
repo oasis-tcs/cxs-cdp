@@ -17,7 +17,7 @@ type CDP_Consent {
   events : CDP_EventConnection
 }
 
-type CDP_UpdateConsentEvent implements CDP_EventInterface {
+type CDP_ConsentUpdateEvent implements CDP_EventInterface {
   id: ID!
   _source : CDP_Source
   _client : CDP_Client
@@ -34,7 +34,7 @@ type CDP_UpdateConsentEvent implements CDP_EventInterface {
 }
 
 "Standard EventType used to create or update a consent"
-input CDP_UpdateConsentEventInput {
+input CDP_ConsentUpdateEventInput {
   type : String!
   status : String,
   lastUpdate : DateTime,
@@ -42,7 +42,7 @@ input CDP_UpdateConsentEventInput {
 }
 
 "Filter for consent update events"
-type CDP_UpdateConsentEventFilter {
+type CDP_ConsentUpdateEventFilter {
   type_equals : String,
   status_equals : String,
   lastUpdate_equals : DateTime,
@@ -53,7 +53,7 @@ type CDP_UpdateConsentEventFilter {
   expiration_equals : DateTime 
 }
 
-input CDP_UpdateConsentEventFilterInput {
+input CDP_ConsentUpdateEventFilterInput {
   type_equals : String,
   status_equals : String
   lastUpdate_between : CDP_DateFilterInput,

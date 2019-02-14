@@ -26,9 +26,9 @@ input CDP_EventInput {
   _timestamp: DateTime
   _topics : [ID]
   _profileUpdateEvent : CDP_ProfileUpdateEventInput
-  _updateConsentEvent : CDP_UpdateConsentEventInput
-  _updateListsEvent : CDP_UpdateListsEventInput
-  _sessionStateEvent : CDP_SessionStateEventInput
+  _consentUpdateEvent : CDP_ConsentUpdateEventInput
+  _listsUpdateEvent : CDP_ListsUpdateEventInput
+  _sessionEvent : CDP_SessionEventInput
   # Sample custom EventTypes below:
   # my_pageView : MY_PageViewEventInput
   # my_addedToCart : MY_addedToCartEventInput,

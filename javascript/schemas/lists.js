@@ -14,7 +14,7 @@ input CDP_ListInput {
   name : String!
 }
 
-type CDP_UpdateListsEvent implements CDP_EventInterface {
+type CDP_ListsUpdateEvent implements CDP_EventInterface {
   id: ID!
   _source : CDP_Source
   _client : CDP_Client
@@ -29,17 +29,17 @@ type CDP_UpdateListsEvent implements CDP_EventInterface {
 }
 
 "CDP standard eventType used to update profile list memberships"
-input CDP_UpdateListsEventInput {
+input CDP_ListsUpdateEventInput {
   joinLists : [ID]
   leaveLists : [ID]
 }
 
-type CDP_UpdateListsEventFilter {
+type CDP_ListsUpdateEventFilter {
   joinLists_contains : [ID]
   leaveLists_contains : [ID]
 }
 
-input CDP_UpdateListsEventFilterInput {
+input CDP_ListsUpdateEventFilterInput {
   joinLists_contains : [ID]
   leaveLists_contains : [ID]
 }

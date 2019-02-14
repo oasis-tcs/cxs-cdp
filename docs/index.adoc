@@ -219,12 +219,12 @@ in different fashions but they will be remembered by the CDP for future displays
 Below is a short introduction to the core domain objects of the specification:
 
 Events:: <<Events>> represent the stream of "customer behaviour" events that help the CDP build <<Profiles>>
-Profiles:: Representing the "customer", or subject, interacting with your business <<Objects>>
+Profiles:: Representing the data of the subject, or "customer" interacting with your business <<Objects>>
 Personas:: Create <<Personas>> to simulate real <<Profiles>> and test your ideas
 Objects:: Are the target items (and possibly persons) a "customer" interacts with
 Lists:: Manually or programatically updated <<Lists>> of profiles
 Segments:: <<Segments>> are dynamic lists based on <<Filters>>
-Concents:: <<Consents>> granted or denied by the subjects
+Consents:: <<Consents>> granted or denied by the subjects
 Properties: Allow the definition of custom profile <<Properties>> within a CDP deployment
 Clients:: <<Clients>> represent any entity connecting to CDP, either for storing or retrieving data
 Views:: Create dministrative <<Views>> for grouping objects defined by back-office users
@@ -346,7 +346,8 @@ The Set value type is special, as it enables nested properties and a tree-struct
 I.e. from the example above: "setOfProperties.response" would hold the value "yo"
 
 A property consists of:
-* the property name
+
+* the property name (it is RECOMMENDED but not mandatory to prefix the property name)
 * the valueType of the property (Identifier, String, Int, Float, Date, Boolean, GeoPoint, Enumeration and Set)
 * minimum occurrences of values (a property may hold one or more values)
 * maximum occurrences
@@ -363,7 +364,7 @@ The property interface defines the common fields for the different value types.
 include::{sourcedir}/schemas/properties.js[lines=5..10]
 ----
 
-ID:: must be in a format that's acceptable as a GraphQL field name (/[_A-Za-z][_0-9A-Za-z]*/) , and we recommend to prefix it to avoid conflicts, i.e acme_pageView, acme_click. "cdp_" is reserved.
+name:: must be in a format that's acceptable as a GraphQL field name (/[_A-Za-z][_0-9A-Za-z]*/) , and we RECOMMEND to prefix it to avoid conflicts, i.e acme_pageView, acme_click. "cdp_" is reserved.
 minOccurences:: Default = 0. For minOccurrences > 1 the property can hold multiple values in preserved order. minOccurences = 1 indicates the property is mandatory.
 maxOccurences:: Default = 1. maxOccurences = 0 indicates no limit. maxOccurences must be higher than minOccurences.
 tags:: System defined/generated tags. E.g: hidden, readOnly, personalData
@@ -962,76 +963,109 @@ The Customer Data Platform is responsible for building profiles based on the pro
 ==== Profile properties
 
 Each deployment of CDP will be unique in how data are collected, and what data is stored per profile.
-Profile properties enable us to define all custom properties required by an organization.
+Profile properties enable us to define custom properties required by an organization.
 
 Administrators and developers may define and maintain a consistent data model for profiles across different <<Clients>> and <<Sources>>.
 Any data to be recorded in a profile must be mapped to a corresponding profile property.
 
-The specification does not define a set of standard profile properties. However, implementors are recommended to consider including standard properties such as :
+The specification does not define a set of standard profile properties. However, implementors SHOULD include the following standard properties :
 
-- full name : string
-- primary email : identifier
-- primary phone number : identifier
-- date of birth : date
-- gender : string
-- etc.
+- fullName : string
+- email : identifier
+- phoneNumber : identifier
 
 Profiles are updated through events.
 The history of external or internal profile modifications is accessible through the profile update events.
-CDP must also specify a way to provide subscriptions on profile modifications so that external systems can retrieve the profile modifications.
+CDP implementations SHOULD also support <<CDP_Subscription,subscriptions>> on profile modifications so that external systems can retrieve the profile modifications in real-time.
 
-The flow looks like this :
-Real Event --> Source -> Mapping -> Profile
+Properties can be dynamically defined for profiles using the ``createOrUpdateProfileProperties`` and ``deleteProfileProperties`` mutations. Once a property is associated with a profile, it will become available in the CDP_Profile and CDP_Persona types.
 
-Profile merges are optional in the CDP specification. They may be supported by using a property defined as an identifier as a merge key (multiple merge keys may of course exist) to merge multiple profiles. The resulting merged profile MUST contain all the source profile IDs of the merged profiles as well as the merged profile data. The original profiles that were merged may be flagged or deleted, this is implementation specific.
-
-TODO: Use sample instead?
-
-TODO Explain how the property types generated the fields in the CDP_ProfileProperties using the samples below
+As an example, let's assume we have a starting CDP_Profile type that looks like this:
 
 [source,graphql]
 ----
-"""
-This type is dynamically generated from the defined ProfileProperties. firstName, lastName, sample_Location and sample_Address are just examples of how this might look if these profileProperties were actually defined.
-"""
-type CDP_ProfileProperties {
-  firstName : String
-  lastName : String
-  sample_Location : Sample_Location
-  sample_Address : Sample_Address
-}
-
-"""
-Sample type generated from ProfileProperties definition
-"""
-type Sample_Location {
-  latitude : Float,
-  longitude : Float
-}
-
-"""
-Sample type generated from ProfileProperties definition
-"""
-type Sample_StreetNumber {
-  streetNumber : Int,
-  prefix : String,
-  postfix : String
-}
-
-"""
-Sample type generated from ProfileProperties definition
-"""
-type Sample_Address {
-  streetName : String,
-  sample_StreetNumber : Sample_StreetNumber,
-  citySubDivisions : [String]
-  city : String,
-  postalCode : String,
-  countrySubvisions : [String]
-  country : String
+type CDP_Profile implements CDP_ProfileInterface {
+  _profileIDs : [CDP_ProfileID]
+  _events(filter : CDP_EventFilterInput, first : Int, last: Int, after : String, before: String) : CDP_EventConnection
+  _lastEvents(count : Int, profileID : CDP_ProfileIDInput) : CDP_EventConnection
+  _segments(views : [CDP_ViewInput]) : [CDP_Segment]
+  _interests(views : [CDP_ViewInput]) : [CDP_Interest]
+  _consents : [CDP_Consent]
+  _lists(views : [CDP_ViewInput]) : [CDP_List]
+  _matches(namedFilters : [CDP_NamedFilterInput]) : [CDP_FilterMatch]
+  _optimize(parameters : [CDP_OptimizationInput]) : [CDP_OptimizationResult]
+  _recommend(parameters : [CDP_RecommendationInput]) : [CDP_RecommendationResult]
+  # fields will be added here according to registered profile properties
 }
 ----
 
+Now let's use the mutation to create a new property.
+
+operation::
+
+[source,graphql]
+----
+mutation addProperties($properties: [CDP_PropertyInput]) {
+  cdp {
+    createOrUpdateProfileProperties(properties: $properties)
+  }
+}
+----
+
+variables::
+
+[source,graphql]
+----
+{
+  "properties": [
+    {
+      "string": {
+        "name": "firstName"
+      }
+    },
+    {
+      "set": {
+        "name": "sample_Address",
+        "properties": {
+          "string": {"name": "streetName"},
+          "string": {"name": "postalCode"}
+        }
+      }
+    }
+  ]
+}----
+
+This will resulting in the following modifications to the CDP_Profile type:
+
+[source,graphql]
+----
+type CDP_Profile implements CDP_ProfileInterface {
+  _profileIDs : [CDP_ProfileID]
+  _events(filter : CDP_EventFilterInput, first : Int, last: Int, after : String, before: String) : CDP_EventConnection
+  _lastEvents(count : Int, profileID : CDP_ProfileIDInput) : CDP_EventConnection
+  _segments(views : [CDP_ViewInput]) : [CDP_Segment]
+  _interests(views : [CDP_ViewInput]) : [CDP_Interest]
+  _consents : [CDP_Consent]
+  _lists(views : [CDP_ViewInput]) : [CDP_List]
+  _matches(namedFilters : [CDP_NamedFilterInput]) : [CDP_FilterMatch]
+  _optimize(parameters : [CDP_OptimizationInput]) : [CDP_OptimizationResult]
+  _recommend(parameters : [CDP_RecommendationInput]) : [CDP_RecommendationResult]
+  # fields will be added here according to registered profile properties
+  firstName : String
+  sample_Address : Sample_Address
+}
+----
+
+The following type is generated from the property definition. The name of the type starts with an uppercased character from the
+property name.
+
+[source,graphql]
+----
+type Sample_Address {
+  streetName : String,
+  postalCode : String
+}
+----
 
 ==== Profile merges
 
@@ -1043,6 +1077,8 @@ In order to keep event history and avoid re-processing of data, the merge proces
 This is why profiles are defined to have multiple profileIDs.
 
 Example: As such, when visitors on a website are tracked through a cookie (defining the profileID), the cookie will remain the same even if the profile is merged.
+
+Profile merges are optional in the CDP specification. They may be supported by using a property defined as an identifier as a merge key (multiple merge keys may of course exist) to merge multiple profiles. The resulting merged profile MUST contain all the source profile IDs of the merged profiles as well as the merged profile data. The original profiles that were merged may be flagged or deleted, this is implementation specific.
 
 ==== CDP_ProfileID
 
@@ -1216,7 +1252,7 @@ variables::
       "minimalCount": 1,
       "eventFilter": {
         "_timestamp_gt": "2018-06-28T05:25:28+00:00",
-        "_updateListsEvent": {
+        "_listsUpdateEvent": {
           "joinLists_contains" : ["NEWSLETTER-LIST-ID"]
         }
       }
@@ -1274,7 +1310,7 @@ include::{sourcedir}/schemas/profilefilters.js[lines=46..53]
 When individuals interact, clients may enrich the data associated with interaction by specifying sessions.
 For instance, a session may start when a user loads a specific app, and end when he closes it.
 
-The CDP_SessionStateEventInput is used to signify the beginning, pause, resume or end of a session.
+The CDP_SessionEventInput is used to signify the beginning, pause, resume or end of a session.
 
 ==== CDP_SessionState
 
@@ -1284,14 +1320,14 @@ include::{sourcedir}/schemas/sessions.js[lines=2..7]
 ----
 
 
-==== CDP_SessionStateEvent
+==== CDP_SessionEvent
 
 [source,graphql]
 ----
 include::{sourcedir}/schemas/sessions.js[lines=9..20]
 ----
 
-==== CDP_SessionStateEventInput
+==== CDP_SessionEventInput
 
 [source,graphql]
 ----
