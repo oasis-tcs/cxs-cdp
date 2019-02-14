@@ -218,18 +218,19 @@ in different fashions but they will be remembered by the CDP for future displays
 
 Below is a short introduction to the core domain objects of the specification:
 
-Events:: TODO
-Profiles:: TODO
-Objects:: TODO
-Lists:: TODO
-Segments:: TODO
-Concents:: TODO
-Properties: Lets administrators configure custom profile properties based on a range of value types
-Clients:: A client is required in order to communicate with the CDP. <<Clients>> are responsible for uniquely identifying its profiles.
-Views:: Administrative users may compose views where objects such as lists and segments are stored, easing use for distributed organisations.
-Topics:: Topics represent top level areas of interest of the organisation. This might for instance be a product, a location or a product group.
-Filters:: A solution to consistently perform queries on the various CDP objects
-
+Events:: <<Events>> represent the stream of "customer behaviour" events that help the CDP build <<Profiles>>
+Profiles:: Representing the "customer", or subject, interacting with your business <<Objects>>
+Personas:: Create <<Personas>> to simulate real <<Profiles>> and test your ideas
+Objects:: Are the target items (and possibly persons) a "customer" interacts with
+Lists:: Manually or programatically updated <<Lists>> of profiles
+Segments:: <<Segments>> are dynamic lists based on <<Filters>>
+Concents:: <<Consents>> granted or denied by the subjects
+Properties: Allow the definition of custom profile <<Properties>> within a CDP deployment
+Clients:: <<Clients>> represent any entity connecting to CDP, either for storing or retrieving data
+Views:: Create dministrative <<Views>> for grouping objects defined by back-office users
+Interest:: Represents a profiles weighted <<Interest>> in a specific <<Topic>>
+Topics:: Represent "business areas" of an organisation deploying CDP - like a product or a location.
+Filters:: Enable definition of structured queries against other CDP domain objects
 
 
 == API Reference
