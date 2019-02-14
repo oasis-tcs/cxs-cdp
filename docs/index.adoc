@@ -134,58 +134,6 @@ The CDP standard is defined as a web-based API using GraphQL - providing a self-
 It has been an explicit goal of the CXS committee to allow extensive customization of CDP deployments, in order to fit the need of each different organization.
 As such, the API dynamically evolves as you customize your deployment.
 
-== Domain objects
-
-Below is a high level introduction to the domain objects of the specification:
-
-=== Events
-
-Events represent user behavioral data/interactions.
-As such, events are always associated with <<Profiles>>.
-A transaction, a page view, a click on a link all represents different events.
-The targets of an interaction is known as <<Objects>>
-Events are fed to the Context Server from different sources.
-CDP implementations may define custom event types, in addition to the mandatory event types.
-
-=== Profiles
-
-Profiles represent "individuals/visitors/customers".
-Administrators may define available properties for profiles.
-As such, profiles may compose properties from a range of different sources.
-Profiles are created and updated through events.
-
-=== Objects
-
-Objects are representations of any item/person that <<Profiles>> interact with through <<Events>>.
-The interaction with objects enables the CDP provide to detect interests, perform optimizations and recommendations if implemented.
-
-=== Lists
-
-Lists enable manual or programmatic grouping of profiles.
-A list may for instance represent participation in a newsletter, a selection of profiles for a marketing campaign, or blacklisting.
-Lists also support opt-out, effectively preventing profiles from being re-added to a list.
-
-=== Segments
-
-Segments are similar to lists, but a profile's inclusion is here defined through a rule.
-More specifically, administrative users may define so-called filters that produce a set of matching <<Profiles>> based on previous events or specific properties.
-
-=== Concents
-
-<<Profiles>> may grant or revoke concents for any specific purpose defined by the CDP administrators.
-This helps organizations document and stay in compliance with legal requirements for personal data,
-as well as managing concents consistently across all systems and touch points.
-
-=== Other
-
-Other important domain objects are:
-
-Properties: Lets administrators configure custom profile properties based on a range of value types
-Clients:: A client is required in order to communicate with the CDP. Clients are responsible for uniquely identifying its profiles.
-Views:: Administrative users may compose views where objects such as lists and segments are stored, easing use for distributed organisations.
-Topics:: Topics represent top level areas of interest of the organisation. This might for instance be a product, a location or a product group.
-Filters:: A solution to consistently perform queries on the various CDP objects
-
 === Terminology
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC2119] and [RFC8174] when, and only when, they appear in all capitals, as shown here.
@@ -200,6 +148,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
   \[RFC3552]	Rescorla, E. and B. Korver, "Guidelines for Writing RFC Text on Security Considerations", BCP 72, RFC 3552, DOI 10.17487/RFC3552, July 2003, <https://www.rfc-editor.org/info/rfc3552>.
   \[Reference]	\[Full reference citation]
+
 
 
 == Use Cases
@@ -265,6 +214,23 @@ are hidden by default. After that, the CDP is asked whether the profile is in va
 in different fashions but they will be remembered by the CDP for future displays.
 
 
+== Domain objects
+
+Below is a short introduction to the core domain objects of the specification:
+
+Events:: TODO
+Profiles:: TODO
+Objects:: TODO
+Lists:: TODO
+Segments:: TODO
+Concents:: TODO
+Properties: Lets administrators configure custom profile properties based on a range of value types
+Clients:: A client is required in order to communicate with the CDP. <<Clients>> are responsible for uniquely identifying its profiles.
+Views:: Administrative users may compose views where objects such as lists and segments are stored, easing use for distributed organisations.
+Topics:: Topics represent top level areas of interest of the organisation. This might for instance be a product, a location or a product group.
+Filters:: A solution to consistently perform queries on the various CDP objects
+
+
 
 == API Reference
 
@@ -287,28 +253,36 @@ variables::
 
     JSON structure
 
-Here's an example of a `query operation:
 
-    query getExistingProfile($profileId : CDP_ProfileIDInput) {
-      cdp {
-        getProfile(createIfMissing: false, profileID: $profileId) {
-          _profileIDs {
-            id
-          }
-        }
+.Example operation
+[source,graphql]
+----
+query getExistingProfile($profileId : CDP_ProfileIDInput) {
+  cdp {
+    getProfile(createIfMissing: false, profileID: $profileId) {
+      _profileIDs {
+        id
       }
     }
+  }
+}
+----
+
 
 What the above query does is retrieve all the profileIDs for a existing profile (that's why we set the createIfMissing
 argument to false). We also define a variable called $profileId that must be passed in the "variables" section of the
 GraphQL request. Here's an example of the `variables part:
 
-    {
-      "profileId": {
-        "source": {"id": "jahia.com", "thirdParty": false},
-        "id": "0bb99ae7-0571-4b5f-8267-978731cb62c2"
-      }
-    }
+.Example variables
+[source,graphql]
+----
+{
+  "profileId": {
+    "source": {"id": "jahia.com", "thirdParty": false},
+    "id": "0bb99ae7-0571-4b5f-8267-978731cb62c2"
+  }
+}
+----
 
 As illustrated above, the variables may contain complex JSON structure that represent the values for the objects that
 are passed as GraphQL arguments.
@@ -670,11 +644,9 @@ include::{sourcedir}/schemas/filters.js[lines=39..43]
 
 === Clients
 
-The CDP GraphQL API is not intended to be exposed publicly, but only made accessible to specific authorized clients.
+The CDP GraphQL API should only be accessible for specific authorized clients.
 
-Client means any software that interacts directly with the Customer Data Platform.
-A Customer Data Platform typically holds personal data, as such implementers are urged to place strong control over which clients can connect to a Customer Data Platform.
-In any case, it should not be possible for unauthorized clients to access the Customer Data Platform API.
+Client represent any software that interacts directly with the Customer Data Platform.
 
 Examples of clients are:
 
@@ -684,10 +656,10 @@ Examples of clients are:
 
 Each Client is responsible for uniquely identifying visitors, for instance through the use of a cookie on the website, a customer ID in the CRM or a user ID in the Identity system.
 The Customer Data Platform requires <<profileIDs>> to be unique within every client.
-For instance, if a client is used to track visitors across multiple websites, it should aim to re-use the same profileID across all of them, for the same visitor.
+For instance, if a client is used to track visitors across multiple websites, it should aim to re-use the same <<profileID>> across all of them, for the same visitor.
 
 NOTE: The standard does not specify Queries or Mutations for creating or retrieving Clients in the CDP specification, as this is considered an implementation-specific feature.
-For any CDP implementation, a Client must be pre-defined in the CDP server before it can access the API.
+For any CDP implementation, a Client MUST be defined before it can access the API.
 
 ==== CDP_Client
 
@@ -698,10 +670,8 @@ include::{sourcedir}/schemas/client.js[lines=2..6]
 
 
 === Sources
-Sources are used to secure unique identifier per client.
-For instance, if a CRM is used as a source it will have unique identifiers for its respective profile records.
-As the CDP server collects data from multiple records, the combination of source and identifier provides a globally unique, but consistent identifier for CDP to process.
-Sources provide a way to identify the exact origin of events beyond the client.
+Sources are optional, but represent a way to identify the exact origin of events within a client.
+For instance, a web tracking script may track visitors across many different sites, but treat each site as a source.
 As such, sources are comparable to siteID's in Google Analytics.
 
 
@@ -849,21 +819,21 @@ Example event types include :
 - Conversion (purchase, download, signs up for a service
 
 
-==== CDP_Event
+==== CDP_EventInterface
 
 Events make use of type inheritance.
 To avoid name space conflicts, all standard event fields are prefixed with ´´_´´.
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/events.js[lines=2..11]
+include::{sourcedir}/schemas/events.js[lines=2..12]
 ----
 
 ==== CDP_EventInput
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/events.js[lines=18..34]
+include::{sourcedir}/schemas/events.js[lines=19..36]
 ----
 
 ==== CDP_Query
@@ -871,7 +841,7 @@ include::{sourcedir}/schemas/events.js[lines=18..34]
 .Event queries
 [source,graphql]
 ----
-include::{sourcedir}/schemas/events.js[lines=37..38]
+include::{sourcedir}/schemas/events.js[lines=39..40]
 ----
 
 ==== CDP_Mutation
@@ -879,7 +849,7 @@ include::{sourcedir}/schemas/events.js[lines=37..38]
 .Event mutations
 [source,graphql]
 ----
-include::{sourcedir}/schemas/events.js[lines=42..42]
+include::{sourcedir}/schemas/events.js[lines=44..44]
 ----
 
 ==== CDP_Subscriptions
@@ -887,7 +857,7 @@ include::{sourcedir}/schemas/events.js[lines=42..42]
 .Event subscriptions
 [source,graphql]
 ----
-include::{sourcedir}/schemas/events.js[lines=46..46]
+include::{sourcedir}/schemas/events.js[lines=48..48]
 ----
 
 ==== Event processing sample
@@ -927,40 +897,46 @@ Example: Filter for identifying events of type `transaction` within the last 30 
 
 operation::
 
-    query findEvents($filter: CDP_EventFilterInput) {
-      cdp {
-        findEvents(filter: $filter) {
-          edges {
-            node {
-              __typename
-            }
-          }
+[source,GraphQL]
+----
+query findEvents($filter: CDP_EventFilterInput) {
+  cdp {
+    findEvents(filter: $filter) {
+      edges {
+        node {
+          __typename
         }
       }
     }
+  }
+}
+----
 
 variables::
 
-    {
-      "filter" : {
-       "_timestamp_between" : {
-         "after" : "2018-06-28T05:25:28+00:00",
-         "before" : "2018-06-28T06:25:28+00:00",
-         "includeBefore": false,
-         "includeAfter": false
-       },
-       "_profileUpdateEvent" : {
-         "firstName_startsWith" : "T",
-         "lastName_endsWith" : "d"
-       }
-      }
+[source,GraphQL]
+----
+{
+  "filter" : {
+    "_timestamp_between" : {
+      "after" : "2018-06-28T05:25:28+00:00",
+      "before" : "2018-06-28T06:25:28+00:00",
+      "includeBefore": false,
+      "includeAfter": false
+    },
+      "_profileUpdateEvent" : {
+      "firstName_startsWith" : "T",
+      "lastName_endsWith" : "d"
     }
+  }
+}
+----
 
 ==== CDP_EventFilter
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/eventfilters.js[lines=2..12]
+include::{sourcedir}/schemas/eventfilters.js[lines=2..22]
 ----
 
 
@@ -968,114 +944,21 @@ include::{sourcedir}/schemas/eventfilters.js[lines=2..12]
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/eventfilters.js[lines=14..24]
+include::{sourcedir}/schemas/eventfilters.js[lines=24..43]
 ----
 
 
 === Profiles
-Profiles are in many ways the essence of CDP.
-A Customer Data Platform dynamically builds profiles from events that occur over time, transparently creating profiles
-when events are received.
+Profiles are in many ways the holy grail of CDP.
+The Customer Data Platform dynamically creates and build profiles from events that occur over time.
 
-A Profile can be created from an anonymous visitor on a webpage, or populated from an identity system or maybe a CRM - or the combination of all of them.
+A Profile can be created from an anonymous visitor on a webpage, populated from an identity system, a CRM, or the combination of all of them.
 
 Different <<Clients>> like a website tracking script, CRM or identity system can be configured to feed <<Events>> to the Customer Data Platform.
 
 The Customer Data Platform is responsible for building profiles based on the provided identifiers and the stream of events coming from each Client.
 
-==== Profile merges
-
-As such, Customer Data Platforms implementations SHOULD support profile merges.
-
-As profiles evolve over time, the Customer Data Platform may discover that two profiles actually represent the same individual i.e. if the same e-mail address is registered in both profiles, or if the user in on both his devices. This may then result in a profile merge.
-During a profile merge, the Customer Data Platform will link two (or more) separate profiles together.
-In order to keep event history and avoid re-processing of data, the merge process must not affect the existing and unique profileIDs.
-This is why profiles are defined to have multiple profileIDs.
-
-Example: As such, when visitors on a website are tracked through a cookie (defining the profileID), the cookie will remain the same even if the profile is merged.
-
-==== CDP_ProfileID
-
-Profiles are created from a source. As such, each profile has a composite key based on a unique ID within that source, and the source.
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/profiles.js[lines=5..8]
-----
-
-==== CDP_ProfileIDInput
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/profiles.js[lines=10..13]
-----
-
-* *id* ID must be unique within the source
-
-==== CDP_ProfileInterface
-This interface is also used by <<Personas>>
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/profiles.js[lines=18..24]
-----
-
-profileIDs:: A single profile may consist of multiple id's as profiles are being merged. The CDP may also generate a system profile ID and expose it here
-
-==== CDP_Profile
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/profiles.js[lines=26..38]
-----
-
-==== CDP_ProfileUpdateEvent
-
-Profiles are crated and updated through this event type.
-This event is part of the standard and must be available for any implementation of the specification.
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/profiles.js[lines=40..50]
-----
-
-==== CDP_ProfileUpdateEventInput
-
-This is the input equivalent, notice because of missing input type inheritance in GraphQL,
-it only contains the actual properties to update.
-
-TODO: Make this version inline rather than what we see below?
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/profiles.js[lines=53..57]
-----
-
-==== CDP_Query
-
-.Profile queries
-[source,graphql]
-----
-include::{sourcedir}/schemas/profiles.js[lines=60..61]
-----
-
-==== CDP_Mutation
-
-.Profile mutations
-[source,graphql]
-----
-include::{sourcedir}/schemas/profiles.js[lines=68..68]
-----
-
-==== CDP_Subscription
-
-.Profile subscriptions
-[source,graphql]
-----
-include::{sourcedir}/schemas/profiles.js[lines=72..72]
-----
-
-=== Profile properties
+==== Profile properties
 
 Each deployment of CDP will be unique in how data are collected, and what data is stored per profile.
 Profile properties enable us to define all custom properties required by an organization.
@@ -1148,19 +1031,137 @@ type Sample_Address {
 }
 ----
 
-==== CDP_Query
+
+==== Profile merges
+
+Customer Data Platforms implementations SHOULD support profile merges.
+
+As profiles evolve over time, the Customer Data Platform may discover that two profiles actually represent the same individual i.e. if the same e-mail address is registered in both profiles, or if the user in on both his devices. This may then result in a profile merge.
+During a profile merge, the Customer Data Platform will link two (or more) separate profiles together.
+In order to keep event history and avoid re-processing of data, the merge process must not affect the existing and unique profileIDs.
+This is why profiles are defined to have multiple profileIDs.
+
+Example: As such, when visitors on a website are tracked through a cookie (defining the profileID), the cookie will remain the same even if the profile is merged.
+
+==== CDP_ProfileID
+
+Profiles are created from a source. As such, each profile has a composite key based on a unique ID within that source, and the source.
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profiles.js[lines=62..62]
+include::{sourcedir}/schemas/profiles.js[lines=5..8]
+----
+
+==== CDP_ProfileIDInput
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/profiles.js[lines=10..13]
+----
+
+* *id* ID must be unique within the source
+
+==== CDP_ProfileInterface
+Common interface for <<Profiles>> and <<Personas>>
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/profiles.js[lines=18..24]
+----
+
+profileIDs:: A single profile may consist of multiple id's as profiles are being merged. The CDP may also generate a system profile ID and expose it here
+
+==== CDP_Profile
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/profiles.js[lines=26..38]
+----
+
+
+
+
+==== CDP_ProfileUpdateEvent
+
+Profiles are crated and updated through this event type.
+This event is part of the standard and must be available for any implementation of the specification.
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/profiles.js[lines=40..51]
+----
+
+==== CDP_ProfileUpdateEventInput
+
+This is the input equivalent, notice because of missing input type inheritance in GraphQL,
+it only contains the actual properties to update.
+
+TODO: Verify this sample
+
+. Sample ProfileUpdateEvent
+[source,graphql]
+----
+input CDP_ProfileUpdateEventInput {
+  firstname : String
+  dateofbirth : Date
+  # more fields will be available based on defined profile properties
+}
+----
+
+==== CDP_ProfileUpdateEventFilter
+
+TODO: Setup real sample
+
+. Sample ProfileUpdateEventFilter
+[source,graphql]
+----
+input CDP_ProfileUpdateEventInput {
+  firstname : String
+  dateofbirth : Date
+  # more fields will be available based on defined profile properties
+}
+----
+
+==== CDP_ProfileUpdateEventFilterInput
+
+TODO: Setup real sample
+
+. Sample ProfileUpdateEventFilterInput
+[source,graphql]
+----
+input CDP_ProfileUpdateEventInput {
+  firstname : String
+  dateofbirth : Date
+  # more fields will be available based on defined profile properties
+}
+----
+
+
+==== CDP_Query
+
+.Profile queries
+[source,graphql]
+----
+include::{sourcedir}/schemas/profiles.js[lines=73..75]
 ----
 
 ==== CDP_Mutation
 
+.Profile mutations
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profiles.js[lines=66..67]
+include::{sourcedir}/schemas/profiles.js[lines=79..81]
 ----
+
+==== CDP_Subscription
+
+.Profile subscriptions
+[source,graphql]
+----
+include::{sourcedir}/schemas/profiles.js[lines=85..85]
+----
+
+
 
 
 === ProfileFilters
@@ -1175,91 +1176,97 @@ id NEWSLETTER-LIST-ID since June 28th, 2018 at 5:25"
 
 operation::
 
-    query profileFilterExample(
-      $profileFilter: CDP_ProfileFilterInput
-      $orderBy: [CDP_OrderByInput]
-    ) {
-      cdp {
-        findProfiles(filter: $profileFilter, orderBy: $orderBy, first : 10) {
-          totalCount
-          edges {
-            node {
-              _profileIDs {
-                source {
-                  id
-                }
-                id
-              }
-              _segments {
-                name
-              }
+[source,GraphQL]
+----
+query profileFilterExample(
+  $profileFilter: CDP_ProfileFilterInput
+  $orderBy: [CDP_OrderByInput]
+) {
+  cdp {
+    findProfiles(filter: $profileFilter, orderBy: $orderBy, first : 10) {
+      totalCount
+      edges {
+        node {
+          _profileIDs {
+            source {
+              id
             }
+            id
+          }
+          _segments {
+            name
           }
         }
       }
     }
+  }
+}
+----
 
 variables::
 
-    {
-      "profileFilter": {
-        "lists_contains" : [ "NEWSLETTER-LIST-ID" ],
-        "properties": {},
-        "events": {
-          "minimalCount": 1,
-          "eventFilter": {
-            "_timestamp_gt": "2018-06-28T05:25:28+00:00",
-            "_updateListsEvent": {
-              "joinLists_contains" : ["NEWSLETTER-LIST-ID"]
-            }
-          }
+[source,GraphQL]
+----
+{
+  "profileFilter": {
+    "lists_contains" : [ "NEWSLETTER-LIST-ID" ],
+    "properties": {},
+    "events": {
+      "minimalCount": 1,
+      "eventFilter": {
+        "_timestamp_gt": "2018-06-28T05:25:28+00:00",
+        "_updateListsEvent": {
+          "joinLists_contains" : ["NEWSLETTER-LIST-ID"]
         }
-      },
-      "orderBy": [
-        {"fieldName": "properties.firstName", "order": "ASC"}
-      ]
+      }
     }
+  },
+  "orderBy": [
+    {"fieldName": "properties.firstName", "order": "ASC"}
+  ]
+}
+----
 
 ==== CDP_ProfileFilter
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profilefilters.js[lines=2..8]
+include::{sourcedir}/schemas/profilefilters.js[lines=2..10]
 ----
 
 ==== CDP_ProfileFilterInput
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profilefilters.js[lines=9..14]
+include::{sourcedir}/schemas/profilefilters.js[lines=12..20]
 ----
 
 ==== CDP_ProfilePropertiesFilter
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profilefilters.js[lines=19..23]
+include::{sourcedir}/schemas/profilefilters.js[lines=25..29]
 ----
 
 ==== CDP_ProfilePropertiesFilterInput
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profilefilters.js[lines=25..29]
+include::{sourcedir}/schemas/profilefilters.js[lines=31..35]
 ----
 
 ==== CDP_ProfileEventsFilter
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profilefilters.js[lines=31..38]
+include::{sourcedir}/schemas/profilefilters.js[lines=37..44]
 ----
 
 ==== CDP_ProfileEventsFilterInput
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profilefilters.js[lines=40..47]
+include::{sourcedir}/schemas/profilefilters.js[lines=46..53]
 ----
 
 === Sessions
@@ -1280,14 +1287,14 @@ include::{sourcedir}/schemas/sessions.js[lines=2..7]
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/sessions.js[lines=9..19]
+include::{sourcedir}/schemas/sessions.js[lines=9..20]
 ----
 
 ==== CDP_SessionStateEventInput
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/sessions.js[lines=21..23]
+include::{sourcedir}/schemas/sessions.js[lines=22..24]
 ----
 
 === Consents
@@ -1299,21 +1306,29 @@ Consents hold an identifier that uniquely identifies the consent across your sys
 
 Consents are given and revoked through events. This means that the CDP specification defines reserved property types for granting and revoking consents.
 
-Examples:
+.Sample ALLOW consent
+[source,graphql]
+----
 {
-  sourceId : "jahia.com",
+  sourceId : "example.com",
   type: {name:"send-to-salesforce"},
   grant: ALLOW
   grantDate : 3498734899
   # no revoke date means it will not expire or defaults to system or legal standard (GDPR)
 }
+----
+
+.Sample DENY consent
+[source,graphql]
+----
 {
-  sourceId : "jahia.com",
+  sourceId : "example.com",
   type : {name:"newsletter-subscription-latestNews"},
   grant: DENY
   grantDate : 3498734899
   # no revoke date means it will not expire or defaults to system or legal standard (GDPR)
 }
+----
 
 Consent Types may include:
 - tracking
@@ -1361,22 +1376,45 @@ Token:: Similar to OAuth 2 authorization tokens to access the consent without th
 Type:: Should be a Url or other meaningful identifier like ``//mycompany.com/consents/newsletters/weekly``, ``//crmcompany.com/consents/push-to-crm`` or ``//oasis_open.org/cxs/consents/send-to-third-parties``
 
 
-==== CDP_ConsentInput
 
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/consents.js[lines=22..27]
-----
-
-==== CDP_UpdateConsentEvent
+==== CDP_ConsentUpdateEvent
 
 Standard EventType to create or update Consents.
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/consents.js[lines=30..32]
+include::{sourcedir}/schemas/consents.js[lines=20..34]
 ----
+
+==== CDP_ConsentUpdateEventInput
+
+Input type for ConsentUpdateEvent
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/consents.js[lines=37..42]
+----
+
+==== CDP_ConsentUpdateEventFilter
+
+Filter for ConsentUpdateEvents
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/consents.js[lines=45..54]
+----
+
+
+==== CDP_ConsentUpdateEventFilterInput
+
+Input type for of ConsentUpdateEventsFilter
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/consents.js[lines=56..61]
+----
+
+
 
 === Views
 
