@@ -531,10 +531,10 @@ The following comparison operators are available:
 |================================================================================
 |Operators  |Identifier|String|Int|Float|Date|Boolean|GeoPoint|Enumeration|Array|
 |equals     |x         |x     |x  |x    |x   |x      |x       |x          |     |
-|startsWith*|          |x     |   |     |    |       |        |           |     |
-|endsWith*  |          |x     |   |     |    |       |        |           |     |
+|startsWith |          |x*    |   |     |    |       |        |           |     |
+|endsWith   |          |x*    |   |     |    |       |        |           |     |
 |contains   |          |x*    |   |     |    |       |        |           |x    |
-|regexp*    |          |x     |   |     |    |       |        |           |     |
+|regexp     |          |x*    |   |     |    |       |        |           |     |
 |lt         |          |      |x  |x    |x   |       |        |           |     |
 |lte        |          |      |x  |x    |x   |       |        |           |     |
 |gt         |          |      |x  |x    |x   |       |        |           |     |
@@ -1560,9 +1560,6 @@ Example Topics for a car manufacturer might for instance be:
 * "Model 3"
 * "Model X"
 
-TODO: What about localization?
-
-
 ==== CDP_Topic
 
 [source,graphql]
@@ -1633,8 +1630,6 @@ score:: will be between 0.0 to 1.0
 ==== CDP_InterestInput
 
 Specifying interest is only relevant for <<Personas>>
-
-TODO: We cannot specify topicInput here??
 
 [source,graphql]
 ----
@@ -1763,7 +1758,7 @@ operation::
 
 [source,graphql]
 ----
-mutation createMaleSegment($segment: CDP_SegmentInput) {
+mutation createSegment($segment: CDP_SegmentInput) {
   cdp {
     createOrUpdateSegment(segment: $segment) {
       name
@@ -1778,7 +1773,7 @@ variables::
 ----
 {
   "segment": {
-    "name": "male",
+    "name": "males",
     "view": "acme",
     "profiles": {
       "properties": {

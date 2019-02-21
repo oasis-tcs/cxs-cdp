@@ -19,7 +19,7 @@ input CDP_PersonaInput {
   _name : String!
   _view : ID!
   _profileIDs : [CDP_ProfileIDInput]
-  _segments : [String]
+  _segments : [ID]
   _interests : [CDP_InterestInput]
   _consents : [CDP_PersonaConsentInput]
   # fields will be added here according to registered profile properties  

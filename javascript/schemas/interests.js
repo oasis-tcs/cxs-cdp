@@ -5,7 +5,7 @@ type CDP_Interest {
 }
 
 input CDP_InterestInput {
-  topic : CDP_TopicInput!
+  topic : ID!
   score : Float
 }
 
