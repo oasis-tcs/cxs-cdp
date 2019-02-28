@@ -11,7 +11,7 @@ type CDP_ScoredObject {
 
 input CDP_OptimizationInput {
     name : String!
-    objects : [CDP_ObjectInput],
+    objects : [ID],
     eventOccurenceBoosts : [CDP_EventOccurenceBoostInput]
     strategy : String
 }
@@ -35,8 +35,8 @@ type CDP_RecommendationResult {
 
 input CDP_RecommendationInput {
     name : String!
-    objectID : ID
-    collections : [String]
+    objectUri : ID
+    topics : [ID]
     size : Int
     algorithm : CDP_AlgorithmInput
 }

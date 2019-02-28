@@ -720,6 +720,17 @@ Objects may be part of one or more collections.
 Collections are used to classify objects.
 By placing objects into collections, optimizations may execute on a reduced data set (i.e. : recommending products).
 
+==== URIs
+
+Objects are identified globally using URIs, that follow the URI specification (https://tools.ietf.org/html/rfc3986).
+Internal CDP objects may be referenced using reserved schemes, that each have their associated syntax:
+
+    - cdp_profile:source/id
+    - cdp_segment:view/name
+    - cdp_persona:view/name
+    - cdp_topic:view/name
+    - cdp_list:view/name
+
 ==== CDP_Object
 
 [source,graphql]
@@ -727,8 +738,8 @@ By placing objects into collections, optimizations may execute on a reduced data
 include::{sourcedir}/schemas/objects.js[lines=2..5]
 ----
 
-id:: Unique within each specified collection
-collection:: A way of classifying objects. Use URIs, e.g. schema.org (http://schema.org/Product) or reverse domain naming convention (org.acme.Product)
+uri:: Globally unique identifier using URI syntax : https://tools.ietf.org/html/rfc3986
+topics:: A way of classifying objects.
 
 ==== CDP_ObjectInput
 
@@ -1182,16 +1193,37 @@ include::{sourcedir}/schemas/profiles.js[lines=40..51]
 This is the input equivalent, notice because of missing input type inheritance in GraphQL,
 it only contains the actual properties to update.
 
-TODO: Verify this sample
+operation::
 
-. Sample ProfileUpdateEvent
 [source,graphql]
 ----
-input CDP_ProfileUpdateEventInput {
-  firstname : String
-  dateofbirth : Date
-  # more fields will be available based on defined profile properties
+mutation updateProfile($events: [CDP_EventInput]!) {
+  cdp {
+    processEvents(events: $events)
+  }
 }
+----
+
+variables::
+
+[source,graphql]
+----
+{"events": [
+  {
+    "_object" : "cdp_profile:crm/crm-profile-id",
+    "_profileID": {
+      "source": "crm",
+      "id": "crm-profile-id"
+    },
+    "_profileUpdateEvent": {
+      "firstName" : "Serge",
+      "sample_Address" : {
+        "streetName" : "My street name",
+        "postalCode" : "12345"
+      }
+    }
+  }
+]}
 ----
 
 ==== CDP_ProfileUpdateEventFilter
@@ -1254,8 +1286,6 @@ include::{sourcedir}/schemas/profiles.js[lines=85..85]
 
 Profile Filters are slightly more complex than <<EventFilters>>.
 As profileFilter are composed from both searching profile properties, and events related to the profile.
-
-TODO provide profile filter example
 
 Here is an example of a GraphQL query (with variables) that will retrieve profiles that "have joined the list with the
 id NEWSLETTER-LIST-ID since June 28th, 2018 at 5:25"

@@ -21,7 +21,7 @@ input CDP_EventInput {
   _clientID : String
   _sourceID : String
   _profileID: CDP_ProfileIDInput!
-  _object: CDP_ObjectInput!
+  _object: ID!
   _location: GeoPoint
   _timestamp: DateTime
   _topics : [ID]

@@ -5,10 +5,11 @@ ProfileIDs uniquely identify a profile within a source
 type CDP_ProfileID {
     source : CDP_Source!
     id : ID!
+    uri : ID # "cdp_profile:source/id"
 }
 
 input CDP_ProfileIDInput {
-    source : CDP_SourceInput!
+    source : ID!
     id : ID!
 }
 
