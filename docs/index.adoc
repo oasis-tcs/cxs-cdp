@@ -1044,7 +1044,8 @@ variables::
       }
     }
   ]
-}----
+}
+----
 
 This will resulting in the following modifications to the CDP_Profile type:
 
