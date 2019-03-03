@@ -1125,6 +1125,8 @@ Also not illustrated here, the same generation system will also add fields to th
 * CDP_ProfileUpdateEventInput
 * CDP_ProfileUpdateEventFilter
 * CDP_ProfileUpdateEventFilterInput
+* CDP_Persona
+* CDP_PersonaInput
 
 The naming and generation conventions are exactly the same as for the profiles properties.
 
