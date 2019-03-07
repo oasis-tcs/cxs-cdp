@@ -1754,6 +1754,42 @@ A common use-case would be testing personalized content in a CMS or a newsletter
 
 Personas and their fields can be explicitly created, where real profiles are built from a stream of events.
 
+Here's an example of creating a persona :
+
+.Operation
+[source,graphql]
+----
+mutation updatePersona($persona: CDP_PersonaInput) {
+  cdp {
+    createOrUpdatePersona(persona: $persona) {
+      id
+    }
+  }
+}
+----
+
+.Variables
+[source,json]
+----
+{
+  "persona": {
+    "_name": "marketingDirectory",
+    "_view": "acme",
+    "_segments": ["segment1", "segment2"],
+    "_consents": [ {
+      "type": "newsletter",
+      "status": "GRANTED",
+      "lastUpdate": "NOW",
+      "expiration" : "NOW+30DAYS"
+    } ],
+    "_interests": [{"topic": "topic1", "score": 10}]
+    "firstName" : "Marketing",
+    "lastName" : "Director"
+  }
+}
+----
+
+
 ==== CDP_Persona
 
 [source,graphql]
