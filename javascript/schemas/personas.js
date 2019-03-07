@@ -11,8 +11,9 @@ type CDP_Persona implements CDP_ProfileInterface {
   _interests(views : [ID]) : [CDP_Interest]
   _consents : [CDP_Consent]
   _lists(views : [ID]) : [CDP_List]
-  # fields will be added here according to registered profile properties  
+  # fields will be added here according to registered profile properties
 }
+
 
 input CDP_PersonaInput {
   id : ID
@@ -22,7 +23,7 @@ input CDP_PersonaInput {
   _segments : [ID]
   _interests : [CDP_InterestInput]
   _consents : [CDP_PersonaConsentInput]
-  # fields will be added here according to registered profile properties  
+  # fields will be added here according to registered profile properties
 }
 
 # Used to update personas

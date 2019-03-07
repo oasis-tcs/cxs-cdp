@@ -516,39 +516,11 @@ Filters are widely used in CDP, and enable querying profiles, events, and other 
 Filters are designed to be easy to use for administrators and marketeers in visual user interfaces, but also in terms of technical implementation.
 
 Filters are essentially composed from basic property comparison expressions, and may be chained with the operators AND and OR, where AND is used by default.
-GraphQL fields will be generated the following way:
 
-    PROPERTYNAME + "_" + OPERATOR
-
-For each operator available on the property value type a GraphQL field will be generated.
-
-A single filter may only operate on a specified CDP object (i.e. profile or event).
-
-The following comparison operators are available:
-
-.Operator availability for property value types
-[options="header"]
-|================================================================================
-|Operators  |Identifier|String|Int|Float|Date|Boolean|GeoPoint|Enumeration|Array|
-|equals     |x         |x     |x  |x    |x   |x      |x       |x          |     |
-|startsWith |          |x*    |   |     |    |       |        |           |     |
-|endsWith   |          |x*    |   |     |    |       |        |           |     |
-|contains   |          |x*    |   |     |    |       |        |           |x    |
-|regexp     |          |x*    |   |     |    |       |        |           |     |
-|lt         |          |      |x  |x    |x   |       |        |           |     |
-|lte        |          |      |x  |x    |x   |       |        |           |     |
-|gt         |          |      |x  |x    |x   |       |        |           |     |
-|gte        |          |      |x  |x    |x   |       |        |           |     |
-|distance   |          |      |   |     |    |       |x       |           |     |
-|================================================================================
-
-* optional operators
-
-The `Array` column is a special case. It can be an array of any GraphQL type. In this case only the `contains` operator
-is defined in the specification, but implementations are free to offer more advanced operators for this type.
+For each operator available on a property's value type a GraphQL field will be generated.
 
 As we are expressing filters through GraphQL, filters will always be strongly typed.
-I.e. if the property "firstName" with valueType string is available, the following options can be used:
+I.e. if the property "firstName" with valueType string is available, the following filter options can be used:
 
   firstName_equals
   firstName_startsWith (optional)
@@ -576,6 +548,34 @@ Below are some basic filter examples:
       { "birthDate_greaterThan" : "1970-01-01" }
     ]
   }
+
+
+GraphQL filter fields will be generated the following way:
+
+    PROPERTYNAME + "_" + OPERATOR
+
+The following comparison operators are available:
+
+.Operator availability for property value types
+[options="header"]
+|================================================================================
+|Operators  |Identifier|String|Int|Float|Date|Boolean|GeoPoint|Enumeration|Array|
+|equals     |x         |x     |x  |x    |x   |x      |x       |x          |     |
+|startsWith |          |x<<o>>|   |     |    |       |        |           |     |
+|endsWith   |          |x<<o>>|   |     |    |       |        |           |     |
+|contains   |          |x<<o>>|   |     |    |       |        |           |x    |
+|regexp     |          |x<<o>>|   |     |    |       |        |           |     |
+|lt         |          |      |x  |x    |x   |       |        |           |     |
+|lte        |          |      |x  |x    |x   |       |        |           |     |
+|gt         |          |      |x  |x    |x   |       |        |           |     |
+|gte        |          |      |x  |x    |x   |       |        |           |     |
+|distance   |          |      |   |     |    |       |x       |           |     |
+|================================================================================
+
+[[[o]]] Optional operator
+
+The `Array` column is a special case. It can be an array of any GraphQL type. In this case only the `contains` operator
+is defined in the specification, but implementations are free to offer more advanced operators for this type.
 
 ==== Ordering
 
@@ -691,8 +691,8 @@ include::{sourcedir}/schemas/sources.js[lines=2..5]
 include::{sourcedir}/schemas/sources.js[lines=7..10]
 ----
 
-* *id* The "system" source ID is reserved for internal use by the CDP.
-* *thirdParty* Optional, indicates that the source is a third party (useful for privacy regulations such as GDPR)
+id:: The "system" source ID is reserved for internal use by the CDP.
+thirdParty:: Optional, indicates that the source is a third party (useful for privacy regulations such as GDPR)
 
 
 ==== CDP_Query
@@ -725,7 +725,7 @@ By placing objects into collections, optimizations may execute on a reduced data
 Objects are identified globally using URIs, that follow the URI specification (https://tools.ietf.org/html/rfc3986).
 Internal CDP objects may be referenced using reserved schemes, that each have their associated syntax:
 
-    - cdp_profile:source/id
+    - cdp_profile:client/id
     - cdp_segment:view/name
     - cdp_persona:view/name
     - cdp_topic:view/name
@@ -735,7 +735,7 @@ Internal CDP objects may be referenced using reserved schemes, that each have th
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/objects.js[lines=2..5]
+include::{sourcedir}/schemas/objects.js[lines=2..7]
 ----
 
 uri:: Globally unique identifier using URI syntax : https://tools.ietf.org/html/rfc3986
@@ -745,7 +745,7 @@ topics:: A way of classifying objects.
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/objects.js[lines=7..10]
+include::{sourcedir}/schemas/objects.js[lines=9..11]
 ----
 
 === Events
@@ -807,12 +807,15 @@ input VENDOR_crmLeadEvent {
 }
 ----
 
-Example event types include :
+Standard event types:
 
 - Updating profile properties, needs to match the profile properties definitions (built-in)
 - Session start/paused/resumed/stopped (built-in)
 - Updating consent ( see http://ec.europa.eu/ipg/basics/legal/cookies/index_en.htm ) (built-in)
 - Opt-in / opt-out of a list (built-in)
+
+Suggested event types:
+
 - Transaction (generic)
 - Like (“user likes a product”)
 - Dislike (“visitor dislikes a comment”)
@@ -908,8 +911,7 @@ EventFilters are a specific version of filters for querying events.
 
 Example: Filter for identifying events of type `transaction` within the last 30 days.
 
-operation::
-
+.Operation
 [source,GraphQL]
 ----
 query findEvents($filter: CDP_EventFilterInput) {
@@ -925,8 +927,7 @@ query findEvents($filter: CDP_EventFilterInput) {
 }
 ----
 
-variables::
-
+.Variables
 [source,json]
 ----
 {
@@ -993,6 +994,7 @@ Properties can be dynamically defined for profiles using the ``createOrUpdatePro
 
 As an example, let's assume we have a starting CDP_Profile type that looks like this:
 
+.Profile before
 [source,graphql]
 ----
 type CDP_Profile implements CDP_ProfileInterface {
@@ -1012,8 +1014,7 @@ type CDP_Profile implements CDP_ProfileInterface {
 
 Now let's use the mutation to create a new property.
 
-operation::
-
+.Operation
 [source,graphql]
 ----
 mutation addProperties($properties: [CDP_PropertyInput]) {
@@ -1023,8 +1024,7 @@ mutation addProperties($properties: [CDP_PropertyInput]) {
 }
 ----
 
-variables::
-
+.Variables
 [source,json]
 ----
 {
@@ -1049,6 +1049,7 @@ variables::
 
 This will resulting in the following modifications to the CDP_Profile type:
 
+.Profile after
 [source,graphql]
 ----
 type CDP_Profile implements CDP_ProfileInterface {
@@ -1071,6 +1072,7 @@ type CDP_Profile implements CDP_ProfileInterface {
 The following type is generated from the property definition. The name of the type starts with an uppercased character from the
 property name.
 
+.Generated type
 [source,graphql]
 ----
 type Sample_Address {
@@ -1081,6 +1083,7 @@ type Sample_Address {
 
 This will also generate new filter fields in the <<CDP_ProfilePropertiesFilterInput>> type:
 
+.Updated filters
 [source,graphql]
 ----
 type CDP_ProfilePropertiesFilter {
@@ -1149,14 +1152,14 @@ Profiles are created from a source. As such, each profile has a composite key ba
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profiles.js[lines=5..8]
+include::{sourcedir}/schemas/profiles.js[lines=5..9]
 ----
 
 ==== CDP_ProfileIDInput
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profiles.js[lines=10..13]
+include::{sourcedir}/schemas/profiles.js[lines=10..14]
 ----
 
 * *id* ID must be unique within the source
@@ -1166,7 +1169,7 @@ Common interface for <<Profiles>> and <<Personas>>
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profiles.js[lines=18..24]
+include::{sourcedir}/schemas/profiles.js[lines=19..25]
 ----
 
 profileIDs:: A single profile may consist of multiple id's as profiles are being merged. The CDP may also generate a system profile ID and expose it here
@@ -1175,7 +1178,7 @@ profileIDs:: A single profile may consist of multiple id's as profiles are being
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profiles.js[lines=26..38]
+include::{sourcedir}/schemas/profiles.js[lines=27..39]
 ----
 
 
@@ -1188,7 +1191,7 @@ This event is part of the standard and must be available for any implementation 
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profiles.js[lines=40..51]
+include::{sourcedir}/schemas/profiles.js[lines=41..52]
 ----
 
 ==== CDP_ProfileUpdateEventInput
@@ -1196,8 +1199,7 @@ include::{sourcedir}/schemas/profiles.js[lines=40..51]
 This is the input equivalent, notice because of missing input type inheritance in GraphQL,
 it only contains the actual properties to update.
 
-operation::
-
+.Operation
 [source,graphql]
 ----
 mutation updateProfile($events: [CDP_EventInput]!) {
@@ -1207,8 +1209,7 @@ mutation updateProfile($events: [CDP_EventInput]!) {
 }
 ----
 
-variables::
-
+.Variables
 [source,json]
 ----
 {"events": [
@@ -1233,7 +1234,7 @@ variables::
 
 TODO: Setup real sample
 
-. Sample ProfileUpdateEventFilter
+.Sample ProfileUpdateEventFilter
 [source,graphql]
 ----
 input CDP_ProfileUpdateEventInput {
@@ -1247,7 +1248,7 @@ input CDP_ProfileUpdateEventInput {
 
 TODO: Setup real sample
 
-. Sample ProfileUpdateEventFilterInput
+.Sample ProfileUpdateEventFilterInput
 [source,graphql]
 ----
 input CDP_ProfileUpdateEventInput {
@@ -1263,7 +1264,7 @@ input CDP_ProfileUpdateEventInput {
 .Profile queries
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profiles.js[lines=73..75]
+include::{sourcedir}/schemas/profiles.js[lines=74..76]
 ----
 
 ==== CDP_Mutation
@@ -1271,7 +1272,7 @@ include::{sourcedir}/schemas/profiles.js[lines=73..75]
 .Profile mutations
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profiles.js[lines=79..81]
+include::{sourcedir}/schemas/profiles.js[lines=80..82]
 ----
 
 ==== CDP_Subscription
@@ -1279,7 +1280,7 @@ include::{sourcedir}/schemas/profiles.js[lines=79..81]
 .Profile subscriptions
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profiles.js[lines=85..85]
+include::{sourcedir}/schemas/profiles.js[lines=86..86]
 ----
 
 
@@ -1293,8 +1294,7 @@ As profileFilter are composed from both searching profile properties, and events
 Here is an example of a GraphQL query (with variables) that will retrieve profiles that "have joined the list with the
 id NEWSLETTER-LIST-ID since June 28th, 2018 at 5:25"
 
-operation::
-
+.Operation
 [source,GraphQL]
 ----
 query profileFilterExample(
@@ -1322,8 +1322,7 @@ query profileFilterExample(
 }
 ----
 
-variables::
-
+.Variables
 [source,json]
 ----
 {
@@ -1418,8 +1417,7 @@ include::{sourcedir}/schemas/sessions.js[lines=22..24]
 
 Example of how to update a session's state
 
-operation::
-
+.Operation
 [source,graphql]
 ----
 mutation updateSessions($events: [CDP_EventInput]!) {
@@ -1429,8 +1427,7 @@ mutation updateSessions($events: [CDP_EventInput]!) {
 }
 ----
 
-variables::
-
+.Variables
 [source,json]
 ----
 {
@@ -1549,8 +1546,7 @@ include::{sourcedir}/schemas/consents.js[lines=37..42]
 
 Example of how to update a consent for a profile :
 
-operation::
-
+.Operation
 [source,graphql]
 ----
 mutation updateConsent($events: [CDP_EventInput]!) {
@@ -1560,8 +1556,7 @@ mutation updateConsent($events: [CDP_EventInput]!) {
 }
 ----
 
-variables::
-
+.Variables
 [source,json]
 ----
 {
@@ -1589,7 +1584,7 @@ Filter for ConsentUpdateEvents
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/consents.js[lines=45..54]
+include::{sourcedir}/schemas/consents.js[lines=45..58]
 ----
 
 
@@ -1599,7 +1594,7 @@ Input type for of ConsentUpdateEventsFilter
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/consents.js[lines=56..61]
+include::{sourcedir}/schemas/consents.js[lines=60..73]
 ----
 
 
@@ -1647,8 +1642,6 @@ include::{sourcedir}/schemas/views.js[lines=16..17]
 
 === Topics
 
-TODO: What/How are the relationship between a topic and events/objects defined??
-
 Topics represent the core entities of the business that is using the Customer Data Platform.
 The Customer Data Platform aims to find correlation between profiles and the topics.
 When such correlations are identified, it is called <<Interests>>.
@@ -1661,6 +1654,14 @@ Example Topics for a car manufacturer might for instance be:
 * "Model S"
 * "Model 3"
 * "Model X"
+
+
+Topics are associated with <<Objects>> and <<Profiles>> through <<Events>>.
+An example of how this might work in real life:
+A website promoting a specific Product, for instance "Car type X", should also contain meta-data for the associated topic i.e. "model X".
+The web tracking script can then feed this information back to the CDP, including both the object (web page in this case), and the specific topic.
+This way, the CDP will be able to build a model of association.
+
 
 ==== CDP_Topic
 
@@ -1680,7 +1681,7 @@ include::{sourcedir}/schemas/topics.js[lines=8..12]
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/managementfilters.js[lines=19..25]
+include::{sourcedir}/schemas/managementfilters.js[lines=16..22]
 ----
 
 
@@ -1741,10 +1742,10 @@ include::{sourcedir}/schemas/interests.js[lines=7..10]
 
 
 
-
 === Personas
 
-A persona is a concept used by marketeers to visualize one or more target customers, and simplify personalization and targeting of content.
+A persona is a concept used to personify your audience.
+This may for instance be used to test personalization and targeting of content in a 3rd party system.
 
 In CDP, personas are essentially "dummy" profiles with the primary purpose of testing or emulating a real profile.
 A common use-case would be testing personalized content in a CMS or a newsletter.
@@ -1755,7 +1756,7 @@ Personas and their fields can be explicitly created, where real profiles are bui
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/personas.js[lines=5..16]
+include::{sourcedir}/schemas/personas.js[lines=5..15]
 ----
 
 ==== CDP_PersonaInput
@@ -1765,12 +1766,21 @@ include::{sourcedir}/schemas/personas.js[lines=5..16]
 include::{sourcedir}/schemas/personas.js[lines=18..27]
 ----
 
+==== CDP_PersonaConsentInput
+Special type to set PersonaConsent without the use of events
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/personas.js[lines=30..35]
+----
+
+
 ==== CDP_Query
 
 .Persona queries
 [source,graphql]
 ----
-include::{sourcedir}/schemas/personas.js[lines=29..30]
+include::{sourcedir}/schemas/personas.js[lines=38..39]
 ----
 
 ==== CDP_Mutation
@@ -1778,7 +1788,7 @@ include::{sourcedir}/schemas/personas.js[lines=29..30]
 .Persona mutations
 [source,graphql]
 ----
-include::{sourcedir}/schemas/personas.js[lines=34..35]
+include::{sourcedir}/schemas/personas.js[lines=43..44]
 ----
 
 
@@ -1804,23 +1814,29 @@ id:: Cannot change and is usually server generated
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/lists.js[lines=10..14]
+include::{sourcedir}/schemas/lists.js[lines=11..15]
 ----
 
 
-==== CDP_UpdateListEvent
+==== CDP_ListsUpdateEvent
 
 Standard Event to update profile membership for specified lists
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/lists.js[lines=17..20]
+include::{sourcedir}/schemas/lists.js[lines=17..29]
+----
+
+==== CDP_ListsUpdateEventInput
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/lists.js[lines=32..35]
 ----
 
 Example of how to update lists for a profile :
 
-operation::
-
+.Operation
 [source,graphql]
 ----
 mutation updateLists($events: [CDP_EventInput]!) {
@@ -1830,8 +1846,7 @@ mutation updateLists($events: [CDP_EventInput]!) {
 }
 ----
 
-variables::
-
+.Variables
 [source,json]
 ----
 {
@@ -1851,12 +1866,28 @@ variables::
 }
 ----
 
-==== CDP_ListFilterInput
+
+==== CDP_ListsUpdateEventFilter
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/managementfilters.js[lines=11..17]
+include::{sourcedir}/schemas/lists.js[lines=37..40]
 ----
+
+==== CDP_ListsUpdateEventFilterInput
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/lists.js[lines=42..45]
+----
+
+==== CDP_ListsFilterInput
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/managementfilters.js[lines=9..14]
+----
+
 
 
 ==== CDP_Query
@@ -1864,7 +1895,7 @@ include::{sourcedir}/schemas/managementfilters.js[lines=11..17]
 .List queries
 [source,graphql]
 ----
-include::{sourcedir}/schemas/lists.js[lines=23..24]
+include::{sourcedir}/schemas/lists.js[lines=48..49]
 ----
 
 ==== CDP_Mutation
@@ -1872,7 +1903,7 @@ include::{sourcedir}/schemas/lists.js[lines=23..24]
 .List mutations
 [source,graphql]
 ----
-include::{sourcedir}/schemas/lists.js[lines=28..31]
+include::{sourcedir}/schemas/lists.js[lines=53..56]
 ----
 
 
