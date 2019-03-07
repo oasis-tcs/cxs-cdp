@@ -11,6 +11,7 @@ interface CDP_EventInterface {
   _topics : [CDP_Topic]
 }
 
+
 """
 Event wrapper object to handle missing input inheritance in GraphQL
 NB! For optimization reasons, a single EventInput may contain multiple events,
@@ -18,10 +19,9 @@ but only one of each type. ID is optional, with the exception of importing
 """
 input CDP_EventInput {
   id: ID
-  _clientID : String
   _sourceID : String
   _profileID: CDP_ProfileIDInput!
-  _object: ID!
+  _objectID: ID!
   _location: GeoPoint
   _timestamp: DateTime
   _topics : [ID]

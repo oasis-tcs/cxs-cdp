@@ -676,6 +676,8 @@ Sources are optional, but represent a way to identify the exact origin of events
 For instance, a web tracking script may track visitors across many different sites, but treat each site as a source.
 As such, sources are comparable to siteID's in Google Analytics.
 
+Sources may be reused across clients as desired.
+
 
 ==== CDP_Source
 
@@ -977,7 +979,7 @@ The Customer Data Platform is responsible for building profiles based on the pro
 Each deployment of CDP will be unique in how data are collected, and what data is stored per profile.
 Profile properties enable us to define custom properties required by an organization.
 
-Administrators and developers may define and maintain a consistent data model for profiles across different <<Clients>> and <<Sources>>.
+Administrators and developers may define and maintain a consistent data model for profiles across different <<Clients>>.
 Any data to be recorded in a profile must be mapped to a corresponding profile property.
 
 The specification does not define a set of standard profile properties. However, implementors SHOULD include the following standard properties :
@@ -1148,7 +1150,7 @@ Profile merges are optional in the CDP specification. They may be supported by u
 
 ==== CDP_ProfileID
 
-Profiles are created from a source. As such, each profile has a composite key based on a unique ID within that source, and the source.
+Profiles are created from a client. As such, each profile has a composite key based on a unique ID within that client, and the client.
 
 [source,graphql]
 ----
@@ -1159,10 +1161,10 @@ include::{sourcedir}/schemas/profiles.js[lines=5..9]
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profiles.js[lines=10..14]
+include::{sourcedir}/schemas/profiles.js[lines=11..14]
 ----
 
-* *id* ID must be unique within the source
+* *id* ID must be unique within the client
 
 ==== CDP_ProfileInterface
 Common interface for <<Profiles>> and <<Personas>>
@@ -1990,9 +1992,73 @@ include::{sourcedir}/schemas/segments.js[lines=22..23]
 ----
 
 
-=== Optimization
+=== Optimizations and Recommendations
 
-TODO: write an introduction to optimization
+TODO: write an introduction to optimization and recommendations
+
+TODO : cleanup section structure
+
+Example of an optimization of objects for a given profile :
+
+.Operation
+[source,graphql]
+----
+query profileOptimizations(
+  $profileId: CDP_ProfileIDInput
+  $optimizationParameters: [CDP_OptimizationInput]
+) {
+  cdp {
+    getProfile(profileID: $profileId) {
+      _optimize(parameters: $optimizationParameters) {
+        name
+        scoredObjects {
+          object {
+            uri
+            scheme
+            path
+            topics {
+              name
+              view {
+                name
+              }
+            }
+          }
+          score
+        }
+      }
+    }
+  }
+}
+----
+
+.Variables
+[source,json]
+----
+{
+  "profileId": {
+    "clientID": "crm",
+    "id": "crm-profile-id"
+  },
+  "optimizationParameters": [
+    {
+      "name": "carPromotion",
+      "objects" : [
+        "cars:modelS",
+        "cars:modelX",
+        "cars:model3"
+      ],
+      "eventOccurenceBoosts": {
+        "eventType": "configuredCar",
+        "boost": 3.0,
+        "fromDate" : "NOW-1MONTH",
+        "toDate" : "NOW"
+      },
+      "strategy": "scoring",
+      "size" : 2
+    }
+  ]
+}
+----
 
 Example of how to get a recommendation for a profile :
 
@@ -2034,13 +2100,13 @@ variables::
 ----
 {
   "profileId": {
-    "source": "crm",
+    "clientID": "crm",
     "id": "crm-profile-id"
   },
   "recommendationParameters": [
     {
       "name": "similarBooks",
-      "objectUri": "books:ISBN",
+      "objectUri": "books:BOOK-ISBN-CODE",
       "topics": ["murderMysteries"],
       "size": 10,
       "algorithm": {"name": "similar"}
@@ -2066,14 +2132,12 @@ include::{sourcedir}/schemas/optimizations.js[lines=18..21]
 
 ==== CDP_OptimizationInput
 
-Example : return list of products that the profile has viewed but not bought
-
 [source,graphql]
 ----
-include::{sourcedir}/schemas/optimizations.js[lines=23..28]
+include::{sourcedir}/schemas/optimizations.js[lines=12..17]
 ----
 
-Strategy:: Any strategy supported by the algorithm. Unspecified, random, scoring, best first match, worst match, a/b test
+Strategy:: Any strategy supported by the algorithm: Unspecified, random, scoring, best first match, worst match, a/b test
 
 ==== CDP_EventOccurenceBoostInput
 
@@ -2117,6 +2181,50 @@ objectID:: Optional since we might just want to use collections to retrieve reco
 collections:: Collections we want to use to retrieve recommendations
 
 size:: Maximum number of results to retrieve
+
+=== Matching
+
+TODO : Write an introduction about matching, maybe talk about how it can be used in a CMS example
+
+This is an example of matching a profile with a real-time filter :
+
+.Operation
+[source,graphql]
+----
+query profileMatching(
+  $profileId: CDP_ProfileIDInput
+  $namedFilters: [CDP_NamedFilterInput]
+) {
+  cdp {
+    getProfile(profileID: $profileId) {
+      _matches(namedFilters: namedFilters) {
+        name
+        matched
+      }
+    }
+  }
+}
+----
+
+.Variables
+[source,json]
+----
+{
+  "profileId": {
+    "clientID": "crm",
+    "id": "crm-profile-id"
+  },
+  "namedFilters": [
+    {
+      "name": "continentMatch",
+      "filter": {
+        "properties": {
+          "continent_equals" : "Europe"
+        }
+      }
+    }
+  ]
+}----
 
 == Security Considerations
 

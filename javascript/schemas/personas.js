@@ -30,8 +30,8 @@ input CDP_PersonaInput {
 input CDP_PersonaConsentInput {
   type : String!
   status : String,
-  statusDate : String,
-  revokeDate : String
+  lastUpdate : DateTime,
+  expiration : DateTime
 }
 
 extend type CDP_Query {

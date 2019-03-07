@@ -14,13 +14,14 @@ input CDP_OptimizationInput {
     objects : [ID],
     eventOccurenceBoosts : [CDP_EventOccurenceBoostInput]
     strategy : String
+    size : Int
 }
 
 input CDP_EventOccurenceBoostInput {
     eventType : String
     boost : Int
-    fromDate : String
-    toDate : String
+    fromDate : DateTime
+    toDate : DateTime
 }
 
 input CDP_AlgorithmInput {

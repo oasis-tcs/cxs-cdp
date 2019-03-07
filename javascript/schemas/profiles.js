@@ -3,13 +3,13 @@ exports.profilesSchema = `
 ProfileIDs uniquely identify a profile within a source
 """
 type CDP_ProfileID {
-    source : CDP_Source!
+    client : CDP_Client!
     id : ID!
     uri : ID # "cdp_profile:source/id"
 }
 
 input CDP_ProfileIDInput {
-    source : ID!
+    clientID : ID!
     id : ID!
 }
 
