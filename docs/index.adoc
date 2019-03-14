@@ -851,7 +851,7 @@ include::{sourcedir}/schemas/events.js[lines=2..12]
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/events.js[lines=19..36]
+include::{sourcedir}/schemas/events.js[lines=20..36]
 ----
 
 ==== CDP_Query
@@ -1953,9 +1953,9 @@ However, where profiles are explicitly added to lists, they are dynamically reso
 Administrative users define segments through <<Filters>>.
 
 Example segments:
-* Rich europeans: Profiles in Europe with income above €100k
-* Frequent buyer: Profiles that have completed more than 5 transactions in the last 3 months
-* Etc
+
+* *Rich europeans*: Profiles in Europe with income above €100k
+* *Frequent buyer*: Profiles that have completed more than 5 transactions in the last 3 months
 
 Here's an example operation to create a "male" segment (it assumes a "gender" profile property has been defined).
 
@@ -2007,7 +2007,7 @@ include::{sourcedir}/schemas/segments.js[lines=9..14]
 
 [source,graphql]
 ----
-include::{sourcedir}/schemas/managementfilters.js[lines=2..9]
+include::{sourcedir}/schemas/managementfilters.js[lines=2..7]
 ----
 
 
@@ -2028,11 +2028,143 @@ include::{sourcedir}/schemas/segments.js[lines=22..23]
 ----
 
 
-=== Optimizations and Recommendations
+=== Profile matching
 
-TODO: write an introduction to optimization and recommendations
+Clients may want to identify in real time if a given profile matches a specific segment, or filter.
+This can effectively used in order to produce personalized responses or messages.
 
-TODO : cleanup section structure
+
+==== CDP_NamedFilterInput
+
+Named filters are used to evaluate filters against a profile - useful for building personalized experiences
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/profilefilters.js[lines=58..61]
+----
+
+==== CDP_FilterMatch
+
+The result of a named filter match request
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/profilefilters.js[lines=64..68]
+----
+
+
+Below is an example of matching a profile with a filter in real-time:
+
+.Operation
+[source,graphql]
+----
+query profileMatching(
+  $profileId: CDP_ProfileIDInput
+  $namedFilters: [CDP_NamedFilterInput]
+) {
+  cdp {
+    getProfile(profileID: $profileId) {
+      _matches(namedFilters: namedFilters) {
+        name
+        matched
+      }
+    }
+  }
+}
+----
+
+.Variables
+[source,json]
+----
+{
+  "profileId": {
+    "clientID": "crm",
+    "id": "crm-profile-id"
+  },
+  "namedFilters": [
+    {
+      "name": "continentMatch",
+      "filter": {
+        "properties": {
+          "continent_equals" : "Europe"
+        }
+      }
+    }
+  ]
+}
+----
+
+
+
+=== Data Intelligence
+
+The collection of structured information in a CDP enables potential beyond simply accessing these data.
+By applying algorithms or machine learning techniques to the data,
+a CDP can act as a real-time data source for advanced use cases in other applications.
+
+The collection of structured information in a CDP enables potential beyond simply accessing these data.
+
+==== CDP_ScoredObject
+
+Objects with a specific scoring
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/optimizations.js[lines=7..10]
+----
+
+==== CDP_AlgorithmInput
+
+Defining a specific algorithm to apply.
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/optimizations.js[lines=27..30]
+----
+
+Name::  Implementation specific algorithms, examples may be `collaborative-filtering`, `clustering`, `deep`, `trending`, etc
+
+Parameters::
+JSON object supported by the specified algorithm. Algorithm must validate object itself. Parameters can be used to filter the results of the recommendation algorithm or any other custom processing that is supported by the implementation.
+
+
+
+=== Optimizations
+
+A specific application of data intelligence is smart decision making, or optimizations.
+In short, an optimization is done by passing a number of objects in, and letting the system rank them according to which is considered optimal.
+For instance, which product is most relevant for a specific visitor.
+
+
+==== CDP_OptimizationResult
+The result of an optimization, containing scored objects
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/optimizations.js[lines=2..5]
+----
+
+==== CDP_OptimizationInput
+
+Definition of the optimization to perform
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/optimizations.js[lines=12..18]
+----
+
+Strategy:: Any strategy supported by the algorithm: Unspecified, random, scoring, best first match, worst match, a/b test
+
+==== CDP_EventOccurenceBoostInput
+
+Used to boost positively/negatively the algorithm based on event type and time span: i.e. return a list of products the profile has viewed in the last year
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/optimizations.js[lines=20..25]
+----
+
+Boost:: Can also be a negative value
 
 Example of an optimization of objects for a given profile :
 
@@ -2096,10 +2228,37 @@ query profileOptimizations(
 }
 ----
 
+=== Recommendations
+
+Unlike optimizations that act on a defined list of objects,
+recommendations take an object as input, only to suggest other objects based on a specific algorithm.
+
+==== CDP_RecommendationResult
+
+Provides a list of scored object
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/optimizations.js[lines=32..35]
+----
+
+==== CDP_RecommendationInput
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/optimizations.js[lines=37..43]
+----
+
+objectUri:: Specific object that is the originator of the recommendation
+
+topics:: Objects have to be related to these specific topics
+
+size:: Maximum number of results to retrieve
+
+
 Example of how to get a recommendation for a profile :
 
-operation::
-
+.Operation
 [source,graphql]
 ----
 query profileRecommendations(
@@ -2130,8 +2289,7 @@ query profileRecommendations(
 }
 ----
 
-variables::
-
+.Variables
 [source,json]
 ----
 {
@@ -2151,116 +2309,8 @@ variables::
 }
 ----
 
-==== CDP_OptimizationResult
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/optimizations.js[lines=13..16]
-----
-
-==== CDP_ScoredObject
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/optimizations.js[lines=18..21]
-----
 
 
-==== CDP_OptimizationInput
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/optimizations.js[lines=12..17]
-----
-
-Strategy:: Any strategy supported by the algorithm: Unspecified, random, scoring, best first match, worst match, a/b test
-
-==== CDP_EventOccurenceBoostInput
-
-Used to boost positively/negatively the algorithm based on event type and time span: i.e. return a list of products the profile has viewed in the last year
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/optimizations.js[lines=30..35]
-----
-
-Boost:: Can also be a negative value
-
-==== CDP_AlgorithmInput
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/optimizations.js[lines=37..40]
-----
-
-Name::  Name of algorithm, examples may be similarity, bought-Together, bought-byOthers, viewed-byOthers, trending, related
-
-Parameters::
-JSON object supported by the specified algorithm. Algorithm must validate object itself. Parameters can be used to filter the results of the recommendation algorithm or any other custom processing that is supported by the implementation.
-
-==== CDP_RecommendationResult
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/optimizations.js[lines=42..45]
-----
-
-==== CDP_RecommendationInput
-
-[source,graphql]
-----
-include::{sourcedir}/schemas/optimizations.js[lines=47..53]
-----
-
-objectID:: Optional since we might just want to use collections to retrieve recommendations
-
-collections:: Collections we want to use to retrieve recommendations
-
-size:: Maximum number of results to retrieve
-
-=== Matching
-
-TODO : Write an introduction about matching, maybe talk about how it can be used in a CMS example
-
-This is an example of matching a profile with a real-time filter :
-
-.Operation
-[source,graphql]
-----
-query profileMatching(
-  $profileId: CDP_ProfileIDInput
-  $namedFilters: [CDP_NamedFilterInput]
-) {
-  cdp {
-    getProfile(profileID: $profileId) {
-      _matches(namedFilters: namedFilters) {
-        name
-        matched
-      }
-    }
-  }
-}
-----
-
-.Variables
-[source,json]
-----
-{
-  "profileId": {
-    "clientID": "crm",
-    "id": "crm-profile-id"
-  },
-  "namedFilters": [
-    {
-      "name": "continentMatch",
-      "filter": {
-        "properties": {
-          "continent_equals" : "Europe"
-        }
-      }
-    }
-  ]
-}----
 
 == Security Considerations
 
