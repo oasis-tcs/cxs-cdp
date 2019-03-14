@@ -157,6 +157,25 @@ In this section we present a few use cases that are relevant to the scope covere
 no means exhaustive and serve primarly as illustrations of what may be achieved using servers that implement the
 standard.
 
+=== Consent management
+
+Privacy is a very important topic, especially when dealing with visitor data. For example, new legislation such as the
+https://eugdpr.org[GDPR] imposes strict restrictions on how visitor data collection should be processed. It is therefore
+very important that the CDP specification provide standardized ways of complying with more and more stringent
+requirements.
+
+image::images/cdp-consent-usecase.svg["Consent use case diagram"]
+
+In the above use case we illustrate the support of consent management that is available in CDP-compliant systems. A
+visitor profile may store the state of consents (granted or not) and these may be updated by using specialized event
+types.
+
+=== Privacy management
+
+todo describe this use case.
+
+image::images/cdp-privacyui-usecase.svg["Privacy management UI use case diagram"]
+
 === Personalization
 
 The first and most common use case is the case of delivering personalized experiences on (desktop or mobile) web sites.
@@ -184,22 +203,6 @@ defined segment to retrieve the subset of profiles it is interested in. Once tho
 used to update the newsletters management system lists with information coming from those exported profiles. And finally,
 when the newsletter is ready to be distributed, the updated lists may be used to send the emails using an email delivery
 server.
-
-=== Privacy
-
-Privacy is a very important topic, especially when dealing with visitor data. For example, new legislation such as the
-https://eugdpr.org[GDPR] imposes strict restrictions on how visitor data collection should be processed. It is therefore
-very important that the CDP specification provide standardized ways of complying with more and more stringent
-requirements.
-
-image::images/cdp-privacy-usecase.svg["Privacy use case diagram"]
-
-In the above use case we illustrate the support of consent management that is available in CDP-compliant systems. A
-visitor profile may store the state of consents (granted or not) and these may be updated by using specialized event
-types.
-
-Other use cases for privacy include profile downloading, being able to anonymize visitor data, as well as deleting
-profiles.
 
 === A/B testing
 
@@ -279,7 +282,7 @@ GraphQL request. Here's an example of the `variables part:
 ----
 {
   "profileId": {
-    "source": {"id": "jahia.com", "thirdParty": false},
+    "clientId": "web-tracker",
     "id": "0bb99ae7-0571-4b5f-8267-978731cb62c2"
   }
 }
@@ -558,19 +561,19 @@ The following comparison operators are available:
 
 .Operator availability for property value types
 [options="header"]
-|================================================================================
-|Operators  |Identifier|String|Int|Float|Date|Boolean|GeoPoint|Enumeration|Array|
-|equals     |x         |x     |x  |x    |x   |x      |x       |x          |     |
-|startsWith |          |x<<o>>|   |     |    |       |        |           |     |
-|endsWith   |          |x<<o>>|   |     |    |       |        |           |     |
-|contains   |          |x<<o>>|   |     |    |       |        |           |x    |
-|regexp     |          |x<<o>>|   |     |    |       |        |           |     |
-|lt         |          |      |x  |x    |x   |       |        |           |     |
-|lte        |          |      |x  |x    |x   |       |        |           |     |
-|gt         |          |      |x  |x    |x   |       |        |           |     |
-|gte        |          |      |x  |x    |x   |       |        |           |     |
-|distance   |          |      |   |     |    |       |x       |           |     |
-|================================================================================
+|===============================================================================
+|Operators  |Identifier|String|Int|Float|Date|Boolean|GeoPoint|Enumeration|Array
+|equals     |x         |x     |x  |x    |x   |x      |x       |x          |
+|startsWith |          |x<<o>>|   |     |    |       |        |           |
+|endsWith   |          |x<<o>>|   |     |    |       |        |           |
+|contains   |          |x<<o>>|   |     |    |       |        |           |x
+|regexp     |          |x<<o>>|   |     |    |       |        |           |
+|lt         |          |      |x  |x    |x   |       |        |           |
+|lte        |          |      |x  |x    |x   |       |        |           |
+|gt         |          |      |x  |x    |x   |       |        |           |
+|gte        |          |      |x  |x    |x   |       |        |           |
+|distance   |          |      |   |     |    |       |x       |           |
+|===============================================================================
 
 [[[o]]] Optional operator
 
@@ -897,8 +900,9 @@ mutation profileUpdateExample($events: [CDP_EventInput]!) {
   {
     "_profileID": {
       "id": "1234567890",
-      "source": {"id": "jahia.com"}},
-    "_object": { "id": "//jahia.com/aboutUs", "collections": ["http://schema.org/WebPage"]},
+      "clientId": "web-tracker"
+    },
+    "_objectId": "http://acme.org/aboutUs",
     "pageViewEvent": {
       "language" : "en"
     }
@@ -987,6 +991,7 @@ The specification does not define a set of standard profile properties. However,
 - fullName : string
 - email : identifier
 - phoneNumber : identifier
+- birthday : datetime # this can be very important for managing consents, or managing any approval for children, minors, etc...
 
 Profiles are updated through events.
 The history of external or internal profile modifications is accessible through the profile update events.
@@ -1234,8 +1239,6 @@ mutation updateProfile($events: [CDP_EventInput]!) {
 
 ==== CDP_ProfileUpdateEventFilter
 
-TODO: Setup real sample
-
 .Sample ProfileUpdateEventFilter
 [source,graphql]
 ----
@@ -1247,8 +1250,6 @@ input CDP_ProfileUpdateEventInput {
 ----
 
 ==== CDP_ProfileUpdateEventFilterInput
-
-TODO: Setup real sample
 
 .Sample ProfileUpdateEventFilterInput
 [source,graphql]
@@ -1773,7 +1774,7 @@ mutation updatePersona($persona: CDP_PersonaInput) {
 ----
 {
   "persona": {
-    "_name": "marketingDirectory",
+    "_name": "mikeMarketing",
     "_view": "acme",
     "_segments": ["segment1", "segment2"],
     "_consents": [ {
@@ -1783,8 +1784,8 @@ mutation updatePersona($persona: CDP_PersonaInput) {
       "expiration" : "NOW+30DAYS"
     } ],
     "_interests": [{"topic": "topic1", "score": 10}]
-    "firstName" : "Marketing",
-    "lastName" : "Director"
+    "firstName" : "Mike",
+    "lastName" : "Marketing"
   }
 }
 ----
