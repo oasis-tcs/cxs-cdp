@@ -1,6 +1,6 @@
 = Customer Data Platform 1.0.0 : Working Draft
-:toc: macro
 :toc: right
+//:toc: macro
 :toclevels: 4
 :sectnums:
 :sourcedir: ../javascript
@@ -109,7 +109,7 @@ OASIS requests that any OASIS Party or any other party that believes it has pate
 
 OASIS invites any party to contact the OASIS TC Administrator if it is aware of a claim of ownership of any patent claims that would necessarily be infringed by implementations of this specification by a patent holder that is not willing to provide a license to such patent claims in a manner consistent with the IPR Mode of the OASIS Technical Committee that produced this specification. OASIS may include such claims on its website, but disclaims any obligation to do so.
 
-OASIS takes no posi tion regarding the validity or scope of any intellectual property or other rights that might be claimed to pertain to the implementation or use of the technology described in this document or the extent to which any license under such rights might or might not be available; neither does it represent that it has made any effort to identify any such rights. Information on OASIS' procedures with respect to rights in any document or deliverable produced by an OASIS Technical Committee can be found on the OASIS website. Copies of claims of rights made available for publication and any assurances of licenses to be made available, or the result of an attempt made to obtain a general license or permission for the use of such proprietary rights by implementers or users of this OASIS Committee Specification or OASIS Standard, can be obtained from the OASIS TC Administrator. OASIS makes no representation that any information or list of intellectual property rights will at any time be complete, or that any claims in such list are, in fact, Essential Claims.
+OASIS takes no position regarding the validity or scope of any intellectual property or other rights that might be claimed to pertain to the implementation or use of the technology described in this document or the extent to which any license under such rights might or might not be available; neither does it represent that it has made any effort to identify any such rights. Information on OASIS' procedures with respect to rights in any document or deliverable produced by an OASIS Technical Committee can be found on the OASIS website. Copies of claims of rights made available for publication and any assurances of licenses to be made available, or the result of an attempt made to obtain a general license or permission for the use of such proprietary rights by implementers or users of this OASIS Committee Specification or OASIS Standard, can be obtained from the OASIS TC Administrator. OASIS makes no representation that any information or list of intellectual property rights will at any time be complete, or that any claims in such list are, in fact, Essential Claims.
 
 The name "OASIS" is a trademark of OASIS, the owner and developer of this specification, and should be used only to refer to the organization and its official outputs. OASIS welcomes reference to, and implementation and use of, specifications, while reserving the right to enforce its marks against misleading uses. Please see https://www.oasis-open.org/policies-guidelines/trademark for above guidance.
 
@@ -150,12 +150,10 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
   \[Reference]	\[Full reference citation]
 
 
-
 == Use Cases
 
-In this section we present a few use cases that are relevant to the scope covered by the CDP specification. They are by
-no means exhaustive and serve primarly as illustrations of what may be achieved using servers that implement the
-standard.
+In this section we present a selection of use cases that are relevant to the scope covered by the CDP specification.
+They are by no means exhaustive, but illustrate what may be achieved through the use of the standard.
 
 === Consent management
 
@@ -172,13 +170,22 @@ types.
 
 === Privacy management
 
-todo describe this use case.
+A core requirement for any business handling personal data is transparency.
+The ability to provide users with insight into what data are stored, and optionally manage their own data is essential.
+A CDP not only aggregates personal data from various sources, but can also manage consents and profiles.
+In specific cases, CDP may act as the source-of-truth across systems, and enable effective privacy management.
+
+In this use case, a custom "privacy management interface" is deployed in front of the CDP.
+The interface should be specifically designed for the business, and require authentication.
+
+Authenticated users can then in a controlled fashion see, delete or update their personal data.
+Examples or such might be events, properties or consents.
 
 image::images/cdp-privacyui-usecase.svg["Privacy management UI use case diagram"]
 
 === Personalization
 
-The first and most common use case is the case of delivering personalized experiences on (desktop or mobile) web sites.
+A common use case is delivering better and more personalized experiences across applications and web sites.
 
 image::images/cdp-webpersonalization-usecase.svg["Personalization use case diagram"]
 
@@ -223,23 +230,23 @@ Below is a short introduction to the core domain objects of the specification:
 
 Events:: <<Events>> represent the stream of "customer behaviour" events that help the CDP build <<Profiles>>
 Profiles:: Representing the data of the subject, or "customer" interacting with your business <<Objects>>
-Personas:: Create <<Personas>> to simulate real <<Profiles>> and test your ideas
-Objects:: Are the target items (and possibly persons) a "customer" interacts with
-Lists:: Manually or programatically updated <<Lists>> of profiles
-Segments:: <<Segments>> are dynamic lists based on <<Filters>>
+Personas:: Use <<Personas>> to simulate real <<Profiles>> for testing and validation
+Objects:: Are the physical or virtual items/persons a "customer" interacts with through events
+Lists:: Manually or programatically managed <<Lists>> of profiles
+Segments:: <<Segments>> are lists of profiles defined by <<Filters>>
 Consents:: <<Consents>> granted or denied by the subjects
-Properties: Allow the definition of custom profile <<Properties>> within a CDP deployment
+Properties: Enable the definition of custom profile <<Properties>> within a CDP deployment
 Clients:: <<Clients>> represent any entity connecting to CDP, either for storing or retrieving data
-Views:: Create dministrative <<Views>> for grouping objects defined by back-office users
-Interest:: Represents a profiles weighted <<Interest>> in a specific <<Topic>>
-Topics:: Represent "business areas" of an organisation deploying CDP - like a product or a location.
-Filters:: Enable definition of structured queries against other CDP domain objects
+Views:: Administrative <<Views>> are used for grouping managed entities, i.e. lists and segments
+Interest:: A profile's weighted <<Interests>> for specific <<Topics>>
+Topics:: Represent "business areas" of the organisation deploying the CDP - i.e. a product or a location.
+Filters:: <<Filters>> are structured queries against other CDP domain objects
 
 
 == API Reference
 
 The Customer Data Platform (CDP) standard is built around a set of concepts, domain objects and services for interacting with them.
-This is represented through a strongly typed API defined through GraphQL Types, Queries, Mutations and Subscriptions.
+This is represented through a strongly typed API defined by GraphQL Types, Queries, Mutations and Subscriptions.
 
 Each section in the API reference will usually start with a description of the domain objects and then include the normative GraphQL types, queries and mutations relevant to the domain objects.
 
@@ -273,7 +280,7 @@ query getExistingProfile($profileId : CDP_ProfileIDInput) {
 ----
 
 
-What the above query does is retrieve all the profileIDs for a existing profile (that's why we set the createIfMissing
+The above query retrieves all profileIDs for an existing profile (that's why we set the createIfMissing
 argument to false). We also define a variable called $profileId that must be passed in the "variables" section of the
 GraphQL request. Here's an example of the `variables part:
 
@@ -296,8 +303,9 @@ NOTE: The most efficient way to explore the GraphQL API is by starting the sampl
 === Scalars
 
 GraphQL provides several basic value types that are used extensively in this specification, for instance Int and String.
-However, the CDP specification is also handling other value types in a similar fashion. As such, the following scalars have been added:
+However, the CDP specification is also handling other value types in a similar fashion.
 
+The following scalars have been specifically added:
 
 ==== JSON
 For values and arguments that cannot be defined structurally
@@ -330,8 +338,7 @@ To properly store and query data CDP needs a way to describe the data dynamicall
 
 A Property represents data stored in a key-value format.
 A single property can hold a single value, or an ordered array of values.
-Each property has a specific valueType to limit what kind of values it may hold.
-These are ``Identifier``,``String``, ``Int``, ``Float``, ``Date``, ``Boolean``, ``GeoPoint``, ``Enumeration`` and ``Set``.
+Each property has a specific valueType to limit what kind of values it may hold, such as `Identifier`, `String` and `Int`.
 
 Below are some examples of properties:
 
@@ -350,10 +357,10 @@ I.e. from the example above: "setOfProperties.response" would hold the value "yo
 
 A property consists of:
 
-* the property name (it is RECOMMENDED but not mandatory to prefix the property name)
-* the valueType of the property (Identifier, String, Int, Float, Date, Boolean, GeoPoint, Enumeration and Set)
-* minimum occurrences of values (a property may hold one or more values)
-* maximum occurrences
+Property name:: it is RECOMMENDED but not mandatory to prefix the property name
+Value type:: One of `Identifier`, `String`, `Int`, `Float`, `Date`, `Boolean`, `GeoPoint`, `Enumeration` and `Set`
+Minimum occurrences:: Minimum number of values a property may hold (array)
+Maximum occurrences:: Maximum number of values per property
 
 Since the CDP api is defined using strongly typed GraphQL,
 the API is dynamically updated when properties are added or changed.
