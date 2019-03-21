@@ -19,14 +19,14 @@ type CDP_Consent {
 
 type CDP_ConsentUpdateEvent implements CDP_EventInterface {
   id: ID!
-  _source : CDP_Source
-  _client : CDP_Client
-  _profileID: CDP_ProfileID!
-  _profile : CDP_Profile!
-  _object: CDP_Object!
-  _location: GeoPoint
-  _timestamp: DateTime
-  _topics : [CDP_Topic]
+  cdp_source : CDP_Source
+  cdp_client : CDP_Client
+  cdp_profileID: CDP_ProfileID!
+  cdp_profile : CDP_Profile!
+  cdp_object: CDP_Object!
+  cdp_location: GeoPoint
+  cdp_timestamp: DateTime
+  cdp_topics : [CDP_Topic]
   type : String!
   status : String,
   lastUpdate : DateTime,

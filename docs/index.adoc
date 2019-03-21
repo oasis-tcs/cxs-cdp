@@ -268,10 +268,10 @@ variables::
 .Example operation
 [source,graphql]
 ----
-query getExistingProfile($profileId : CDP_ProfileIDInput) {
+query getExistingProfile($profileID : CDP_ProfileIDInput) {
   cdp {
-    getProfile(createIfMissing: false, profileID: $profileId) {
-      _profileIDs {
+    getProfile(createIfMissing: false, profileID: $profileID) {
+      cdp_profileIDs {
         id
       }
     }
@@ -281,15 +281,15 @@ query getExistingProfile($profileId : CDP_ProfileIDInput) {
 
 
 The above query retrieves all profileIDs for an existing profile (that's why we set the createIfMissing
-argument to false). We also define a variable called $profileId that must be passed in the "variables" section of the
+argument to false). We also define a variable called $profileID that must be passed in the "variables" section of the
 GraphQL request. Here's an example of the `variables part:
 
 .Example variables
 [source,json]
 ----
 {
-  "profileId": {
-    "clientId": "web-tracker",
+  "profileID": {
+    "clientID": "web-tracker",
     "id": "0bb99ae7-0571-4b5f-8267-978731cb62c2"
   }
 }
@@ -908,9 +908,9 @@ mutation profileUpdateExample($events: [CDP_EventInput]!) {
   {
     "_profileID": {
       "id": "1234567890",
-      "clientId": "web-tracker"
+      "clientID": "web-tracker"
     },
-    "_objectId": "http://acme.org/aboutUs",
+    "_objectID": "http://acme.org/aboutUs",
     "pageViewEvent": {
       "language" : "en"
     }
@@ -935,8 +935,8 @@ query findEvents($filter: CDP_EventFilterInput) {
       edges {
         node {
           __typename
-          _timestamp
-          _object {
+          cdp_timestamp
+          cdp_object {
             uri
           }
         }
@@ -1026,16 +1026,16 @@ As an example, let's assume we have a starting CDP_Profile type that looks like 
 [source,graphql]
 ----
 type CDP_Profile implements CDP_ProfileInterface {
-  _profileIDs : [CDP_ProfileID]
-  _events(filter : CDP_EventFilterInput, first : Int, last: Int, after : String, before: String) : CDP_EventConnection
-  _lastEvents(count : Int, profileID : CDP_ProfileIDInput) : CDP_EventConnection
-  _segments(views : [ID]) : [CDP_Segment]
-  _interests(views : [ID]) : [CDP_Interest]
-  _consents : [CDP_Consent]
-  _lists(views : [ID]) : [CDP_List]
-  _matches(namedFilters : [CDP_NamedFilterInput]) : [CDP_FilterMatch]
-  _optimize(parameters : [CDP_OptimizationInput]) : [CDP_OptimizationResult]
-  _recommend(parameters : [CDP_RecommendationInput]) : [CDP_RecommendationResult]
+  cdp_profileIDs : [CDP_ProfileID]
+  cdp_events(filter : CDP_EventFilterInput, first : Int, last: Int, after : String, before: String) : CDP_EventConnection
+  cdp_lastEvents(count : Int, profileID : CDP_ProfileIDInput) : CDP_EventConnection
+  cdp_segments(views : [ID]) : [CDP_Segment]
+  cdp_interests(views : [ID]) : [CDP_Interest]
+  cdp_consents : [CDP_Consent]
+  cdp_lists(views : [ID]) : [CDP_List]
+  cdp_matches(namedFilters : [CDP_NamedFilterInput]) : [CDP_FilterMatch]
+  cdp_optimize(parameters : [CDP_OptimizationInput]) : [CDP_OptimizationResult]
+  cdp_recommend(parameters : [CDP_RecommendationInput]) : [CDP_RecommendationResult]
   # fields will be added here according to registered profile properties
 }
 ----
@@ -1081,16 +1081,16 @@ This will resulting in the following modifications to the CDP_Profile type:
 [source,graphql]
 ----
 type CDP_Profile implements CDP_ProfileInterface {
-  _profileIDs : [CDP_ProfileID]
-  _events(filter : CDP_EventFilterInput, first : Int, last: Int, after : String, before: String) : CDP_EventConnection
-  _lastEvents(count : Int, profileID : CDP_ProfileIDInput) : CDP_EventConnection
-  _segments(views : [ID]) : [CDP_Segment]
-  _interests(views : [ID]) : [CDP_Interest]
-  _consents : [CDP_Consent]
-  _lists(views : [ID]) : [CDP_List]
-  _matches(namedFilters : [CDP_NamedFilterInput]) : [CDP_FilterMatch]
-  _optimize(parameters : [CDP_OptimizationInput]) : [CDP_OptimizationResult]
-  _recommend(parameters : [CDP_RecommendationInput]) : [CDP_RecommendationResult]
+  cdp_profileIDs : [CDP_ProfileID]
+  cdp_events(filter : CDP_EventFilterInput, first : Int, last: Int, after : String, before: String) : CDP_EventConnection
+  cdp_lastEvents(count : Int, profileID : CDP_ProfileIDInput) : CDP_EventConnection
+  cdp_segments(views : [ID]) : [CDP_Segment]
+  cdp_interests(views : [ID]) : [CDP_Interest]
+  cdp_consents : [CDP_Consent]
+  cdp_lists(views : [ID]) : [CDP_List]
+  cdp_matches(namedFilters : [CDP_NamedFilterInput]) : [CDP_FilterMatch]
+  cdp_optimize(parameters : [CDP_OptimizationInput]) : [CDP_OptimizationResult]
+  cdp_recommend(parameters : [CDP_RecommendationInput]) : [CDP_RecommendationResult]
   # fields will be added here according to registered profile properties
   firstName : String
   sample_Address : Sample_Address
@@ -1244,7 +1244,7 @@ mutation updateProfile($events: [CDP_EventInput]!) {
   {
     "_object" : "cdp_profile:crm/crm-profile-id",
     "_profileID": {
-      "clientId": "crm",
+      "clientID": "crm",
       "id": "crm-profile-id"
     },
     "_profileUpdateEvent": {
@@ -1330,13 +1330,13 @@ query profileFilterExample(
       totalCount
       edges {
         node {
-          _profileIDs {
+          cdp_profileIDs {
             client {
               id
             }
             id
           }
-          _segments {
+          cdp_segments {
             name
           }
         }
@@ -1458,7 +1458,7 @@ mutation updateSessions($events: [CDP_EventInput]!) {
   "events": [
     {
       "_profileID": {
-        "clientId": "crm",
+        "clientID": "crm",
         "id" : "crm-profile-id"
       },
       "_object": "cdp_profile:crm/crm-profile-id",
@@ -1483,9 +1483,9 @@ Consents are given and revoked through events. This means that the CDP specifica
 [source,graphql]
 ----
     {
-      "_sourceId" : "example.com",
+      "_sourceID" : "example.com",
       "_profileID": {
-        "clientId": "crm",
+        "clientID": "crm",
         "id" : "crm-profile-id"
       },
       "_object": "cdp_profile:crm/crm-profile-id",
@@ -1502,9 +1502,9 @@ Consents are given and revoked through events. This means that the CDP specifica
 [source,graphql]
 ----
     {
-      "_sourceId" : "example.com",
+      "_sourceID" : "example.com",
       "_profileID": {
-        "clientId": "crm",
+        "clientID": "crm",
         "id" : "crm-profile-id"
       },
       "_object": "cdp_profile:crm/crm-profile-id",
@@ -1601,7 +1601,7 @@ mutation updateConsent($events: [CDP_EventInput]!) {
   "events": [
     {
       "_profileID": {
-        "clientId": "crm",
+        "clientID": "crm",
         "id" : "crm-profile-id"
       },
       "_object": "cdp_profile:crm/crm-profile-id",
@@ -1927,7 +1927,7 @@ mutation updateLists($events: [CDP_EventInput]!) {
   "events": [
     {
       "_profileID": {
-        "clientId": "crm",
+        "clientID": "crm",
         "id" : "crm-profile-id"
       },
       "_object": "cdp_profile:crm/crm-profile-id",
@@ -2095,12 +2095,12 @@ Below is an example of matching a profile with a filter in real-time:
 [source,graphql]
 ----
 query profileMatching(
-  $profileId: CDP_ProfileIDInput
+  $profileID: CDP_ProfileIDInput
   $namedFilters: [CDP_NamedFilterInput]
 ) {
   cdp {
-    getProfile(profileID: $profileId) {
-      _matches(namedFilters: namedFilters) {
+    getProfile(profileID: $profileID) {
+      cdp_matches(namedFilters: namedFilters) {
         name
         matched
       }
@@ -2113,7 +2113,7 @@ query profileMatching(
 [source,json]
 ----
 {
-  "profileId": {
+  "profileID": {
     "clientID": "crm",
     "id": "crm-profile-id"
   },
@@ -2208,12 +2208,12 @@ Example of an optimization of objects for a given profile :
 [source,graphql]
 ----
 query profileOptimizations(
-  $profileId: CDP_ProfileIDInput
+  $profileID: CDP_ProfileIDInput
   $optimizationParameters: [CDP_OptimizationInput]
 ) {
   cdp {
-    getProfile(profileID: $profileId) {
-      _optimize(parameters: $optimizationParameters) {
+    getProfile(profileID: $profileID) {
+      cdp_optimize(parameters: $optimizationParameters) {
         name
         scoredObjects {
           object {
@@ -2239,7 +2239,7 @@ query profileOptimizations(
 [source,json]
 ----
 {
-  "profileId": {
+  "profileID": {
     "clientID": "crm",
     "id": "crm-profile-id"
   },
@@ -2298,12 +2298,12 @@ Example of how to get a recommendation for a profile :
 [source,graphql]
 ----
 query profileRecommendations(
-  $profileId: CDP_ProfileIDInput
+  $profileID: CDP_ProfileIDInput
   $recommendationParameters: [CDP_RecommendationInput]
 ) {
   cdp {
-    getProfile(profileID: $profileId) {
-      _recommend(parameters: $recommendationParameters) {
+    getProfile(profileID: $profileID) {
+      cdp_recommend(parameters: $recommendationParameters) {
         name
         scoredObjects {
           object {
@@ -2329,7 +2329,7 @@ query profileRecommendations(
 [source,json]
 ----
 {
-  "profileId": {
+  "profileID": {
     "clientID": "crm",
     "id": "crm-profile-id"
   },

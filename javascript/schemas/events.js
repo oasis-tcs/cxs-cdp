@@ -1,14 +1,14 @@
 exports.eventsSchema = `
 interface CDP_EventInterface {
   id: ID!
-  _source : CDP_Source
-  _client : CDP_Client
-  _profileID: CDP_ProfileID!
-  _profile : CDP_Profile!
-  _object: CDP_Object!
-  _location: GeoPoint
-  _timestamp: DateTime
-  _topics : [CDP_Topic]
+  cdp_source : CDP_Source
+  cdp_client : CDP_Client
+  cdp_profileID: CDP_ProfileID!
+  cdp_profile : CDP_Profile!
+  cdp_object: CDP_Object!
+  cdp_location: GeoPoint
+  cdp_timestamp: DateTime
+  cdp_topics : [CDP_Topic]
 }
 
 
@@ -19,16 +19,16 @@ but only one of each type. ID is optional, with the exception of importing
 """
 input CDP_EventInput {
   id: ID
-  _sourceID : String
-  _profileID: CDP_ProfileIDInput!
-  _objectID: ID!
-  _location: GeoPoint
-  _timestamp: DateTime
-  _topics : [ID]
-  _profileUpdateEvent : CDP_ProfileUpdateEventInput
-  _consentUpdateEvent : CDP_ConsentUpdateEventInput
-  _listsUpdateEvent : CDP_ListsUpdateEventInput
-  _sessionEvent : CDP_SessionEventInput
+  cdp_sourceID : String
+  cdp_profileID: CDP_ProfileIDInput!
+  cdp_objectID: ID!
+  cdp_location: GeoPoint
+  cdp_timestamp: DateTime
+  cdp_topics : [ID]
+  cdp_profileUpdateEvent : CDP_ProfileUpdateEventInput
+  cdp_consentUpdateEvent : CDP_ConsentUpdateEventInput
+  cdp_listsUpdateEvent : CDP_ListsUpdateEventInput
+  cdp_sessionEvent : CDP_SessionEventInput
   # Sample custom EventTypes below:
   # my_pageView : MY_PageViewEventInput
   # my_addedToCart : MY_addedToCartEventInput,

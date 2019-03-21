@@ -20,7 +20,7 @@ variables:
     "properties": [
       {
         "identifier": {
-          "name": "pageId"
+          "name": "pageID"
         }
       },
       {

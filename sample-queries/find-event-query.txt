@@ -19,12 +19,12 @@ variables:
     "or": [
       {
         "properties": {
-          "profileId_equals": "serge-profile-id"
+          "profileID_equals": "serge-profile-id"
         }
       },
       {
         "properties_or": {
-          "sourceId_equals": "enonic.com",
+          "sourceID_equals": "enonic.com",
           "pageView": {
             "pageUrl_equals": "http://localhost:8080/home/people/serge.html",
             "pageProperties": {

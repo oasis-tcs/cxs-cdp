@@ -4,25 +4,25 @@ Emulate real profiles with personas
 """
 type CDP_Persona implements CDP_ProfileInterface {
   id : ID!
-  _name : String!
-  _view : CDP_View!
-  _profileIDs : [CDP_ProfileID]
-  _segments(views : [ID]) : [CDP_Segment]
-  _interests(views : [ID]) : [CDP_Interest]
-  _consents : [CDP_Consent]
-  _lists(views : [ID]) : [CDP_List]
+  cdp_name : String!
+  cdp_view : CDP_View!
+  cdp_profileIDs : [CDP_ProfileID]
+  cdp_segments(views : [ID]) : [CDP_Segment]
+  cdp_interests(views : [ID]) : [CDP_Interest]
+  cdp_consents : [CDP_Consent]
+  cdp_lists(views : [ID]) : [CDP_List]
   # fields will be added here according to registered profile properties
 }
 
 
 input CDP_PersonaInput {
   id : ID
-  _name : String!
-  _view : ID!
-  _profileIDs : [CDP_ProfileIDInput]
-  _segments : [ID]
-  _interests : [CDP_InterestInput]
-  _consents : [CDP_PersonaConsentInput]
+  cdp_name : String!
+  cdp_view : ID!
+  cdp_profileIDs : [CDP_ProfileIDInput]
+  cdp_segments : [ID]
+  cdp_interests : [CDP_InterestInput]
+  cdp_consents : [CDP_PersonaConsentInput]
   # fields will be added here according to registered profile properties
 }
 
