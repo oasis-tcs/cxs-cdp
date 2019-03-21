@@ -11,7 +11,7 @@ image::images/OASISLogo-v2.0.jpg["Oasis Open Logo"]
 == Committee Specification Draft 01 / Public Review Draft 01 (Working Draft)
 
 [discrete]
-== Not Yet Published (18 October 2018)
+== Not Yet Published (21 March 2019)
 
 ////
 [discrete]
@@ -89,13 +89,13 @@ When referencing this specification the following citation format should be used
 
 *CDP-v1.0*
 
-_Customer Data Platform Version 1.0_. Edited by Thomas Lund Sigdestad. 12 October 2018. OASIS Committee Specification Draft 01 / Public Review Draft 01. http://docs.oasis-open.org/cxs/cdp/v1.0/csprd01/cdp-v1.0-csprd01.html. Latest version: http://docs.oasis-open.org/cxs/cdp/v1.0/cdp-v1.0.html.
+_Customer Data Platform Version 1.0_. Edited by Thomas Lund Sigdestad & Serge Huber. 21 March 2019. OASIS Committee Specification Draft 01 / Public Review Draft 01. http://docs.oasis-open.org/cxs/cdp/v1.0/csprd01/cdp-v1.0-csprd01.html. Latest version: http://docs.oasis-open.org/cxs/cdp/v1.0/cdp-v1.0.html.
 
 
 [discrete]
 == Notices
 
-Copyright © OASIS Open 2018. All Rights Reserved.
+Copyright © OASIS Open 2019. All Rights Reserved.
 
 All capitalized terms in the following text have the meanings assigned to them in the OASIS Intellectual Property Rights Policy (the "OASIS IPR Policy"). The full Policy may be found at the OASIS website.
 
@@ -786,7 +786,8 @@ In the CDP, every EventType will need both an regular GraphQL type, and a GraphQ
 
 NOTE: EventType fields MUST match the CDP propertyType format, and its underlying valueTypes
 
-Below are examples of what custom EventTypes might look like:
+Below are examples of what custom EventTypes might look like, we used a VENDOR prefix as it is recommended to avoid
+conflicts with other types:
 
 .Sample EventType for Page Views
 [source,GraphQL]
@@ -915,7 +916,8 @@ mutation profileUpdateExample($events: [CDP_EventInput]!) {
 
 EventFilters are a specific version of filters for querying events.
 
-Example: Filter for identifying events of type `transaction` within the last 30 days.
+Example: Filter for identifying events of type `_profileUpdate` with a first name starting with `T`and a last name
+ending with `d` within the last 30 days.
 
 .Operation
 [source,GraphQL]
@@ -926,6 +928,10 @@ query findEvents($filter: CDP_EventFilterInput) {
       edges {
         node {
           __typename
+          _timestamp
+          _object {
+            uri
+          }
         }
       }
     }
@@ -939,8 +945,8 @@ query findEvents($filter: CDP_EventFilterInput) {
 {
   "filter" : {
     "_timestamp_between" : {
-      "after" : "2018-06-28T05:25:28+00:00",
-      "before" : "2018-06-28T06:25:28+00:00",
+      "after" : "NOW-30DAYS",
+      "before" : "NOW",
       "includeBefore": false,
       "includeAfter": false
     },
@@ -1223,7 +1229,7 @@ mutation updateProfile($events: [CDP_EventInput]!) {
   {
     "_object" : "cdp_profile:crm/crm-profile-id",
     "_profileID": {
-      "source": "crm",
+      "clientId": "crm",
       "id": "crm-profile-id"
     },
     "_profileUpdateEvent": {
@@ -1310,7 +1316,7 @@ query profileFilterExample(
       edges {
         node {
           _profileIDs {
-            source {
+            client {
               id
             }
             id
@@ -1437,7 +1443,7 @@ mutation updateSessions($events: [CDP_EventInput]!) {
   "events": [
     {
       "_profileID": {
-        "source": "crm",
+        "clientId": "crm",
         "id" : "crm-profile-id"
       },
       "_object": "cdp_profile:crm/crm-profile-id",
@@ -1461,25 +1467,39 @@ Consents are given and revoked through events. This means that the CDP specifica
 .Sample ALLOW consent
 [source,graphql]
 ----
-{
-  sourceId : "example.com",
-  type: {name:"send-to-salesforce"},
-  grant: ALLOW
-  grantDate : 3498734899
-  # no revoke date means it will not expire or defaults to system or legal standard (GDPR)
-}
+    {
+      "_sourceId" : "example.com",
+      "_profileID": {
+        "clientId": "crm",
+        "id" : "crm-profile-id"
+      },
+      "_object": "cdp_profile:crm/crm-profile-id",
+      "_consentUpdateEvent": {
+        "type": "send-to-salesforce",
+        "status": "GRANTED",
+        "lastUpdate": "NOW",
+        # no revoke date means it will not expire or defaults to system or legal standard (GDPR)
+      }
+    }
 ----
 
 .Sample DENY consent
 [source,graphql]
 ----
-{
-  sourceId : "example.com",
-  type : {name:"newsletter-subscription-latestNews"},
-  grant: DENY
-  grantDate : 3498734899
-  # no revoke date means it will not expire or defaults to system or legal standard (GDPR)
-}
+    {
+      "_sourceId" : "example.com",
+      "_profileID": {
+        "clientId": "crm",
+        "id" : "crm-profile-id"
+      },
+      "_object": "cdp_profile:crm/crm-profile-id",
+      "_consentUpdateEvent": {
+        "type": "newsletter-subscription-latestNews",
+        "status": "DENY",
+        "lastUpdate": "NOW",
+        # no revoke date means it will not expire or defaults to system or legal standard (GDPR)
+      }
+    }
 ----
 
 Consent Types may include:
@@ -1566,7 +1586,7 @@ mutation updateConsent($events: [CDP_EventInput]!) {
   "events": [
     {
       "_profileID": {
-        "source": "crm",
+        "clientId": "crm",
         "id" : "crm-profile-id"
       },
       "_object": "cdp_profile:crm/crm-profile-id",
@@ -1892,7 +1912,7 @@ mutation updateLists($events: [CDP_EventInput]!) {
   "events": [
     {
       "_profileID": {
-        "source": "crm",
+        "clientId": "crm",
         "id" : "crm-profile-id"
       },
       "_object": "cdp_profile:crm/crm-profile-id",
