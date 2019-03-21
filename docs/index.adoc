@@ -64,7 +64,6 @@ This specification is related to:
 
   * GraphQL : https://graphql.org
   * GraphQL specification : https://facebook.github.io/graphql/
-  *	Related specifications (VISIBLE hyperlink, preferably to HTML version)
 
 [discrete]
 === Abstract:
@@ -140,14 +139,15 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 === Normative References
 
-  \[RFC2119]	Bradner, S., "Key words for use in RFCs to Indicate Requirement Levels", BCP 14, RFC 2119, DOI 10.17487/RFC2119, March 1997, <http://www.rfc-editor.org/info/rfc2119>.
-  \[RFC8174]	Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174, May 2017, <http://www.rfc-editor.org/info/rfc8174>.
-  \[Reference]	\[Full reference citation]
+[RFC2119]	Bradner, S., "Key words for use in RFCs to Indicate Requirement Levels", BCP 14, RFC 2119, DOI 10.17487/RFC2119, March 1997, <http://www.rfc-editor.org/info/rfc2119>.
+
+[RFC8174]	Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174, May 2017, <http://www.rfc-editor.org/info/rfc8174>.
+
+[Reference]	[Full reference citation]
 
 === Non-Normative References
 
-  \[RFC3552]	Rescorla, E. and B. Korver, "Guidelines for Writing RFC Text on Security Considerations", BCP 72, RFC 3552, DOI 10.17487/RFC3552, July 2003, <https://www.rfc-editor.org/info/rfc3552>.
-  \[Reference]	\[Full reference citation]
+[RFC3552]	Rescorla, E. and B. Korver, "Guidelines for Writing RFC Text on Security Considerations", BCP 72, RFC 3552, DOI 10.17487/RFC3552, July 2003, <https://www.rfc-editor.org/info/rfc3552>.
 
 
 == Use Cases
@@ -923,7 +923,7 @@ mutation profileUpdateExample($events: [CDP_EventInput]!) {
 
 EventFilters are a specific version of filters for querying events.
 
-Example: Filter for identifying events of type `_profileUpdate` with a first name starting with `T`and a last name
+Example: Filter for identifying events of type `_profileUpdate` with a first name starting with `T` and a last name
 ending with `d` within the last 30 days.
 
 .Operation
@@ -1010,7 +1010,15 @@ Profiles are updated through events.
 The history of external or internal profile modifications is accessible through the profile update events.
 CDP implementations SHOULD also support <<CDP_Subscription,subscriptions>> on profile modifications so that external systems can retrieve the profile modifications in real-time.
 
-Properties can be dynamically defined for profiles using the ``createOrUpdateProfileProperties`` and ``deleteProfileProperties`` mutations. Once a property is associated with a profile, it will become available in the CDP_Profile and CDP_Persona types.
+Properties can be dynamically defined for profiles using the ``createOrUpdateProfileProperties`` and ``deleteProfileProperties`` mutations.
+Once a property is associated with a profile, it will become available in the CDP_Profile and CDP_Persona types.
+
+[NOTE]
+======
+It is the responsability of clients accessing the GraphQL API to handle the lifecycle of properties properly, as
+new properties may be defined at any time, or more importantly, properties may be also deleted, potentially breaking a
+client's use of the API.
+======
 
 As an example, let's assume we have a starting CDP_Profile type that looks like this:
 
@@ -1471,7 +1479,7 @@ Consents hold an identifier that uniquely identifies the consent across your sys
 
 Consents are given and revoked through events. This means that the CDP specification defines reserved property types for granting and revoking consents.
 
-.Sample ALLOW consent
+.Sample GRANTED consent
 [source,graphql]
 ----
     {
@@ -2348,6 +2356,11 @@ While it may not be immediately obvious how your specification might make system
 In addition to considering and describing foreseeable risks, this section should include guidance on how implementers and adopters can protect against these risks
 We encourage editors and TC members concerned with this subject to read Guidelines for Writing RFC Text on Security Considerations, IETF \[RFC3552], for more information.)
 
+TODO :
+- Talk about GraphQL input validation, https://facebook.github.io/graphql/June2018/#sec-Validation
+- Talk about managing personal information and GDPR
+- Access management for the API
+- Audit
 
 == Conformance
 
@@ -2361,13 +2374,14 @@ The following individuals have participated in the creation of this specificatio
 
 Participants:
 
+  * Jan Blessenohl, Progress Software
+  * Kaloyan Nikolov, Progress Software
+  * Chris Laprun, RedHat
+
   * Participant Name, Affiliation | Individual Member
   * Participant Name, Affiliation | Individual Member
 
-== Appendix B. Example Title
-
-TODO: any additional appendices for non-normative text here
-
-== Appendix C. Revision History
+== Appendix B. Revision History
 
 Revision 	Date 	Editor 	Changes Made
+TODO Add history

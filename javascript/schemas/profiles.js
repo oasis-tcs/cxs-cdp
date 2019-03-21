@@ -34,7 +34,7 @@ type CDP_Profile implements CDP_ProfileInterface {
   _lists(views : [ID]) : [CDP_List]
   _matches(namedFilters : [CDP_NamedFilterInput]) : [CDP_FilterMatch]
   _optimize(parameters : [CDP_OptimizationInput]) : [CDP_OptimizationResult]
-  _recommend(parameters : [CDP_RecommendationInput]) : [CDP_RecommendationResult]
+  _recommend(parameters : [CDP_RecommendationInput]) : [CDP_RecommendationResult]  
   # fields will be added here according to registered profile properties  
 }
 
