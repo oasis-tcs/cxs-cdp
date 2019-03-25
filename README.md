@@ -12,7 +12,7 @@ specification documents as well as an associated GraphQL Javascript API demo.
 
 ## Contributions
 
-As stated in this repository's <a href="https://github.com/oasis-tcs/cxs/blob/master/CONTRIBUTING.md">CONTRIBUTING file</a>, 
+As stated in this repository's <a href="https://github.com/oasis-tcs/cxs-cdp/blob/master/CONTRIBUTING.md">CONTRIBUTING file</a>, 
 contributors to this repository are expected to be Members of the OASIS Context Server (CXS) TC, for any substantive change requests.  
 Anyone wishing to contribute to this GitHub project and <a href="https://www.oasis-open.org/join/participation-instructions">participate</a> in the TC's technical activity is invited to join as an OASIS TC Member.  Public feedback is also accepted, 
 subject to the terms of the <a href="https://www.oasis-open.org/policies-guidelines/ipr#appendixa">OASIS Feedback License</a>.
