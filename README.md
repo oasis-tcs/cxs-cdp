@@ -1,6 +1,6 @@
 ## README
 
-Members of the <a href="https://www.oasis-open.org/committees/csx/">OASIS Context Server (CXS) TC</a> 
+Members of the <a href="https://www.oasis-open.org/committees/cxs/">OASIS Context Server (CXS) TC</a> 
 create and manage technical content in this TC GitHub repository (<a href="https://github.com/oasis-tcs/cxs-cdp">https://github.com/oasis-tcs/cxs-cdp</a>) as part of the TC's chartered work (<i>i.e.</i>, the program of work and deliverables described in its <a href="https://www.oasis-open.org/committees/cxs/charter.php">charter</a>).
 
 OASIS TC GitHub repositories, as described in <a href="https://www.oasis-open.org/resources/tcadmin/github-repositories-for-oasis-tc-members-chartered-work">GitHub Repositories for OASIS TC Members' Chartered Work</a>, are governed by the OASIS <a href="https://www.oasis-open.org/policies-guidelines/tc-process">TC Process</a>, <a href="https://www.oasis-open.org/policies-guidelines/ipr">IPR Policy</a>, and other policies, similar to TC Wikis, TC JIRA issues tracking instances, TC SVN/Subversion repositories, etc. While they make use of public GitHub repositories, these TC GitHub repositories are distinct from <a href="https://www.oasis-open.org/resources/open-repositories">OASIS Open Repositories</a>, which are used for development of open source <a href="https://www.oasis-open.org/resources/open-repositories/licenses">licensed</a> content.
