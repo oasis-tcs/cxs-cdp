@@ -6,7 +6,7 @@ This work is being done by the OASIS Context Server Technical Committee (see htt
 
 You can find work-in-progress snapshots of the current draft being work on at the following location:
 
-    https://sergehuber.github.io/cdp/index.html
+    https://sergehuber.github.io/
 
 ## Status
 
