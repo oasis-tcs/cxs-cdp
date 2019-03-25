@@ -1,0 +1,15 @@
+## Repository Contributions, Participation, and Public Access
+
+*Who may Contribute*? Contributors to <a href="https://github.com/oasis-tcs/cxs-cdp/">this repository</a> are expected to be <a href="https://www.oasis-open.org/policies-guidelines/oasis-defined-terms-2017-05-26#dMember">Members</a> of the
+<a href="https://www.oasis-open.org/committees/cxs/">OASIS Context Server (CXS) TC</a>, for any substantive contributions.  Anyone wishing to <a href="https://www.oasis-open.org/org/faq#committee-participation">participate</a>
+in the TC's technical activity is invited to <a href="https://www.oasis-open.org/committees/join">join</a> as a TC Member. **Member** in this context means any TC role or office other than OASIS TC Observer, per the
+<a href="https://www.oasis-open.org/policies-guidelines/tc-process#membership">TC Process</a>.</p>
+
+Persons who are not TC members are invited to open issues and provide comments using this repository's <a href="https://github.com/oasis-tcs/cxs-cdp/issues/new">GitHub Issues</a> tracking facility or using the TC's <a href="https://www.oasis-open.org/committees/comments/index.php?wg_abbrev=cxs">comment facility</a>.  All such content created in GitHub Issues and/or posted to the TC's <a href="https://lists.oasis-open.org/archives/cxs-comment/">archived comment list</a> is governed by the terms of the <a href="https://www.oasis-open.org/policies-guidelines/ipr#appendixa">OASIS Feedback License</a>.
+
+*Use of Contributions*. As with all OASIS Technical Committee assets (TC <a href="https://wiki.oasis-open.org/">Wiki</a>, TC <a href="https://issues.oasis-open.org/secure/Dashboard.jspa">Issues Tracker</a>, TC <a href="https://lists.oasis-open.org/archives/">General Discussion List archives</a>, TC <a href="http://docs.oasis-open.org/">OASIS Library</a> assets), content placed into this GitHub repository is visible and publicly accessible.  Subject to applicable <a href="https://github.com/oasis-tcs/cxs-cdp/blob/master/LICENSE.md">licensing</a> rules, the repository content may be re-used freely, including the creation and publication of derivative works.
+
+*Cloning and forking*. May users clone and fork this repository?  Yes. Just as versioned content maintained in any OASIS TC's <a href="https://tools.oasis-open.org/version-control/browse/">SVN/Subversion repository</a> may be checked out to a remote SVN repository and used by anyone, this GitHub repository may be forked or cloned for use by any party.  Compare, e.g., svn checkout https://tools.oasis-open.org/version-control/svn/dita/trunk/doctypes/dita-doctypes.
+
+Please see the <a href="https://github.com/oasis-tcs/cxs-cdp/blob/master/README.md">README</a> for general description of this repository, and the <a href="https://github.com/oasis-tcs/cxs-cdp/blob/master/LICENSE.md">LICENSE</a> file for licensing.
+
