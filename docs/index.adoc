@@ -71,7 +71,6 @@ This specification is related to:
   * GraphQL : https://graphql.org
   * GraphQL specification : https://facebook.github.io/graphql/
   *	Apache Unomi: https://unomi.apache.org
-=======
 
 [discrete]
 === Abstract:
