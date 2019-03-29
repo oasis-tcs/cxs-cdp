@@ -39,3 +39,9 @@ To test the server simply launch
 You can then connect a browser to the following URL:
 
     http://localhost:4000
+    
+### OASIS CXS TC Group Notes
+
+A copy of the HTML for the group notes of the OASIS CXS TC is stored in the `oasis-cxs-tc/group-notes.html` file. This 
+makes it easier to maintain this file as the KWS interface is tedious to use. Also this guarantees we have versioning
+for this document.
