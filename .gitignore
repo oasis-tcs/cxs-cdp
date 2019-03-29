@@ -45,3 +45,5 @@ target/
 node/
 etc/
 node_modules/
+graphql.config.json
+graphql.schema.json

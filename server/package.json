@@ -1,0 +1,24 @@
+{
+  "name": "cdp-graphql-api",
+  "version": "1.0.0",
+  "description": "GraphQL Implementation of the OASIS Context Server TC : Customer Data Platform API Specification",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sergehuber/cdp-graphql-api.git"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/sergehuber/cdp-graphql-api/issues"
+  },
+  "homepage": "https://github.com/sergehuber/cdp-graphql-api#readme",
+  "dependencies": {
+    "apollo-server": "^2.3.3",
+    "graphql": "^14.1.1"
+  }
+}
