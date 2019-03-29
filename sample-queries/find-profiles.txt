@@ -52,7 +52,7 @@ variables :
       },
       {
         "eventOccurence": {
-          "eventId": "purchased",
+          "eventID": "purchased",
           "count": 1,
           "afterTime": "now-30d"
         }

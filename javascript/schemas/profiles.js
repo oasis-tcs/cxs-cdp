@@ -17,37 +17,37 @@ input CDP_ProfileIDInput {
 Common interface for both profiles and personas
 """
 interface CDP_ProfileInterface {
-  _profileIDs : [CDP_ProfileID]
-  _segments(views : [ID]) : [CDP_Segment]
-  _interests(views : [ID]) : [CDP_Interest]
-  _consents : [CDP_Consent]
-  _lists(views : [ID]) : [CDP_List]
+  cdp_profileIDs : [CDP_ProfileID]
+  cdp_segments(views : [ID]) : [CDP_Segment]
+  cdp_interests(views : [ID]) : [CDP_Interest]
+  cdp_consents : [CDP_Consent]
+  cdp_lists(views : [ID]) : [CDP_List]
 }
 
 type CDP_Profile implements CDP_ProfileInterface {
-  _profileIDs : [CDP_ProfileID]
-  _events(filter : CDP_EventFilterInput, first : Int, last: Int, after : String, before: String) : CDP_EventConnection
-  _lastEvents(count : Int, profileID : CDP_ProfileIDInput) : CDP_EventConnection
-  _segments(views : [ID]) : [CDP_Segment]
-  _interests(views : [ID]) : [CDP_Interest]
-  _consents : [CDP_Consent]
-  _lists(views : [ID]) : [CDP_List]
-  _matches(namedFilters : [CDP_NamedFilterInput]) : [CDP_FilterMatch]
-  _optimize(parameters : [CDP_OptimizationInput]) : [CDP_OptimizationResult]
-  _recommend(parameters : [CDP_RecommendationInput]) : [CDP_RecommendationResult]
+  cdp_profileIDs : [CDP_ProfileID]
+  cdp_events(filter : CDP_EventFilterInput, first : Int, last: Int, after : String, before: String) : CDP_EventConnection
+  cdp_lastEvents(count : Int, profileID : CDP_ProfileIDInput) : CDP_EventConnection
+  cdp_segments(views : [ID]) : [CDP_Segment]
+  cdp_interests(views : [ID]) : [CDP_Interest]
+  cdp_consents : [CDP_Consent]
+  cdp_lists(views : [ID]) : [CDP_List]
+  cdp_matches(namedFilters : [CDP_NamedFilterInput]) : [CDP_FilterMatch]
+  cdp_optimize(parameters : [CDP_OptimizationInput]) : [CDP_OptimizationResult]
+  cdp_recommend(parameters : [CDP_RecommendationInput]) : [CDP_RecommendationResult]  
   # fields will be added here according to registered profile properties  
 }
 
 type CDP_ProfileUpdateEvent implements CDP_EventInterface {
   id: ID!
-  _source : CDP_Source
-  _client : CDP_Client
-  _profileID: CDP_ProfileID!
-  _profile : CDP_Profile!
-  _object: CDP_Object!
-  _location: GeoPoint
-  _timestamp: DateTime
-  _topics : [CDP_Topic]
+  cdp_source : CDP_Source
+  cdp_client : CDP_Client
+  cdp_profileID: CDP_ProfileID!
+  cdp_profile : CDP_Profile!
+  cdp_object: CDP_Object!
+  cdp_location: GeoPoint
+  cdp_timestamp: DateTime
+  cdp_topics : [CDP_Topic]
   # fields will be added here according to registered profile properties. To remove a property value pass a null value
 }
 

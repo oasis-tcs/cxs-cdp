@@ -13,7 +13,6 @@ image::images/OASISLogo-v2.0.jpg["Oasis Open Logo"]
 [discrete]
 == Not Yet Published (29 March 2019)
 
-////
 [discrete]
 === Specification URIs:
 This Version:
@@ -30,7 +29,6 @@ Latest Version:
   * http://docs.oasis-open.org/cxs/cdp/v1.0/cdp-v1.0.txt (Authoritative)
   * http://docs.oasis-open.org/cxs/cdp/v1.0/cdp-v1.0.html
   * http://docs.oasis-open.org/cxs/cdp/v1.0/cdp-v1.0.pdf
-////
 
 [discrete]
 === Technical Committee:
@@ -72,6 +70,7 @@ This specification is related to:
   * GraphQL : https://graphql.org
   * GraphQL specification : https://facebook.github.io/graphql/
   *	Apache Unomi: https://unomi.apache.org
+=======
 
 [discrete]
 === Abstract:
@@ -276,10 +275,10 @@ variables::
 .Example operation
 [source,graphql]
 ----
-query getExistingProfile($profileId : CDP_ProfileIDInput) {
+query getExistingProfile($profileID : CDP_ProfileIDInput) {
   cdp {
-    getProfile(createIfMissing: false, profileID: $profileId) {
-      _profileIDs {
+    getProfile(createIfMissing: false, profileID: $profileID) {
+      cdp_profileIDs {
         id
       }
     }
@@ -289,15 +288,15 @@ query getExistingProfile($profileId : CDP_ProfileIDInput) {
 
 
 The above query retrieves all profileIDs for an existing profile (that's why we set the createIfMissing
-argument to false). We also define a variable called $profileId that must be passed in the "variables" section of the
+argument to false). We also define a variable called $profileID that must be passed in the "variables" section of the
 GraphQL request. Here's an example of the `variables part:
 
 .Example variables
 [source,json]
 ----
 {
-  "profileId": {
-    "clientId": "web-tracker",
+  "profileID": {
+    "clientID": "web-tracker",
     "id": "0bb99ae7-0571-4b5f-8267-978731cb62c2"
   }
 }
@@ -916,9 +915,9 @@ mutation profileUpdateExample($events: [CDP_EventInput]!) {
   {
     "_profileID": {
       "id": "1234567890",
-      "clientId": "web-tracker"
+      "clientID": "web-tracker"
     },
-    "_objectId": "http://acme.org/aboutUs",
+    "_objectID": "http://acme.org/aboutUs",
     "pageViewEvent": {
       "language" : "en"
     }
@@ -931,7 +930,7 @@ mutation profileUpdateExample($events: [CDP_EventInput]!) {
 
 EventFilters are a specific version of filters for querying events.
 
-Example: Filter for identifying events of type `_profileUpdate` with a first name starting with `T`and a last name
+Example: Filter for identifying events of type `_profileUpdate` with a first name starting with `T` and a last name
 ending with `d` within the last 30 days.
 
 .Operation
@@ -943,8 +942,8 @@ query findEvents($filter: CDP_EventFilterInput) {
       edges {
         node {
           __typename
-          _timestamp
-          _object {
+          cdp_timestamp
+          cdp_object {
             uri
           }
         }
@@ -1018,7 +1017,15 @@ Profiles are updated through events.
 The history of external or internal profile modifications is accessible through the profile update events.
 CDP implementations SHOULD also support <<CDP_Subscription,subscriptions>> on profile modifications so that external systems can retrieve the profile modifications in real-time.
 
-Properties can be dynamically defined for profiles using the ``createOrUpdateProfileProperties`` and ``deleteProfileProperties`` mutations. Once a property is associated with a profile, it will become available in the CDP_Profile and CDP_Persona types.
+Properties can be dynamically defined for profiles using the ``createOrUpdateProfileProperties`` and ``deleteProfileProperties`` mutations.
+Once a property is associated with a profile, it will become available in the CDP_Profile and CDP_Persona types.
+
+[NOTE]
+======
+It is the responsability of clients accessing the GraphQL API to handle the lifecycle of properties properly, as
+new properties may be defined at any time, or more importantly, properties may be also deleted, potentially breaking a
+client's use of the API.
+======
 
 As an example, let's assume we have a starting CDP_Profile type that looks like this:
 
@@ -1026,16 +1033,16 @@ As an example, let's assume we have a starting CDP_Profile type that looks like 
 [source,graphql]
 ----
 type CDP_Profile implements CDP_ProfileInterface {
-  _profileIDs : [CDP_ProfileID]
-  _events(filter : CDP_EventFilterInput, first : Int, last: Int, after : String, before: String) : CDP_EventConnection
-  _lastEvents(count : Int, profileID : CDP_ProfileIDInput) : CDP_EventConnection
-  _segments(views : [ID]) : [CDP_Segment]
-  _interests(views : [ID]) : [CDP_Interest]
-  _consents : [CDP_Consent]
-  _lists(views : [ID]) : [CDP_List]
-  _matches(namedFilters : [CDP_NamedFilterInput]) : [CDP_FilterMatch]
-  _optimize(parameters : [CDP_OptimizationInput]) : [CDP_OptimizationResult]
-  _recommend(parameters : [CDP_RecommendationInput]) : [CDP_RecommendationResult]
+  cdp_profileIDs : [CDP_ProfileID]
+  cdp_events(filter : CDP_EventFilterInput, first : Int, last: Int, after : String, before: String) : CDP_EventConnection
+  cdp_lastEvents(count : Int, profileID : CDP_ProfileIDInput) : CDP_EventConnection
+  cdp_segments(views : [ID]) : [CDP_Segment]
+  cdp_interests(views : [ID]) : [CDP_Interest]
+  cdp_consents : [CDP_Consent]
+  cdp_lists(views : [ID]) : [CDP_List]
+  cdp_matches(namedFilters : [CDP_NamedFilterInput]) : [CDP_FilterMatch]
+  cdp_optimize(parameters : [CDP_OptimizationInput]) : [CDP_OptimizationResult]
+  cdp_recommend(parameters : [CDP_RecommendationInput]) : [CDP_RecommendationResult]
   # fields will be added here according to registered profile properties
 }
 ----
@@ -1081,16 +1088,16 @@ This will resulting in the following modifications to the CDP_Profile type:
 [source,graphql]
 ----
 type CDP_Profile implements CDP_ProfileInterface {
-  _profileIDs : [CDP_ProfileID]
-  _events(filter : CDP_EventFilterInput, first : Int, last: Int, after : String, before: String) : CDP_EventConnection
-  _lastEvents(count : Int, profileID : CDP_ProfileIDInput) : CDP_EventConnection
-  _segments(views : [ID]) : [CDP_Segment]
-  _interests(views : [ID]) : [CDP_Interest]
-  _consents : [CDP_Consent]
-  _lists(views : [ID]) : [CDP_List]
-  _matches(namedFilters : [CDP_NamedFilterInput]) : [CDP_FilterMatch]
-  _optimize(parameters : [CDP_OptimizationInput]) : [CDP_OptimizationResult]
-  _recommend(parameters : [CDP_RecommendationInput]) : [CDP_RecommendationResult]
+  cdp_profileIDs : [CDP_ProfileID]
+  cdp_events(filter : CDP_EventFilterInput, first : Int, last: Int, after : String, before: String) : CDP_EventConnection
+  cdp_lastEvents(count : Int, profileID : CDP_ProfileIDInput) : CDP_EventConnection
+  cdp_segments(views : [ID]) : [CDP_Segment]
+  cdp_interests(views : [ID]) : [CDP_Interest]
+  cdp_consents : [CDP_Consent]
+  cdp_lists(views : [ID]) : [CDP_List]
+  cdp_matches(namedFilters : [CDP_NamedFilterInput]) : [CDP_FilterMatch]
+  cdp_optimize(parameters : [CDP_OptimizationInput]) : [CDP_OptimizationResult]
+  cdp_recommend(parameters : [CDP_RecommendationInput]) : [CDP_RecommendationResult]
   # fields will be added here according to registered profile properties
   firstName : String
   sample_Address : Sample_Address
@@ -1252,7 +1259,7 @@ mutation updateProfile($events: [CDP_EventInput]!) {
   {
     "_object" : "cdp_profile:crm/crm-profile-id",
     "_profileID": {
-      "clientId": "crm",
+      "clientID": "crm",
       "id": "crm-profile-id"
     },
     "_profileUpdateEvent": {
@@ -1338,13 +1345,13 @@ query profileFilterExample(
       totalCount
       edges {
         node {
-          _profileIDs {
+          cdp_profileIDs {
             client {
               id
             }
             id
           }
-          _segments {
+          cdp_segments {
             name
           }
         }
@@ -1466,7 +1473,7 @@ mutation updateSessions($events: [CDP_EventInput]!) {
   "events": [
     {
       "_profileID": {
-        "clientId": "crm",
+        "clientID": "crm",
         "id" : "crm-profile-id"
       },
       "_object": "cdp_profile:crm/crm-profile-id",
@@ -1487,13 +1494,13 @@ Consents hold an identifier that uniquely identifies the consent across your sys
 
 Consents are given and revoked through events. This means that the CDP specification defines reserved property types for granting and revoking consents.
 
-.Sample ALLOW consent
+.Sample GRANTED consent
 [source,graphql]
 ----
     {
-      "_sourceId" : "example.com",
+      "_sourceID" : "example.com",
       "_profileID": {
-        "clientId": "crm",
+        "clientID": "crm",
         "id" : "crm-profile-id"
       },
       "_object": "cdp_profile:crm/crm-profile-id",
@@ -1510,9 +1517,9 @@ Consents are given and revoked through events. This means that the CDP specifica
 [source,graphql]
 ----
     {
-      "_sourceId" : "example.com",
+      "_sourceID" : "example.com",
       "_profileID": {
-        "clientId": "crm",
+        "clientID": "crm",
         "id" : "crm-profile-id"
       },
       "_object": "cdp_profile:crm/crm-profile-id",
@@ -1609,7 +1616,7 @@ mutation updateConsent($events: [CDP_EventInput]!) {
   "events": [
     {
       "_profileID": {
-        "clientId": "crm",
+        "clientID": "crm",
         "id" : "crm-profile-id"
       },
       "_object": "cdp_profile:crm/crm-profile-id",
@@ -1935,7 +1942,7 @@ mutation updateLists($events: [CDP_EventInput]!) {
   "events": [
     {
       "_profileID": {
-        "clientId": "crm",
+        "clientID": "crm",
         "id" : "crm-profile-id"
       },
       "_object": "cdp_profile:crm/crm-profile-id",
@@ -2103,12 +2110,12 @@ Below is an example of matching a profile with a filter in real-time:
 [source,graphql]
 ----
 query profileMatching(
-  $profileId: CDP_ProfileIDInput
+  $profileID: CDP_ProfileIDInput
   $namedFilters: [CDP_NamedFilterInput]
 ) {
   cdp {
-    getProfile(profileID: $profileId) {
-      _matches(namedFilters: namedFilters) {
+    getProfile(profileID: $profileID) {
+      cdp_matches(namedFilters: namedFilters) {
         name
         matched
       }
@@ -2121,7 +2128,7 @@ query profileMatching(
 [source,json]
 ----
 {
-  "profileId": {
+  "profileID": {
     "clientID": "crm",
     "id": "crm-profile-id"
   },
@@ -2216,12 +2223,12 @@ Example of an optimization of objects for a given profile :
 [source,graphql]
 ----
 query profileOptimizations(
-  $profileId: CDP_ProfileIDInput
+  $profileID: CDP_ProfileIDInput
   $optimizationParameters: [CDP_OptimizationInput]
 ) {
   cdp {
-    getProfile(profileID: $profileId) {
-      _optimize(parameters: $optimizationParameters) {
+    getProfile(profileID: $profileID) {
+      cdp_optimize(parameters: $optimizationParameters) {
         name
         scoredObjects {
           object {
@@ -2247,7 +2254,7 @@ query profileOptimizations(
 [source,json]
 ----
 {
-  "profileId": {
+  "profileID": {
     "clientID": "crm",
     "id": "crm-profile-id"
   },
@@ -2306,12 +2313,12 @@ Example of how to get a recommendation for a profile :
 [source,graphql]
 ----
 query profileRecommendations(
-  $profileId: CDP_ProfileIDInput
+  $profileID: CDP_ProfileIDInput
   $recommendationParameters: [CDP_RecommendationInput]
 ) {
   cdp {
-    getProfile(profileID: $profileId) {
-      _recommend(parameters: $recommendationParameters) {
+    getProfile(profileID: $profileID) {
+      cdp_recommend(parameters: $recommendationParameters) {
         name
         scoredObjects {
           object {
@@ -2337,7 +2344,7 @@ query profileRecommendations(
 [source,json]
 ----
 {
-  "profileId": {
+  "profileID": {
     "clientID": "crm",
     "id": "crm-profile-id"
   },
@@ -2364,6 +2371,11 @@ While it may not be immediately obvious how your specification might make system
 In addition to considering and describing foreseeable risks, this section should include guidance on how implementers and adopters can protect against these risks
 We encourage editors and TC members concerned with this subject to read Guidelines for Writing RFC Text on Security Considerations, IETF \[RFC3552], for more information.)
 
+TODO :
+- Talk about GraphQL input validation, https://facebook.github.io/graphql/June2018/#sec-Validation
+- Talk about managing personal information and GDPR
+- Access management for the API
+- Audit
 
 == Conformance
 
@@ -2377,13 +2389,14 @@ The following individuals have participated in the creation of this specificatio
 
 Participants:
 
+  * Jan Blessenohl, Progress Software
+  * Kaloyan Nikolov, Progress Software
+  * Chris Laprun, RedHat
+
   * Participant Name, Affiliation | Individual Member
   * Participant Name, Affiliation | Individual Member
 
-== Appendix B. Example Title
-
-TODO: any additional appendices for non-normative text here
-
-== Appendix C. Revision History
+== Appendix B. Revision History
 
 Revision 	Date 	Editor 	Changes Made
+TODO Add history
