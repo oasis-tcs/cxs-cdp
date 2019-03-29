@@ -3,7 +3,7 @@
 //:toc: macro
 :toclevels: 4
 :sectnums:
-:sourcedir: ../javascript
+:sourcedir: ../server
 
 image::images/OASISLogo-v2.0.jpg["Oasis Open Logo"]
 
@@ -11,7 +11,7 @@ image::images/OASISLogo-v2.0.jpg["Oasis Open Logo"]
 == Committee Specification Draft 01 / Public Review Draft 01 (Working Draft)
 
 [discrete]
-== Not Yet Published (21 March 2019)
+== Not Yet Published (29 March 2019)
 
 ////
 [discrete]
@@ -54,8 +54,15 @@ OASIS Context Server (CXS) TC
 
 This prose specification is one component of a Work Product that also includes:
 
-  * GraphQL sample implementation: http://docs.oasis-open.org/tc-short-name/WP-abbrev/version/csdXX/schemas/ (hyperlink, including terminating /)
-  * Other parts (list full title and VISIBLE hyperlink, preferably to HTML version)
+* Sample server implementation: https://github.com/oasis-tcs/cxs-cdp
+
+.To run server locally:
+----
+git clone https://github.com/oasis-tcs/cxs-cdp -c 1.0.0
+cd server/
+npm install
+npm start
+----
 
 [discrete]
 === Related work:
@@ -64,12 +71,14 @@ This specification is related to:
 
   * GraphQL : https://graphql.org
   * GraphQL specification : https://facebook.github.io/graphql/
-  *	Related specifications (VISIBLE hyperlink, preferably to HTML version)
+  *	Apache Unomi: https://unomi.apache.org
 
 [discrete]
 === Abstract:
 
-This specification aims to standardize exchange of customer data across systems and silos by defining a web-based API using GraphQL, thus providing a self-documented and strongly typed interface while allowing extensive customization. It is based upon four core concepts: Profiles, Events, Consents, and Clients.
+This specification aims to standardize exchange of customer data across systems and silos by defining a web-based API using GraphQL.
+The GraphQL api is a self-documented and strongly typed interface.
+It is designed to be dynamically extended, and allows extensive implementation specific customization.
 
 [discrete]
 === Status:
@@ -80,7 +89,7 @@ TC members should send comments on this specification to the TC's email list. Ot
 
 This specification is provided under the Non-Assertion Mode of the OASIS IPR Policy, the mode chosen when the Technical Committee was established. For information on whether any patents have been disclosed that may be essential to implementing this specification, and any offers of patent licensing terms, please refer to the Intellectual Property Rights section of the TC's web page (https://www.oasis-open.org/committees/cxs/ipr.php).
 
-Note that any machine-readable content (Computer Language Definitions) declared Normative for this Work Product is provided in separate plain text files. In the event of a discrepancy between any such plain text file and display content in the Work Product's prose narrative document(s), the content in the separate plain text file prevails.
+NOTE: Any machine-readable content (Computer Language Definitions) declared Normative for this Work Product is provided in separate plain text files. In the event of a discrepancy between any such plain text file and display content in the Work Product's prose narrative document(s), the content in the separate plain text file prevails.
 
 [discrete]
 === Citation format:
@@ -140,14 +149,13 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 === Normative References
 
-  \[RFC2119]	Bradner, S., "Key words for use in RFCs to Indicate Requirement Levels", BCP 14, RFC 2119, DOI 10.17487/RFC2119, March 1997, <http://www.rfc-editor.org/info/rfc2119>.
-  \[RFC8174]	Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174, May 2017, <http://www.rfc-editor.org/info/rfc8174>.
-  \[Reference]	\[Full reference citation]
+[RFC2119]	Bradner, S., "Key words for use in RFCs to Indicate Requirement Levels", BCP 14, RFC 2119, DOI 10.17487/RFC2119, March 1997, http://www.rfc-editor.org/info/rfc2119.
+
+[RFC8174]	Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174, May 2017, http://www.rfc-editor.org/info/rfc8174.
 
 === Non-Normative References
 
-  \[RFC3552]	Rescorla, E. and B. Korver, "Guidelines for Writing RFC Text on Security Considerations", BCP 72, RFC 3552, DOI 10.17487/RFC3552, July 2003, <https://www.rfc-editor.org/info/rfc3552>.
-  \[Reference]	\[Full reference citation]
+[RFC3552]	Rescorla, E. and B. Korver, "Guidelines for Writing RFC Text on Security Considerations", BCP 72, RFC 3552, DOI 10.17487/RFC3552, July 2003, <https://www.rfc-editor.org/info/rfc3552>.
 
 
 == Use Cases
@@ -533,10 +541,10 @@ As we are expressing filters through GraphQL, filters will always be strongly ty
 I.e. if the property "firstName" with valueType string is available, the following filter options can be used:
 
   firstName_equals
-  firstName_startsWith (optional)
-  firstName_endsWith (optional)
+  firstName_startsWith (OPTIONAL)
+  firstName_endsWith (OPTIONAL)
   firstName_contains
-  firstName_regexp (optional)
+  firstName_regexp (OPTIONAL)
 
 Below are some basic filter examples:
 
@@ -582,7 +590,7 @@ The following comparison operators are available:
 |distance   |          |      |   |     |    |       |x       |           |
 |===============================================================================
 
-[[[o]]] Optional operator
+[[[o]]] OPTIONAL operator
 
 The `Array` column is a special case. It can be an array of any GraphQL type. In this case only the `contains` operator
 is defined in the specification, but implementations are free to offer more advanced operators for this type.
@@ -1157,14 +1165,22 @@ The naming and generation conventions are exactly the same as for the profiles p
 
 Customer Data Platforms implementations SHOULD support profile merges.
 
-As profiles evolve over time, the Customer Data Platform may discover that two profiles actually represent the same individual i.e. if the same e-mail address is registered in both profiles, or if the user in on both his devices. This may then result in a profile merge.
+As profiles evolve over time, the Customer Data Platform may discover that two profiles actually represent the same individual.
+I.e. if the same e-mail address is registered in both two different profiles.
+
+This may then result in a profile merge.
 During a profile merge, the Customer Data Platform will link two (or more) separate profiles together.
 In order to keep event history and avoid re-processing of data, the merge process must not affect the existing and unique profileIDs.
 This is why profiles are defined to have multiple profileIDs.
 
 Example: As such, when visitors on a website are tracked through a cookie (defining the profileID), the cookie will remain the same even if the profile is merged.
 
-Profile merges are optional in the CDP specification. They may be supported by using a property defined as an identifier as a merge key (multiple merge keys may of course exist) to merge multiple profiles. The resulting merged profile MUST contain all the source profile IDs of the merged profiles as well as the merged profile data. The original profiles that were merged may be flagged or deleted, this is implementation specific.
+TODO: READ THIS SERGE
+They may be supported by using a property defined as an identifier as a merge key.
+Multiple merge keys may of course exist to merge multiple profiles.
+The resulting merged profile MUST contain all the profile IDs of the merged profiles,
+as well as the merged profile data.
+The original profiles that were merged may be flagged or deleted, this is implementation specific.
 
 ==== CDP_ProfileID
 
