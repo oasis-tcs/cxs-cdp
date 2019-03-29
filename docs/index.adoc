@@ -56,8 +56,9 @@ This prose specification is one component of a Work Product that also includes:
 
 .To run server locally:
 ----
-git clone https://github.com/oasis-tcs/cxs-cdp -c 1.0.0
-cd server/
+git clone https://github.com/oasis-tcs/cxs-cdp
+git checkout tags/v1.0.0
+cd cxs-cdp/server/
 npm install
 npm start
 ----
@@ -304,8 +305,6 @@ GraphQL request. Here's an example of the `variables part:
 
 As illustrated above, the variables may contain complex JSON structure that represent the values for the objects that
 are passed as GraphQL arguments.
-
-NOTE: The most efficient way to explore the GraphQL API is by starting the sample CDP server TODO
 
 === Scalars
 
@@ -1182,9 +1181,7 @@ This is why profiles are defined to have multiple profileIDs.
 
 Example: As such, when visitors on a website are tracked through a cookie (defining the profileID), the cookie will remain the same even if the profile is merged.
 
-TODO: READ THIS SERGE
-They may be supported by using a property defined as an identifier as a merge key.
-Multiple merge keys may of course exist to merge multiple profiles.
+Profile merges may for instance be supported by using identifying profile properties (such as email and/or social security number).
 The resulting merged profile MUST contain all the profile IDs of the merged profiles,
 as well as the merged profile data.
 The original profiles that were merged may be flagged or deleted, this is implementation specific.
