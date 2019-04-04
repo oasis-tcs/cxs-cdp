@@ -30,7 +30,25 @@ const { objectsSchema } = require('./schemas/objects');
 const { topicsSchema } = require('./schemas/topics');
 const { viewsSchema } = require('./schemas/views');
 
-const resolvers = {};
+// we don't really implement resolvers because this is just used to validate the schema, not to implement the actual
+// CDP backend.
+const resolvers = {
+    CDP_EventInterface : {
+        __resolveType : function (obj, context, info) {
+            return obj.typename;
+        }
+    },
+    CDP_ProfileInterface : {
+        __resolveType : function (obj, context, info) {
+            return obj.typename;
+        }
+    },
+    CDP_PropertyInterface : {
+        __resolveType : function (obj, context, info) {
+            return obj.typename;
+        }
+    }
+};
 
 const typeDefs = [
     cdpGlobalSchema,
