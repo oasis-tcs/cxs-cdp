@@ -2378,6 +2378,17 @@ TODO :
 TODO REMOVE: (For the definition of "conformance clause," see OASIS Defined Terms.
 See "Guidelines to Writing Conformance Clauses": http://docs.oasis-open.org/templates/TCHandbook/ConformanceGuidelines.html.)
 
+The baseline server and client profiles provide the most basic functionality that is expected of a conformant CDP client or server. The complete server profile defines a CDP server that implements the entire specification. A CDP implementation conformant to this specification (the Key Management Interoperability Protocol Profiles) SHALL meet all the conditions documented in one or more of the following sections.
+
+An implementation conforms to this speciﬁcation if it satisﬁes all of the MUST or REQUIRED level requirements deﬁned within this speciﬁcation.
+
+=== Baseline Client Basic CDP v1.4 Profile Conformance
+KMIP client implementations conformant to this profile:
+
+. SHALL support [CDP-SPEC]
+. SHALL support the Basic Authentication Suite conditions (3.1) and;
+. SHALL support the Baseline Client conditions (5.1.1)
+
 
 == Appendix A. Acknowledgements
 
