@@ -2375,12 +2375,16 @@ TODO :
 
 == Conformance
 
+////
 TODO REMOVE: (For the definition of "conformance clause," see OASIS Defined Terms.
 See "Guidelines to Writing Conformance Clauses": http://docs.oasis-open.org/templates/TCHandbook/ConformanceGuidelines.html.)
+SAMPLE: An implementation conforms to this speciﬁcation if it satisﬁes all of the MUST or REQUIRED level requirements deﬁned within this speciﬁcation.
+////
 
-The baseline server and client profiles provide the most basic functionality that is expected of a conformant CDP client or server. The complete server profile defines a CDP server that implements the entire specification. A CDP implementation conformant to this specification (the Key Management Interoperability Protocol Profiles) SHALL meet all the conditions documented in one or more of the following sections.
+The specification GraphQL API provides the most basic functionality that is expected of a conformant CDP server.
+A CDP implementation conformant to this specification SHALL meet all the conditions documented in the <<API>> section.
 
-An implementation conforms to this speciﬁcation if it satisﬁes all of the MUST or REQUIRED level requirements deﬁned within this speciﬁcation.
+Any parts of the specification stated as OPTIONAL or RECOMMENDED TODO conformance.
 
 === Baseline Client Basic CDP v1.4 Profile Conformance
 KMIP client implementations conformant to this profile:
