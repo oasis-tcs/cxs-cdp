@@ -250,7 +250,7 @@ Topics:: Represent "business areas" of the organisation deploying the CDP - i.e.
 Filters:: <<Filters>> are structured queries against other CDP domain objects
 
 
-== API Reference
+== API
 
 The Customer Data Platform (CDP) standard is built around a set of concepts, domain objects and services for interacting with them.
 This is represented through a strongly typed API defined by GraphQL Types, Queries, Mutations and Subscriptions.
@@ -362,7 +362,7 @@ I.e. from the example above: "setOfProperties.response" would hold the value "yo
 
 A property consists of:
 
-Property name:: it is RECOMMENDED but not mandatory to prefix the property name
+Property name:: it is recommended but not mandatory to prefix the property name
 Value type:: One of `Identifier`, `String`, `Int`, `Float`, `Date`, `Boolean`, `GeoPoint`, `Enumeration` and `Set`
 Minimum occurrences:: Minimum number of values a property may hold (array)
 Maximum occurrences:: Maximum number of values per property
@@ -379,7 +379,7 @@ The property interface defines the common fields for the different value types.
 include::{sourcedir}/schemas/properties.js[lines=5..10]
 ----
 
-name:: must be in a format that's acceptable as a GraphQL field name (/[_A-Za-z][_0-9A-Za-z]*/) , and we RECOMMEND to prefix it to avoid conflicts, i.e acme_pageView, acme_click. "cdp_" is reserved.
+name:: must be in a format that's acceptable as a GraphQL field name (/[_A-Za-z][_0-9A-Za-z]*/) , we highly RECOMMEND to prefix it to avoid conflicts, i.e acme_pageView, acme_click. "cdp_" is reserved.
 minOccurences:: Default = 0. For minOccurrences > 1 the property can hold multiple values in preserved order. minOccurences = 1 indicates the property is mandatory.
 maxOccurences:: Default = 1. maxOccurences = 0 indicates no limit. maxOccurences must be higher than minOccurences.
 tags:: System defined/generated tags. E.g: hidden, readOnly, personalData
@@ -676,7 +676,7 @@ The Customer Data Platform requires <<profileIDs>> to be unique within every cli
 For instance, if a client is used to track visitors across multiple websites, it should aim to re-use the same <<profileID>> across all of them, for the same visitor.
 
 NOTE: The standard does not specify Queries or Mutations for creating or retrieving Clients in the CDP specification, as this is considered an implementation-specific feature.
-For any CDP implementation, a Client MUST be defined before it can access the API.
+For any CDP implementation, a Client MUST be defined for it to access the API.
 
 ==== CDP_Client
 
@@ -798,7 +798,7 @@ In the CDP, every EventType will need both an regular GraphQL type, and a GraphQ
 
 NOTE: EventType fields MUST match the CDP propertyType format, and its underlying valueTypes
 
-Below are examples of what custom EventTypes might look like, we used a VENDOR prefix as it is recommended to avoid
+Below are examples of what custom EventTypes might look like, we used VENDOR as prefix, since it is recommended to avoid
 conflicts with other types:
 
 .Sample EventType for Page Views
@@ -1168,7 +1168,7 @@ The naming and generation conventions are exactly the same as for the profiles p
 
 ==== Profile merges
 
-Customer Data Platforms implementations SHOULD support profile merges.
+Customer Data Platforms implementations MUST support profile merges.
 
 As profiles evolve over time, the Customer Data Platform may discover that two profiles actually represent the same individual.
 I.e. if the same e-mail address is registered in both two different profiles.
@@ -1226,7 +1226,7 @@ include::{sourcedir}/schemas/profiles.js[lines=27..39]
 ==== CDP_ProfileUpdateEvent
 
 Profiles are crated and updated through this event type.
-This event is part of the standard and must be available for any implementation of the specification.
+This event is part of the standard and MUST be available for any implementation of the specification.
 
 [source,graphql]
 ----
@@ -2172,11 +2172,13 @@ include::{sourcedir}/schemas/optimizations.js[lines=27..30]
 Name::  Implementation specific algorithms, examples may be `collaborative-filtering`, `clustering`, `deep`, `trending`, etc
 
 Parameters::
-JSON object supported by the specified algorithm. Algorithm must validate object itself. Parameters can be used to filter the results of the recommendation algorithm or any other custom processing that is supported by the implementation.
+JSON object supported by the specified algorithm. Algorithms must validate the object themselves. Parameters can be used to filter the results of the recommendation algorithm or any other custom processing that is supported by the implementation.
 
 
 
 === Optimizations
+
+This part of the specification is OPTIONAL
 
 A specific application of data intelligence is smart decision making, or optimizations.
 In short, an optimization is done by passing a number of objects in, and letting the system rank them according to which is considered optimal.
@@ -2277,6 +2279,8 @@ query profileOptimizations(
 
 === Recommendations
 
+This part of the specification is OPTIONAL
+
 Unlike optimizations that act on a defined list of objects,
 recommendations take an object as input, only to suggest other objects based on a specific algorithm.
 
@@ -2361,38 +2365,89 @@ query profileRecommendations(
 
 == Security Considerations
 
+////
 TODO REMOVE: (Note: OASIS strongly recommends that Technical Committees consider issues that could affect security when implementing their specification and document them for implementers and adopters. For some purposes, you may find it required, e.g. if you apply for IANA registration.
 While it may not be immediately obvious how your specification might make systems vulnerable to attack, most specifications, because they involve communications between systems, message formats, or system settings, open potential channels for exploit. For example, IETF \[RFC3552] lists “eavesdropping, replay, message insertion, deletion, modification, and man-in-the-middle” as well as potential denial of service attacks as threats that must be considered and, if appropriate, addressed in IETF RFCs.
 
 In addition to considering and describing foreseeable risks, this section should include guidance on how implementers and adopters can protect against these risks
 We encourage editors and TC members concerned with this subject to read Guidelines for Writing RFC Text on Security Considerations, IETF \[RFC3552], for more information.)
+////
 
-TODO :
-- Talk about GraphQL input validation, https://facebook.github.io/graphql/June2018/#sec-Validation
-- Talk about managing personal information and GDPR
-- Access management for the API
-- Audit
+The goal of CDP is to aggregate and store personal data.
+Failure in securing the data may have dramatic consequences, both financially and in direct customer relationship for the involved parties.
+
+=== Attack surface
+
+Architecturally, CDP is designed to only be accessible through a single API. This limits the attack surface.
+Deliberately, the standard does not specify how the API is secured, as this can be handled using traditional web security mechanisms, such as IP filtering and certificates.
+
+=== Client tokens
+
+Communicating with the API requires a valid <<Clients, Client>>.
+Implementers are strongly encouraged to use additional tokens or similar for securing the client access further.
+
+=== Access control
+
+By default, clients get access to all data stored in the CDP.
+
+Implementers are encouraged to implement different levels of access control beyond this.
+For instance using roles or access control mechanisms, limiting clients to writing events,
+or allowing access to management objects, etc.
+
+=== Authentication
+
+The specification does not set any requirements for authentication
+However, CDP specifies management objects that are intended to be created and handled by power-users and marketeers.
+
+Implementers are encouraged to support a concepts for users in the implementation and API directly.
+
+By combining the concept of client tokens above with users and/or autorization tokens (i.e using Oauth),
+implementers may offer granular and controlled access to data through the CDP API.
+
+[NOTE]
+====
+It is always recommended to proxy access to CDP through a gateway client.
+Direct access from end user devices and other clients poses a higher risk of exposing sensitive data.
+====
+
+=== Audit logs
+
+For interaction with management object in particular, it is recommended to implement audit logging.
+
+=== GraphQL
+The API itself is strongly typed, but consider specific security measurements related to GraphQL, such as input validation.
+For more information: https://facebook.github.io/graphql/June2018/#sec-Validation
 
 == Conformance
+
+This section describes requirements for an implementation to claim specification conformance.
 
 ////
 TODO REMOVE: (For the definition of "conformance clause," see OASIS Defined Terms.
 See "Guidelines to Writing Conformance Clauses": http://docs.oasis-open.org/templates/TCHandbook/ConformanceGuidelines.html.)
-SAMPLE: An implementation conforms to this speciﬁcation if it satisﬁes all of the MUST or REQUIRED level requirements deﬁned within this speciﬁcation.
 ////
 
-The specification GraphQL API provides the most basic functionality that is expected of a conformant CDP server.
-A CDP implementation conformant to this specification SHALL meet all the conditions documented in the <<API>> section.
+=== Conformance targets
 
-Any parts of the specification stated as OPTIONAL or RECOMMENDED TODO conformance.
+There are two defined levels of conformance:
 
-=== Baseline Client Basic CDP v1.4 Profile Conformance
-KMIP client implementations conformant to this profile:
+* CORE (minimum level conformance)
+* FULL (complete implementation, including intelligence capabilities)
 
-. SHALL support [CDP-SPEC]
-. SHALL support the Basic Authentication Suite conditions (3.1) and;
-. SHALL support the Baseline Client conditions (5.1.1)
 
+=== CORE conformance
+
+CORE conformance CDP server implementations:
+
+* MUST implement the specifications of the <<API>> section
+* MAY implement any parts of the <<API>> specification marked as OPTIONAL
+
+=== FULL conformance
+
+CORE conformance CDP server implementations:
+
+* MUST meet all requirements of the CORE conformance
+* MUST additionally implement all OPTIONAL parts of the <<API>> specification
 
 == Appendix A. Acknowledgements
 
@@ -2403,9 +2458,6 @@ Participants:
   * Jan Blessenohl, Progress Software
   * Kaloyan Nikolov, Progress Software
   * Chris Laprun, RedHat
-
-  * Participant Name, Affiliation | Individual Member
-  * Participant Name, Affiliation | Individual Member
 
 == Appendix B. Revision History
 
