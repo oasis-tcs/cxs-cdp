@@ -2381,6 +2381,10 @@ Failure in securing the data may have dramatic consequences, both financially an
 Architecturally, CDP is designed to only be accessible through a single API. This limits the attack surface.
 Deliberately, the standard does not specify how the API is secured, as this can be handled using traditional web security mechanisms, such as IP filtering and certificates.
 
+=== Network communication
+
+All communication going through a network, be it a local or global one, should be encrypted using latest recommended standards in the matter. In the case of the GraphQL API, it is highly recommended to use HTTPS connections to avoid man-in-the-middle attacks and eavesdropping. It is also not recommended that the GraphQL API be publicly and directly available, but only available to known and trusted clients.
+
 === Client tokens
 
 Communicating with the API requires a valid <<Clients, Client>>.
@@ -2415,8 +2419,8 @@ Direct access from end user devices and other clients poses a higher risk of exp
 For interaction with management object in particular, it is recommended to implement audit logging.
 
 === GraphQL
-The API itself is strongly typed, but consider specific security measurements related to GraphQL, such as input validation.
-For more information: https://facebook.github.io/graphql/June2018/#sec-Validation
+Thanks to the usage of GraphQL, the API is strongly typed, which implies that input validation is performed on any API
+request, minimizing the attack surface even more. For more information: https://facebook.github.io/graphql/June2018/#sec-Validation
 
 == Conformance
 
