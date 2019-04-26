@@ -152,11 +152,6 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 [RFC8174]	Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174, May 2017, http://www.rfc-editor.org/info/rfc8174.
 
-=== Non-Normative References
-
-[RFC3552]	Rescorla, E. and B. Korver, "Guidelines for Writing RFC Text on Security Considerations", BCP 72, RFC 3552, DOI 10.17487/RFC3552, July 2003, <https://www.rfc-editor.org/info/rfc3552>.
-
-
 == Use Cases
 
 In this section we present a selection of use cases that are relevant to the scope covered by the CDP specification.
@@ -2366,7 +2361,7 @@ query profileRecommendations(
 == Security Considerations
 
 ////
-TODO REMOVE: (Note: OASIS strongly recommends that Technical Committees consider issues that could affect security when implementing their specification and document them for implementers and adopters. For some purposes, you may find it required, e.g. if you apply for IANA registration.
+(Note: OASIS strongly recommends that Technical Committees consider issues that could affect security when implementing their specification and document them for implementers and adopters. For some purposes, you may find it required, e.g. if you apply for IANA registration.
 While it may not be immediately obvious how your specification might make systems vulnerable to attack, most specifications, because they involve communications between systems, message formats, or system settings, open potential channels for exploit. For example, IETF \[RFC3552] lists “eavesdropping, replay, message insertion, deletion, modification, and man-in-the-middle” as well as potential denial of service attacks as threats that must be considered and, if appropriate, addressed in IETF RFCs.
 
 In addition to considering and describing foreseeable risks, this section should include guidance on how implementers and adopters can protect against these risks
@@ -2418,16 +2413,18 @@ Direct access from end user devices and other clients poses a higher risk of exp
 
 For interaction with management object in particular, it is recommended to implement audit logging.
 
-=== GraphQL
+=== Input validation
 Thanks to the usage of GraphQL, the API is strongly typed, which implies that input validation is performed on any API
 request, minimizing the attack surface even more. For more information: https://facebook.github.io/graphql/June2018/#sec-Validation
+
+However, the input validation provided by GraphQL does not free implementations from performing measures against cross-site scripting and other script-injection attacks (eg: SQL injection).
 
 == Conformance
 
 This section describes requirements for an implementation to claim specification conformance.
 
 ////
-TODO REMOVE: (For the definition of "conformance clause," see OASIS Defined Terms.
+(For the definition of "conformance clause," see OASIS Defined Terms.
 See "Guidelines to Writing Conformance Clauses": http://docs.oasis-open.org/templates/TCHandbook/ConformanceGuidelines.html.)
 ////
 
@@ -2466,4 +2463,6 @@ Participants:
 == Appendix B. Revision History
 
 Revision 	Date 	Editor 	Changes Made
+////
 TODO Add history
+////
