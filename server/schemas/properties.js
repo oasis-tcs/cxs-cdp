@@ -1,6 +1,6 @@
 exports.propertyTypesSchema = `
 """
-TODO: Nice description on why we have this interface
+This interface regroups all the common fields between properties.
 """
 interface CDP_PropertyInterface {
   name : ID!

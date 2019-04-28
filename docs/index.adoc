@@ -365,7 +365,7 @@ Maximum occurrences:: Maximum number of values per property
 Since the CDP api is defined using strongly typed GraphQL,
 the API is dynamically updated when properties are added or changed.
 
-==== CDP_Property
+==== CDP_PropertyInterface
 
 The property interface defines the common fields for the different value types.
 
@@ -680,6 +680,12 @@ For any CDP implementation, a Client MUST be defined for it to access the API.
 include::{sourcedir}/schemas/client.js[lines=2..6]
 ----
 
+==== CDP_ClientInput
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/client.js[lines=8..11]
+----
 
 === Sources
 Sources are optional, but represent a way to identify the exact origin of events within a client.
@@ -1299,6 +1305,8 @@ include::{sourcedir}/schemas/profiles.js[lines=74..76]
 
 ==== CDP_Mutation
 
+TODO Should profile properties mutations be made optional ? Implementations could provide their own way of registering properties and not want to expose this ?
+
 .Profile mutations
 [source,graphql]
 ----
@@ -1474,6 +1482,24 @@ mutation updateSessions($events: [CDP_EventInput]!) {
     }
   ]
 }
+----
+
+==== CDP_SessionEventFilter
+
+This type is used in <<EventFilters>> to filter session events
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/sessions.js[lines=26..28]
+----
+
+==== CDP_SessionEventFilterInput
+
+This type is used in <<EventFilters>> to filter session events
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/sessions.js[lines=30..32]
 ----
 
 === Consents
@@ -1783,7 +1809,21 @@ Specifying interest is only relevant for <<Personas>>
 include::{sourcedir}/schemas/interests.js[lines=7..10]
 ----
 
+==== CDP_InterestFilter
 
+Used to filter interests, mostly for administration purposes
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/interests.js[lines=12..21]
+----
+
+==== CDP_InterestFilterInput
+
+[source,graphql]
+----
+include::{sourcedir}/schemas/interests.js[lines=23..32]
+----
 
 
 === Personas
@@ -1956,12 +1996,16 @@ include::{sourcedir}/schemas/lists.js[lines=37..40]
 
 ==== CDP_ListsUpdateEventFilterInput
 
+Used to filter list update events when querying events
+
 [source,graphql]
 ----
 include::{sourcedir}/schemas/lists.js[lines=42..45]
 ----
 
-==== CDP_ListsFilterInput
+==== CDP_ListFilterInput
+
+Used to filter lists in for management purposes
 
 [source,graphql]
 ----
