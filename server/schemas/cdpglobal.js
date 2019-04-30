@@ -34,7 +34,8 @@ type CDP_Query {
 }
 
 type CDP_Mutation {
-  deleteAllPersonalData : Boolean
+  "Please disregard the underscore field, it is only there because GraphQL schema doesn't allow empty types"
+  _ : EmptyTypeWorkAround
 }
 
 type CDP_Subscription {

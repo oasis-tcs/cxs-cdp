@@ -80,6 +80,7 @@ extend type CDP_Mutation {
   createOrUpdateProfileProperties(properties : [CDP_PropertyInput]) : Boolean
   deleteProfileProperties(propertyNames : [ID]!) : Boolean
   deleteProfile(profileID : CDP_ProfileIDInput) : CDP_Profile
+  deleteAllPersonalData(profileID : CDP_ProfileIDInput) : Boolean
 }
 
 extend type CDP_Subscription {

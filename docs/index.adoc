@@ -799,8 +799,9 @@ In the CDP, every EventType will need both an regular GraphQL type, and a GraphQ
 
 NOTE: EventType fields MUST match the CDP propertyType format, and its underlying valueTypes
 
-If custom EventTypes are registered in a server, when using as fields in the EventInput type, the convention is that
-the field name is the same as the type name but starting with a lowercase character instead of an uppercase one.
+When custom EventTypes are registered in a server, new corresponding fields will be added to the in the <<CDP_EventInput>>
+ type and the convention is that the field name is the same as the type name but starting with a lowercase character
+ instead of an uppercase one.
 
 Custom output event types must also inherit from the CDP_EventInterface interface.
 
@@ -860,8 +861,8 @@ input CDP_EventInput {
 }
 ----
 
-Once the event types are defined (in an implementation-specific manner), they can be send using the `processEvents` mutation field
-that uses the <<CDP_EventInput>> type and queried using the `findEvents` query field
+Once the event types are defined (in an implementation-specific manner), they can be sent using the `processEvents`
+mutation field that uses the <<CDP_EventInput>> type and queried using the `findEvents` query field
 
 .Sample EventType for CRM updates
 [source,javascript]
@@ -1257,6 +1258,12 @@ The resulting merged profile MUST contain all the profile IDs of the merged prof
 as well as the merged profile data.
 The original profiles that were merged may be flagged or deleted, this is implementation specific.
 
+==== Deleting profile personal data (aka profile anonymizing)
+
+The API provides a way to delete personal data associated with a profile. The effect of this operation is not specified
+in details but it should respect existing privacy laws such as GDPR. For example, it could remove all properties flagged
+as containing personal data and/or it could even process events in ways to anonymize data.
+
 ==== CDP_ProfileID
 
 Profiles are created from a client. As such, each profile has a composite key based on a unique ID within that client, and the client.
@@ -1376,12 +1383,13 @@ include::{sourcedir}/schemas/profiles.js[lines=74..76]
 
 ==== CDP_Mutation
 
-TODO Should profile properties mutations be made optional ? Implementations could provide their own way of registering properties and not want to expose this ?
+The profile property mutation fields (createOrUpdateProfileProperties, deleteProfileProperties) are OPTIONAL
+(see <<Conformance>> section).
 
 .Profile mutations
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profiles.js[lines=80..82]
+include::{sourcedir}/schemas/profiles.js[lines=80..83]
 ----
 
 ==== CDP_Subscription
