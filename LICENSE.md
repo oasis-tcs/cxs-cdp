@@ -11,4 +11,4 @@ Description of this repository is presented in the <a href="https://github.com/o
 file, and guidelines for contribution/participation are given in the <a href="https://github.com/oasis-tcs/cxs-cdp/blob/master/CONTRIBUTING.md">CONTRIBUTING</a> file.
 
 ### Corporate non-assertion statement
-The CXS TC and companies behind the CDP specifications welcome any interested parties to freely copy, use, license and re-license the sample CDP server and it's code in this repository for their own purposes. The code is placed in the "server/" folder at root of this repository
+The CXS TC and companies behind the CDP specifications welcome any interested parties to freely copy, use, license and re-license the sample CDP server and it's code for their own purposes. The code is placed in the "server/" folder at root of this repository.
