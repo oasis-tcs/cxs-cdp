@@ -9,3 +9,6 @@ the <a href="https://www.oasis-open.org/policies-guidelines/ipr#appendixa">OASIS
 
 Description of this repository is presented in the <a href="https://github.com/oasis-tcs/cxs-cdp/blob/master/README.md">README</a> 
 file, and guidelines for contribution/participation are given in the <a href="https://github.com/oasis-tcs/cxs-cdp/blob/master/CONTRIBUTING.md">CONTRIBUTING</a> file.
+
+### Corporate non-assertion statement
+The CXS TC and companies behind the CDP specifications welcome any interested parties to freely copy, use, license and re-license the sample CDP server and it's code in this repository for their own purposes. The code is placed in the "server/" folder at root of this repository
