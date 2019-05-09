@@ -230,6 +230,10 @@ in different fashions but they will be remembered by the CDP for future displays
 
 Below is a short introduction to the core domain objects of the specification:
 
+image::images/object-model.png["Logical and simplified object model graph"]
+
+NOTE: Blue objects are typically manually configured and managed, red objects are generated.
+
 Events:: <<Events>> represent the stream of "customer behaviour" events that help the CDP build <<Profiles>>
 Profiles:: Representing the data of the subject, or "customer" interacting with your business <<Objects>>
 Personas:: Use <<Personas>> to simulate real <<Profiles>> for testing and validation
