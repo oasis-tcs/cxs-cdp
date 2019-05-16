@@ -191,13 +191,14 @@ A common use case is delivering better and more personalized experiences across 
 
 image::images/cdp-webpersonalization-usecase.svg["Personalization use case diagram"]
 
-As illustrated above, the browser can interact with both a Content Management System (CMS) and a CDP-compliant server
-to first retrieve the HTML needed to deliver the page content. After this the next request to the CMS is a request
+As illustrated above, the browser can interact with both a (headless or regular) Content Management System (CMS) and a CDP-compliant server
+to first retrieve the HTML needed to deliver the page content or bootstrap a Progressive Web Application (PWA). After this the next request to the CMS is a request
 for personalized content that will be customized based on the profile retrieved from the CDP. The result is personalized
 content for the current visitor being sent back to the browser.
 
 This illustration is by no means the only way to implement personalization using a CDP but it serves as a simple
-introduction to the possibilies such a system may offer.
+introduction to the possibilies such a system may offer. Even native mobile applications could be integrated using this
+pattern.
 
 === Newsletters
 
@@ -211,7 +212,10 @@ In the above illustration the newsletter server can query the CDP for a group of
 defined segment to retrieve the subset of profiles it is interested in. Once those profiles are retrieved they may be
 used to update the newsletters management system lists with information coming from those exported profiles. And finally,
 when the newsletter is ready to be distributed, the updated lists may be used to send the emails using an email delivery
-server.
+server or service.
+
+This use case could be expanded to use segmentation, campaigns and other Marketing Automation technologies that could
+benefit from the standardized functionalities exposed by this specification.
 
 === A/B testing
 
@@ -304,6 +308,16 @@ GraphQL request. Here's an example of the `variables part:
 As illustrated above, the variables may contain complex JSON structure that represent the values for the objects that
 are passed as GraphQL arguments.
 
+=== Output Types and Input Types
+
+GraphQL differentiates output types and input types as separate structures used either as part of the input query or in
+the resulting output of a GraphQL query. This specification therefore specifies both input and output types. There are
+also differences in terms of the features available for input and output types. For example, output types support unions
+and interfaces, while input types do not. Because of these limitations the specification had to find workarounds for
+some of these problems, and they will be explicitely mentioned in the sections that had to use them.
+
+Finally, as a shortcut, GraphQL output types are just usually called GraphQL types.
+
 === Scalars
 
 GraphQL provides several basic value types that are used extensively in this specification, for instance Int and String.
@@ -352,12 +366,15 @@ Below are some examples of properties:
 * gender(Enumeration) : FEMALE
 * location(GeoPoint) : "lat,lon"
 * arrayOfStrings([String]) : ["This", "is", "nice"]
-* setOfProperties(Set) : {prompt : "hello", response : "yo"}
+* setOfProperties(Set) : {"prompt" : "hello", "response" : "yo"}
+* arraySetOfProperties([Set]) : [{"name1": "value1", "name2" : "value2"}], [{"name1": "value1", "name2" : "value2"}]
 
 In the case of the enumeration value type, a GraphQL enum type will be generated based on the registered possible values for the property.
 
 The Set value type is special, as it enables nested properties and a tree-structure of properties.
 I.e. from the example above: "setOfProperties.response" would hold the value "yo"
+
+The arraySetOfProperties given as an example above is simply a properties of Set type but with multiple possible values.
 
 A property consists of:
 
@@ -365,6 +382,8 @@ Property name:: it is recommended but not mandatory to prefix the property name
 Value type:: One of `Identifier`, `String`, `Int`, `Float`, `Date`, `Boolean`, `GeoPoint`, `Enumeration` and `Set`
 Minimum occurrences:: Minimum number of values a property may hold (array)
 Maximum occurrences:: Maximum number of values per property
+Tags:: A property may be be tagged to indicate special properties such as "personalData", "requiredReadAuthorization", or
+any important metadata about the property.
 
 Since the CDP api is defined using strongly typed GraphQL,
 the API is dynamically updated when properties are added or changed.
@@ -385,8 +404,11 @@ tags:: System defined/generated tags. E.g: hidden, readOnly, personalData
 
 ==== CDP_PropertyInput
 
-This type is a workaround for missing inheritance in GraphQL.
-Only one field may be used at a time, all other fields must be null.
+A property type may have different values types, but due to a limitation of GraphQL Input types it is not possible to
+represent this using type inheritance. As a workaround, an input type containing all possible value types is used
+instead, and only one of these fields is allowed to have a value corresponding to the declared property value type. All
+other value fields must be null. It is REQUIRED that implementations check for this and return an error if invalid
+values are passed.
 
 [source,graphql]
 ----
