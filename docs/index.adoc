@@ -308,15 +308,13 @@ GraphQL request. Here's an example of the `variables part:
 As illustrated above, the variables may contain complex JSON structure that represent the values for the objects that
 are passed as GraphQL arguments.
 
-=== Output Types and Input Types
+=== GraphQL limitations and workarounds
 
-GraphQL differentiates output types and input types as separate structures used either as part of the input query or in
-the resulting output of a GraphQL query. This specification therefore specifies both input and output types. There are
-also differences in terms of the features available for input and output types. For example, output types support unions
-and interfaces, while input types do not. Because of these limitations the specification had to find workarounds for
-some of these problems, and they will be explicitely mentioned in the sections that had to use them.
+No support for inheritance in input types:: as a workaround a wrapper type is used that contains fields for all the different possible sub-object types. The <<CDP_PropertyInput>> type is an example of such a workaround
 
-Finally, as a shortcut, GraphQL output types are just usually called GraphQL types.
+Namespacing:: all types are prefixed with the `CDP_` prefix to avoid conflicts with custom-defined types. Also for types that may mix CDP standard and user-defined fields, a `cdp_` prefix has been used.
+
+Dynamic API:: as parts of the API are generated from user-defined properties or event types, removal of fields and types may happen dynamically. Implementors should advise users about this or create workarounds (such as https://www.apollographql.com/docs/graphql-tools/schema-directives[depreciation]).
 
 === Scalars
 
@@ -367,14 +365,14 @@ Below are some examples of properties:
 * location(GeoPoint) : "lat,lon"
 * arrayOfStrings([String]) : ["This", "is", "nice"]
 * setOfProperties(Set) : {"prompt" : "hello", "response" : "yo"}
-* arraySetOfProperties([Set]) : [{"name1": "value1", "name2" : "value2"}], [{"name1": "value1", "name2" : "value2"}]
+* arrayOfSet([Set]) : [{"name1": "value1", "name2" : "value2"}], [{"name1": "value1", "name2" : "value2"}]
 
 In the case of the enumeration value type, a GraphQL enum type will be generated based on the registered possible values for the property.
 
 The Set value type is special, as it enables nested properties and a tree-structure of properties.
 I.e. from the example above: "setOfProperties.response" would hold the value "yo"
 
-The arraySetOfProperties given as an example above is simply a properties of Set type but with multiple possible values.
+The arrayOfSet given as an example above is simply a Set property type with multiple values (see occurrences defined below).
 
 A property consists of:
 
@@ -382,8 +380,7 @@ Property name:: it is recommended but not mandatory to prefix the property name
 Value type:: One of `Identifier`, `String`, `Int`, `Float`, `Date`, `Boolean`, `GeoPoint`, `Enumeration` and `Set`
 Minimum occurrences:: Minimum number of values a property may hold (array)
 Maximum occurrences:: Maximum number of values per property
-Tags:: A property may be be tagged to indicate special properties such as "personalData", "requiredReadAuthorization", or
-any important metadata about the property.
+Tags:: A tag may be used to annotate the property with metadata information such as "personalData", "requiredReadAuthorization".
 
 Since the CDP api is defined using strongly typed GraphQL,
 the API is dynamically updated when properties are added or changed.
