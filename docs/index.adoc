@@ -1,4 +1,4 @@
-= Customer Data Platform 1.0.0 : Working Draft
+= Customer Data Platform 1.0 : Working Draft
 :toc: right
 //:toc: macro
 :toclevels: 4
@@ -11,7 +11,7 @@ image::images/OASISLogo-v2.0.jpg["Oasis Open Logo"]
 == Committee Specification Draft 01 / Public Review Draft 01 (Working Draft)
 
 [discrete]
-== Not Yet Published (29 March 2019)
+== Not Yet Published (06 June 2019)
 
 [discrete]
 === Specification URIs:
