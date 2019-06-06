@@ -12,7 +12,7 @@ buildscript {
 apply plugin: 'org.asciidoctor.convert'
 
 asciidoctor {
-  backends 'html5', 'pdf'
+  backends 'html5'
   sourceDir = file('docs')
   outputDir = file('build/docs')
 }
