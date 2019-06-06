@@ -4,6 +4,7 @@
 :toclevels: 4
 :sectnums:
 :sourcedir: ../server
+:stylesheet: oasis.css
 
 image::images/OASISLogo-v2.0.jpg["Oasis Open Logo"]
 
