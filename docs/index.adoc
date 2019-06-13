@@ -1029,12 +1029,13 @@ previous example.
 
 ==== Standard event types
 
-TODO: This seems vague? need to specify somehow?
+The CDP specification includes some standard event types. They are actually documented in their relevant section but we
+list them here to provide an overview.
 
-- Updating profile properties, needs to match the profile properties definitions (built-in)
-- Session start/paused/resumed/stopped (built-in)
-- Updating consent ( see http://ec.europa.eu/ipg/basics/legal/cookies/index_en.htm ) (built-in)
-- Opt-in / opt-out of a list (built-in)
+- <<CDP_ProfileUpdateEvent,Updating profile properties>>, used to update a profile properties (built-in)
+- <<CDP_SessionEvent,Session>> start/paused/resumed/stopped (built-in)
+- <<CDP_ConsentUpdateEvent,Updating consent>>, used to update a profile's consents ( see http://ec.europa.eu/ipg/basics/legal/cookies/index_en.htm ) (built-in)
+- <<CDP_ListsUpdateEvent,Opt-in / opt-out>> of a list (built-in)
 
 ==== Sample event types
 
