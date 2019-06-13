@@ -165,21 +165,22 @@ As such, the API dynamically evolves as you customize your deployment.
 
 === Terminology
 
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC2119] and [RFC8174] when, and only when, they appear in all capitals, as shown here.
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <<RFC2119, RFC2119>> and <<RFC8174, RFC8174>> when, and only when, they appear in all capitals, as shown here.
 
 === Normative References
 
+[#RFC3986]
+[RFC3986]:: T. Berners-Lee, "Uniform Resource Identifier (URI): Generic Syntax", STD 66, RFC 8174, 10.17487/RFC3986, January 2005, http://www.rfc-editor.org/info/rfc3986
+
+[#RFC3339]
+[RFC3339]:: G. Klyne, "Date and Time on the Internet: Timestamps", RFC 3339, DOI:  10.17487/RFC3339 , July 2002, http://www.rfc-editor.org/info/rfc3339
+
 [#RFC2119]
-*[RFC2119]*	Bradner, S., "Key words for use in RFCs to Indicate Requirement Levels", BCP 14, RFC 2119, DOI 10.17487/RFC2119, March 1997, http://www.rfc-editor.org/info/rfc2119.
+[RFC2119]::	Bradner, S., "Key words for use in RFCs to Indicate Requirement Levels", BCP 14, RFC 2119, DOI 10.17487/RFC2119, March 1997, http://www.rfc-editor.org/info/rfc2119.
 
 [#RFC8174]
-*[RFC8174]*	Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174, May 2017, http://www.rfc-editor.org/info/rfc8174.
+[RFC8174]::	Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174, May 2017, http://www.rfc-editor.org/info/rfc8174.
 
-[#RFC3986]
-*[RFC3986]* T. Berners-Lee, "Uniform Resource Identifier (URI): Generic Syntax", RFC 8174, Jan, 2005, https://tools.ietf.org/html/rfc3986
-
-[#RFCXX]
-*[RFCXX]* TODO
 
 == Use Cases
 
@@ -352,23 +353,27 @@ However, the CDP specification is also handling other value types in a similar f
 
 The following scalars have been specifically added:
 
+////
+see https://github.com/graphql-java/graphql-java-extended-scalars for example implementation
+////
+
 ==== JSON
 For values and arguments that cannot be defined structurally
 
   Scalar JSON
 
 ==== Date
-For consistent representation of dates. Based on RFC-3339, for example 1996-12-19, see https://github.com/graphql-java/graphql-java-extended-scalars for example implementation
+For consistent representation of dates. Based on <<RFC-3339, RFC-3339>>, for example 1996-12-19
 
   Scalar Date
 
 ==== Time
-For consistent representation of time. Based on RFC-3339, for example 16:39:57-08:00, see https://github.com/graphql-java/graphql-java-extended-scalars for example implementation
+For consistent representation of time. Based on <<RFC-3339, RFC-3339>>, for example 16:39:57-08:00
 
   Scalar Time
 
 ==== DateTime
-For consistent representation of date and time. Based on RFC-3339, for example 1996-12-19T16:39:57-08:00, see https://github.com/graphql-java/graphql-java-extended-scalars for example implementation
+For consistent representation of date and time. Based on <<RFC-3339, RFC-3339>>, for example 1996-12-19T16:39:57-08:00
 
   Scalar DateTime
 
@@ -1032,10 +1037,10 @@ previous example.
 The CDP specification includes some standard event types. They are actually documented in their relevant section but we
 list them here to provide an overview.
 
-- <<CDP_ProfileUpdateEvent,Updating profile properties>>, used to update a profile properties (built-in)
-- <<CDP_SessionEvent,Session>> start/paused/resumed/stopped (built-in)
-- <<CDP_ConsentUpdateEvent,Updating consent>>, used to update a profile's consents ( see http://ec.europa.eu/ipg/basics/legal/cookies/index_en.htm ) (built-in)
-- <<CDP_ListsUpdateEvent,Opt-in / opt-out>> of a list (built-in)
+<<CDP_ProfileUpdateEvent,Profile update>>:: Update profile properties
+<<CDP_SessionEvent,Session>>:: Track session state changes
+<<CDP_ConsentUpdateEvent,Consent update>>:: Update a profile consents
+<<CDP_ListsUpdateEvent,List update>>:: Opt in/out of list
 
 ==== Sample event types
 
