@@ -1,4 +1,4 @@
-= Customer Data Platform 1.0 : Working Draft
+= Customer Data Platform 1.0
 :toc: right
 //:toc: macro
 :toclevels: 4
@@ -9,27 +9,35 @@
 image::images/OASISLogo-v2.0.jpg["Oasis Open Logo"]
 
 [discrete]
-== Committee Specification Draft 01 / Public Review Draft 01 (Working Draft)
+== Committee Specification Draft 01 / Public Review Draft 01
 
 [discrete]
-== Not Yet Published (06 June 2019)
+== 13 June 2019
 
 [discrete]
 === Specification URIs:
-This Version:
 
-  * http://docs.oasis-open.org/cxs/cdp/v1.0/csprd01/cdp-v1.0-csprd01.adoc (Authoritative)
-  * http://docs.oasis-open.org/cxs/cdp/v1.0/csprd01/cdp-v1.0-csprd01.html
-  * http://docs.oasis-open.org/cxs/cdp/v1.0/csprd01/cdp-v1.0-csprd01.pdf
+[discrete]
+==== This Version:
+[horizontal]
+::
+https://docs.oasis-open.org/cxs/cdp/v1.0/csprd01/cdp-v1.0-csprd01.adoc (Authoritative) +
+https://docs.oasis-open.org/cxs/cdp/v1.0/csprd01/cdp-v1.0-csprd01.html +
+https://docs.oasis-open.org/cxs/cdp/v1.0/csprd01/cdp-v1.0-csprd01.pdf
 
-Previous Version:
-  N/A
+[discrete]
+==== Previous Version:
+[horizontal]
+::
+N/A
 
-Latest Version:
-
-  * http://docs.oasis-open.org/cxs/cdp/v1.0/cdp-v1.0.txt (Authoritative)
-  * http://docs.oasis-open.org/cxs/cdp/v1.0/cdp-v1.0.html
-  * http://docs.oasis-open.org/cxs/cdp/v1.0/cdp-v1.0.pdf
+[discrete]
+==== Latest Version:
+[horizontal]
+::
+https://docs.oasis-open.org/cxs/cdp/v1.0/cdp-v1.0.txt (Authoritative) +
+https://docs.oasis-open.org/cxs/cdp/v1.0/cdp-v1.0.html +
+https://docs.oasis-open.org/cxs/cdp/v1.0/cdp-v1.0.pdf
 
 [discrete]
 === Technical Committee:
@@ -37,23 +45,30 @@ Latest Version:
 OASIS Context Server (CXS) TC
 
 [discrete]
-==== Chair(s):
+==== Chairs:
 
-  * Serge Huber (shuber@jahia.com), Jahia Solutions Group SA
-  * Thomas Lund Sigdestad (tsi@enonic.com), Enonic
+[horizontal]
+::
+Serge Huber (shuber@jahia.com), Jahia Solutions Group SA +
+Thomas Lund Sigdestad (tsi@enonic.com), Enonic
 
 [discrete]
-==== Editor(s):
+==== Editors:
 
-  * Thomas Lund Sigdestad (tsi@enonic.com), Enonic
-  * Serge Huber (shuber@jahia.com), Jahia Solutions Group SA
+[horizontal]
+::
+Thomas Lund Sigdestad (tsi@enonic.com), Enonic +
+Serge Huber (shuber@jahia.com), Jahia Solutions Group SA
 
 [discrete]
 === Additional artifacts:
 
 This prose specification is one component of a Work Product that also includes:
 
-* Sample server implementation: https://github.com/oasis-tcs/cxs-cdp
+[discrete]
+==== Sample server
+
+Available from: https://github.com/oasis-tcs/cxs-cdp
 
 .To run server locally:
 ----
@@ -69,9 +84,11 @@ npm start
 
 This specification is related to:
 
-  * GraphQL : https://graphql.org
-  * GraphQL specification : https://facebook.github.io/graphql/
-  *	Apache Unomi: https://unomi.apache.org
+[horizontal]
+::
+GraphQL : https://graphql.org +
+GraphQL specification : https://facebook.github.io/graphql/ +
+Apache Unomi: https://unomi.apache.org
 
 [discrete]
 === Abstract:
@@ -89,7 +106,7 @@ TC members should send comments on this specification to the TC's email list. Ot
 
 This specification is provided under the Non-Assertion Mode of the OASIS IPR Policy, the mode chosen when the Technical Committee was established. For information on whether any patents have been disclosed that may be essential to implementing this specification, and any offers of patent licensing terms, please refer to the Intellectual Property Rights section of the TC's web page (https://www.oasis-open.org/committees/cxs/ipr.php).
 
-NOTE: Any machine-readable content (Computer Language Definitions) declared Normative for this Work Product is provided in separate plain text files. In the event of a discrepancy between any such plain text file and display content in the Work Product's prose narrative document(s), the content in the separate plain text file prevails.
+*Note that:* Any machine-readable content (Computer Language Definitions) declared Normative for this Work Product is provided in separate plain text files. In the event of a discrepancy between any such plain text file and display content in the Work Product's prose narrative document(s), the content in the separate plain text file prevails.
 
 [discrete]
 === Citation format:
@@ -98,8 +115,12 @@ When referencing this specification the following citation format should be used
 
 *CDP-v1.0*
 
-_Customer Data Platform Version 1.0_. Edited by Thomas Lund Sigdestad & Serge Huber. 21 March 2019. OASIS Committee Specification Draft 01 / Public Review Draft 01. http://docs.oasis-open.org/cxs/cdp/v1.0/csprd01/cdp-v1.0-csprd01.html. Latest version: http://docs.oasis-open.org/cxs/cdp/v1.0/cdp-v1.0.html.
+_Customer Data Platform Version 1.0_. Edited by Thomas Lund Sigdestad & Serge Huber. 13 June 2019.
+OASIS Committee Specification Draft 01 / Public Review Draft 01.
+https://docs.oasis-open.org/cxs/cdp/v1.0/csprd01/cdp-v1.0-csprd01.html.
+Latest version: https://docs.oasis-open.org/cxs/cdp/v1.0/cdp-v1.0.html.
 
+'''
 
 [discrete]
 == Notices
@@ -122,8 +143,7 @@ OASIS takes no position regarding the validity or scope of any intellectual prop
 
 The name "OASIS" is a trademark of OASIS, the owner and developer of this specification, and should be used only to refer to the organization and its official outputs. OASIS welcomes reference to, and implementation and use of, specifications, while reserving the right to enforce its marks against misleading uses. Please see https://www.oasis-open.org/policies-guidelines/trademark for above guidance.
 
-toc::[]
-
+'''
 
 == Introduction
 
@@ -149,9 +169,17 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 === Normative References
 
-[RFC2119]	Bradner, S., "Key words for use in RFCs to Indicate Requirement Levels", BCP 14, RFC 2119, DOI 10.17487/RFC2119, March 1997, http://www.rfc-editor.org/info/rfc2119.
+[#RFC2119]
+*[RFC2119]*	Bradner, S., "Key words for use in RFCs to Indicate Requirement Levels", BCP 14, RFC 2119, DOI 10.17487/RFC2119, March 1997, http://www.rfc-editor.org/info/rfc2119.
 
-[RFC8174]	Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174, May 2017, http://www.rfc-editor.org/info/rfc8174.
+[#RFC8174]
+*[RFC8174]*	Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174, May 2017, http://www.rfc-editor.org/info/rfc8174.
+
+[#RFC3986]
+*[RFC3986]* T. Berners-Lee, "Uniform Resource Identifier (URI): Generic Syntax", RFC 8174, Jan, 2005, https://tools.ietf.org/html/rfc3986
+
+[#RFCXX]
+*[RFCXX]* TODO
 
 == Use Cases
 
@@ -359,14 +387,16 @@ Each property has a specific valueType to limit what kind of values it may hold,
 
 Below are some examples of properties:
 
-* fullName(String) : "Jane Doe"
-* birthDate(Date) : "2003-07-01"
-* someInteger(Integer) : 1337
-* gender(Enumeration) : FEMALE
-* location(GeoPoint) : "lat,lon"
-* arrayOfStrings([String]) : ["This", "is", "nice"]
-* setOfProperties(Set) : {"prompt" : "hello", "response" : "yo"}
-* arrayOfSet([Set]) : [{"name1": "value1", "name2" : "value2"}], [{"name1": "value1", "name2" : "value2"}]
+[horizontal]
+::
+fullName(String) : "Jane Doe" +
+birthDate(Date) : "2003-07-01" +
+someInteger(Integer) : 1337 +
+gender(Enumeration) : FEMALE +
+location(GeoPoint) : "lat,lon" +
+arrayOfStrings([String]) : ["This", "is", "nice"] +
+setOfProperties(Set) : {"prompt" : "hello", "response" : "yo"} +
+arrayOfSet([Set]) : [{"name1": "value1", "name2" : "value2"}], [{"name1": "value1", "name2" : "value2"}]
 
 In the case of the enumeration value type, a GraphQL enum type will be generated based on the registered possible values for the property.
 
@@ -554,13 +584,13 @@ Filters are essentially composed from basic property comparison expressions, and
 For each operator available on a property's value type a GraphQL field will be generated.
 
 As we are expressing filters through GraphQL, filters will always be strongly typed.
-I.e. if the property "firstName" with valueType string is available, the following filter options can be used:
+I.e. if the property "firstName" of valueType string is available, the following filter options can be used:
 
   firstName_equals
-  firstName_startsWith (OPTIONAL)
-  firstName_endsWith (OPTIONAL)
+  firstName_startsWith
+  firstName_endsWith
   firstName_contains
-  firstName_regexp (OPTIONAL)
+  firstName_regexp
 
 Below are some basic filter examples:
 
@@ -681,18 +711,19 @@ include::{sourcedir}/schemas/filters.js[lines=39..43]
 === Clients
 
 The CDP GraphQL API should only be accessible for specific authorized clients.
-
 Client represent any software that interacts directly with the Customer Data Platform.
 
 Examples of clients are:
 
-* Cookie-based (Javascript or other) tracker for website(s)
-* Integration with your CRM
-* Integration with your Identity System
+[horizontal]
+::
+Cookie-based (Javascript or other) tracker for website(s) +
+Integration with your CRM +
+Integration with your Identity System
 
 Each Client is responsible for uniquely identifying visitors, for instance through the use of a cookie on the website, a customer ID in the CRM or a user ID in the Identity system.
-The Customer Data Platform requires <<profileIDs>> to be unique within every client.
-For instance, if a client is used to track visitors across multiple websites, it should aim to re-use the same <<profileID>> across all of them, for the same visitor.
+The Customer Data Platform requires a unique <<CDP_profileID, profile ID>> within every client.
+For instance, if a client is used to track visitors across multiple websites, it should aim to re-use the same profile ID across all of them, for the same visitor.
 
 NOTE: The standard does not specify Queries or Mutations for creating or retrieving Clients in the CDP specification, as this is considered an implementation-specific feature.
 For any CDP implementation, a Client MUST be defined for it to access the API.
@@ -764,14 +795,16 @@ By placing objects into collections, optimizations may execute on a reduced data
 
 ==== URIs
 
-Objects are identified globally using URIs, that follow the URI specification (https://tools.ietf.org/html/rfc3986).
+Objects are identified globally using URIs.
 Internal CDP objects may be referenced using reserved schemes, that each have their associated syntax:
 
-    - cdp_profile:client/id
-    - cdp_segment:view/name
-    - cdp_persona:view/name
-    - cdp_topic:view/name
-    - cdp_list:view/name
+[horizontal]
+::
+cdp_profile:client/id +
+cdp_segment:view/name +
+cdp_persona:view/name +
+cdp_topic:view/name +
+cdp_list:view/name
 
 ==== CDP_Object
 
@@ -780,7 +813,7 @@ Internal CDP objects may be referenced using reserved schemes, that each have th
 include::{sourcedir}/schemas/objects.js[lines=2..7]
 ----
 
-uri:: Globally unique identifier using URI syntax : https://tools.ietf.org/html/rfc3986
+uri:: Globally unique identifier using URI syntax according to <<RFC3986, RFC3986>>.
 topics:: A way of classifying objects.
 
 ==== CDP_ObjectInput
@@ -809,145 +842,6 @@ At a later point, the same visitor picks up a different device and returns to th
 A single client may be used to track <<Events>> from a number of different websites, where each website can be tagged with a source.
 Sources provide a way to identify the exact origin of the events beyond the client.
 As such, sources are comparable to siteID's in Google Analytics.
-
-==== EventTypes
-
-Events must always be of a specific type.
-CDP implementations must implement a set of standard EventTypes, any other EventTypes are implementation specific.
-
-For flexibility reasons, implementers are encouraged to make EventTypes pluggable.
-Implementation specific, or pluggable EventTypes SHOULD be registered with a prefix, to avoid naming conflicts.
-All standard EventTypes will be prefixed with CDP.
-
-In the CDP, every EventType will need both an regular GraphQL type, and a GraphQL input.
-
-NOTE: EventType fields MUST match the CDP propertyType format, and its underlying valueTypes
-
-When custom EventTypes are registered in a server, new corresponding fields will be added to the in the <<CDP_EventInput>>
- type and the convention is that the field name is the same as the type name but starting with a lowercase character
- instead of an uppercase one.
-
-Custom output event types must also inherit from the CDP_EventInterface interface.
-
-Below are examples of what custom EventTypes might look like, we used VENDOR as prefix, since it is recommended to avoid
-conflicts with other types:
-
-.Sample EventType for Page Views
-[source,GraphQL]
-----
-input VENDOR_PageViewEventInput {
-  pageID : String,
-  language : String,
-  pageUrl : String,
-  referrer : String,
-  userAgent : String
-}
-
-type VENDOR_PageViewEvent implements CDP_EventInterface {
-  # The following fields come from the EventInterface
-  id: ID!
-  cdp_source : CDP_Source
-  cdp_client : CDP_Client
-  cdp_profileID: CDP_ProfileID!
-  cdp_profile : CDP_Profile!
-  cdp_object: CDP_Object!
-  cdp_location: GeoPoint
-  cdp_timestamp: DateTime
-  cdp_topics : [CDP_Topic]
-  # The following fields are specific to this event type
-  pageID : String,
-  language : String,
-  pageUrl : String,
-  referrer : String,
-  userAgent : String
-}
-----
-
-The <<CDP_EventInput>> type will therefore modified to add the new event type-specific field.
-
-.Sample EventType for Page Views
-[source,GraphQL]
-----
-input CDP_EventInput {
-  id: ID
-  cdp_sourceID : String
-  cdp_profileID: CDP_ProfileIDInput!
-  cdp_objectID: ID!
-  cdp_location: GeoPoint
-  cdp_timestamp: DateTime
-  cdp_topics : [ID]
-  cdp_profileUpdateEvent : CDP_ProfileUpdateEventInput
-  cdp_consentUpdateEvent : CDP_ConsentUpdateEventInput
-  cdp_listsUpdateEvent : CDP_ListsUpdateEventInput
-  cdp_sessionEvent : CDP_SessionEventInput
-
-  vENDORPageViewEvent : VENDOR_PageViewEventInput # note the lowercase v as a convention as well as the absence of the "Input" suffix.
-}
-----
-
-Once the event types are defined (in an implementation-specific manner), they can be sent using the `processEvents`
-mutation field that uses the <<CDP_EventInput>> type and queried using the `findEvents` query field
-
-.Sample EventType for CRM updates
-[source,javascript]
-----
-input VENDOR_CrmLeadEventInput {
-  leadStatus : String,
-  leadID : String,
-  firstName : String,
-  lastName : String,
-  email : String
-}
-
-type VENDOR_CrmLeadEvent implements CDP_EventInterface {
-  # The following fields come from the EventInterface
-  id: ID!
-  cdp_source : CDP_Source
-  cdp_client : CDP_Client
-  cdp_profileID: CDP_ProfileID!
-  cdp_profile : CDP_Profile!
-  cdp_object: CDP_Object!
-  cdp_location: GeoPoint
-  cdp_timestamp: DateTime
-  cdp_topics : [CDP_Topic]
-  # The following fields are specific to this event type
-  leadStatus : String,
-  leadID : String,
-  firstName : String,
-  lastName : String,
-  email : String
-}
-----
-
-The <<CDP_EventInput>> type will also have a new field called `vENDOR_CrmLeadEvent : VENDOR_CrmLeadEventInput` as in the
-previous example.
-
-Standard event types:
-
-- Updating profile properties, needs to match the profile properties definitions (built-in)
-- Session start/paused/resumed/stopped (built-in)
-- Updating consent ( see http://ec.europa.eu/ipg/basics/legal/cookies/index_en.htm ) (built-in)
-- Opt-in / opt-out of a list (built-in)
-
-Suggested event types:
-
-- Transaction (generic)
-- Like (“user likes a product”)
-- Dislike (“visitor dislikes a comment”)
-- Abuse, “user reports abuse on a page”
-- Rate (score in percent) “user rates product 4 out of 5 stars”
-- Vote
-- Download (“user downloaded a digital product”)
-- Register/Submission
-- Login
-- Logout
-- RequestFriendship
-- AcceptFriendship
-- DenyFriendship
-- Click
-- View
-- Contribute (comment, blog etc?)
-- Conversion (purchase, download, signs up for a service
 
 
 ==== CDP_EventInterface
@@ -1021,6 +915,147 @@ mutation profileUpdateExample($events: [CDP_EventInput]!) {
 ----
 
 
+=== EventTypes
+
+Events must always be of a specific type.
+CDP implementations must implement a set of standard EventTypes, any other EventTypes are implementation specific.
+
+For flexibility reasons, implementers are encouraged to make EventTypes pluggable.
+Implementation specific, or pluggable EventTypes SHOULD be registered with a prefix, to avoid naming conflicts.
+All standard EventTypes will be prefixed with CDP.
+
+Every EventType will need both a regular GraphQL type, and a GraphQL input.
+
+NOTE: EventType fields MUST match the CDP propertyType format, and its underlying valueTypes
+
+When custom EventTypes are registered in a server, new corresponding fields will be added to the in the <<CDP_EventInput>>
+type and the convention is that the field name is the same as the type name but starting with lowercase characters
+instead of an uppercase one. For prefixed eventTypes, the entire prefix should be lowercased.
+
+Custom output event types must also inherit from the CDP_EventInterface interface.
+
+Below are examples of what custom EventTypes might look like, we used VENDOR as prefix, since it is recommended to avoid
+conflicts with other types:
+
+.Sample EventType for Page Views
+[source,GraphQL]
+----
+input VENDOR_PageViewEventInput {
+  pageID : String,
+  language : String,
+  pageUrl : String,
+  referrer : String,
+  userAgent : String
+}
+
+type VENDOR_PageViewEvent implements CDP_EventInterface {
+  # The following fields come from the EventInterface
+  id: ID!
+  cdp_source : CDP_Source
+  cdp_client : CDP_Client
+  cdp_profileID: CDP_ProfileID!
+  cdp_profile : CDP_Profile!
+  cdp_object: CDP_Object!
+  cdp_location: GeoPoint
+  cdp_timestamp: DateTime
+  cdp_topics : [CDP_Topic]
+  # The following fields are specific to this event type
+  pageID : String,
+  language : String,
+  pageUrl : String,
+  referrer : String,
+  userAgent : String
+}
+----
+
+The <<CDP_EventInput>> type will therefore modified to add the new event type-specific field.
+
+.Sample EventType for Page Views
+[source,GraphQL]
+----
+input CDP_EventInput {
+  id: ID
+  cdp_sourceID : String
+  cdp_profileID: CDP_ProfileIDInput!
+  cdp_objectID: ID!
+  cdp_location: GeoPoint
+  cdp_timestamp: DateTime
+  cdp_topics : [ID]
+  cdp_profileUpdateEvent : CDP_ProfileUpdateEventInput
+  cdp_consentUpdateEvent : CDP_ConsentUpdateEventInput
+  cdp_listsUpdateEvent : CDP_ListsUpdateEventInput
+  cdp_sessionEvent : CDP_SessionEventInput
+  # Custom eventType - note the prefix lowercasing convention as well as the absence of the "Input" suffix.
+  vendor_PageViewEvent : VENDOR_PageViewEventInput
+}
+----
+
+Once the event types are defined (in an implementation-specific manner), they can be sent using the `processEvents`
+mutation field that uses the <<CDP_EventInput>> type and queried using the `findEvents` query field
+
+.Sample EventType for CRM updates
+[source,javascript]
+----
+input VENDOR_CrmLeadEventInput {
+  leadStatus : String,
+  leadID : String,
+  firstName : String,
+  lastName : String,
+  email : String
+}
+
+type VENDOR_CrmLeadEvent implements CDP_EventInterface {
+  # The following fields come from the EventInterface
+  id: ID!
+  cdp_source : CDP_Source
+  cdp_client : CDP_Client
+  cdp_profileID: CDP_ProfileID!
+  cdp_profile : CDP_Profile!
+  cdp_object: CDP_Object!
+  cdp_location: GeoPoint
+  cdp_timestamp: DateTime
+  cdp_topics : [CDP_Topic]
+  # The following fields are specific to this event type
+  leadStatus : String,
+  leadID : String,
+  firstName : String,
+  lastName : String,
+  email : String
+}
+----
+
+The <<CDP_EventInput>> type will also have a new field called `vendor_CrmLeadEvent : VENDOR_CrmLeadEventInput` as in the
+previous example.
+
+==== Standard event types
+
+TODO: This seems vague? need to specify somehow?
+
+- Updating profile properties, needs to match the profile properties definitions (built-in)
+- Session start/paused/resumed/stopped (built-in)
+- Updating consent ( see http://ec.europa.eu/ipg/basics/legal/cookies/index_en.htm ) (built-in)
+- Opt-in / opt-out of a list (built-in)
+
+==== Sample event types
+
+Based on popular demand, future versions of the CDP standard may extend the set of standard eventTypes.
+As an inspiration to implementers, below is a small list of non-standard eventTypes identified:
+
+Click:: Interaction
+View:: View an object
+Transaction:: Generic transaction
+Conversion:: Purchase, download, signs up etc
+Like:: Positive reaction to object
+Dislike:: Negative reaction to an object
+Abuse:: Reports spam or other negative use of an object
+Rate:: Score in an object (in percent?)
+Download:: After downloading a digital object
+Submit:: After completing a form or providing input
+Contribute:: Adding value to an object
+Login:: Signing in
+Logout:: Signing out
+
+
 === EventFilters
 
 EventFilters are a specific version of filters for querying events.
@@ -1083,6 +1118,9 @@ include::{sourcedir}/schemas/eventfilters.js[lines=24..43]
 ----
 
 
+
+
+
 === Profiles
 Profiles are in many ways the holy grail of CDP.
 The Customer Data Platform dynamically creates and build profiles from events that occur over time.
@@ -1103,10 +1141,12 @@ Any data to be recorded in a profile must be mapped to a corresponding profile p
 
 The specification does not define a set of standard profile properties. However, implementors SHOULD include the following standard properties :
 
-- fullName : string
-- email : identifier
-- phoneNumber : identifier
-- birthday : datetime # this can be very important for managing consents, or managing any approval for children, minors, etc...
+[horizontal]
+::
+fullName : string +
+email : identifier +
+phoneNumber : identifier +
+birthDay : datetime
 
 Profiles are updated through events.
 The history of external or internal profile modifications is accessible through the profile update events.
@@ -1254,12 +1294,14 @@ suffix to them. This will always happen and implementations MUST do this.
 
 Also not illustrated here, the same generation system will also add fields to the following types :
 
-* CDP_ProfileUpdateEvent
-* CDP_ProfileUpdateEventInput
-* CDP_ProfileUpdateEventFilter
-* CDP_ProfileUpdateEventFilterInput
-* CDP_Persona
-* CDP_PersonaInput
+[horizontal]
+::
+CDP_ProfileUpdateEvent +
+CDP_ProfileUpdateEventInput +
+CDP_ProfileUpdateEventFilter +
+CDP_ProfileUpdateEventFilterInput +
+CDP_Persona +
+CDP_PersonaInput
 
 The naming and generation conventions are exactly the same as for the profiles properties.
 
@@ -1304,7 +1346,7 @@ include::{sourcedir}/schemas/profiles.js[lines=5..9]
 include::{sourcedir}/schemas/profiles.js[lines=11..14]
 ----
 
-* *id* ID must be unique within the client
+id:: ID must be unique within the client
 
 ==== CDP_ProfileInterface
 Common interface for <<Profiles>> and <<Personas>>
@@ -1653,16 +1695,19 @@ Consents are given and revoked through events. This means that the CDP specifica
 ----
 
 Consent Types may include:
-- tracking
-- list membership
-- newsletter membership
-- access to camera
-- access to friends / contacts data
-- access to medical records
-- send sms
-- call you
-- send personal data to third parties
-- send anonymous data to third parties
+
+[horizontal]
+::
+calling +
+tracking +
+message +
+e-mail +
+list membership +
+access to camera +
+access to friends / contacts +
+access to medical records +
+send personal data to third parties +
+send anonymous data to third parties
 
 Consent types are not defined in the specification, only the format of the type identifier
 should use a URI convention. Some URIs could actually be URLs and point to real resource that would give the
@@ -1824,9 +1869,11 @@ Profile interests is typically a core objective of Marketing activities, and tar
 
 Example Topics for a car manufacturer might for instance be:
 
-* "Model S"
-* "Model 3"
-* "Model X"
+[horizontal]
+::
+Model S +
+Model 3 +
+Model X
 
 
 Topics are associated with <<Objects>> and <<Profiles>> through <<Events>>.
@@ -1886,10 +1933,12 @@ The algorithm for how a Customer Data Platform scores and interest is implementa
 
 Example interests for products from a car manufacturer might be:
 
-*  Model S = 0.1
-*  Model 3 = 0.3
-*  Model X = 0.9
-*  Model Y = 1.0
+[horizontal]
+::
+Model S = 0.1 +
+Model 3 = 0.3 +
+Model X = 0.9 +
+Model Y = 1.0
 
 
 ==== CDP_Interest
@@ -2143,13 +2192,12 @@ Administrative users define segments through <<Filters>>.
 
 Example segments:
 
-* *Rich europeans*: Profiles in Europe with income above €100k
-* *Frequent buyer*: Profiles that have completed more than 5 transactions in the last 3 months
+Rich europeans:: Profiles in Europe with income above €1000k
+Frequent buyer:: Profiles that have completed more than 5 transactions in the last 3 months
 
 Here's an example operation to create a "male" segment (it assumes a "gender" profile property has been defined).
 
-operation::
-
+.Operation
 [source,graphql]
 ----
 mutation createSegment($segment: CDP_SegmentInput) {
@@ -2161,8 +2209,7 @@ mutation createSegment($segment: CDP_SegmentInput) {
 }
 ----
 
-variables::
-
+.Variables
 [source,json]
 ----
 {
@@ -2579,33 +2626,39 @@ See "Guidelines to Writing Conformance Clauses": http://docs.oasis-open.org/temp
 
 There are two defined levels of conformance:
 
-* CORE (minimum level conformance)
-* FULL (complete implementation, including intelligence capabilities)
+[horizontal]
+::
+CORE (minimum level conformance) +
+FULL (complete implementation, including intelligence capabilities)
 
 
 === CORE conformance
 
 CORE conformance CDP server implementations:
 
-* MUST implement the specifications of the <<API>> section
-* MAY implement any parts of the <<API>> specification marked as OPTIONAL
+[horizontal]
+::
+MUST implement the specifications of the <<API>> section +
+MAY implement any parts of the <<API>> specification marked as OPTIONAL
 
 === FULL conformance
 
 CORE conformance CDP server implementations:
 
-* MUST meet all requirements of the CORE conformance
-* MUST additionally implement all OPTIONAL parts of the <<API>> specification
+[horizontal]
+::
+MUST meet all requirements of the CORE conformance +
+MUST additionally implement all OPTIONAL parts of the <<API>> specification
 
-== Appendix A. Acknowledgements
+== Appendix A. Acknowledgments
 
 The following individuals have participated in the creation of this specification and are gratefully acknowledged:
 
-Participants:
-
-  * Jan Blessenohl, Progress Software
-  * Kaloyan Nikolov, Progress Software
-  * Chris Laprun, RedHat
+[horizontal]
+::
+Jan Blessenohl, Progress Software +
+Kaloyan Nikolov, Progress Software +
+Chris Laprun, RedHat
 
 == Appendix B. Revision History
 

@@ -1,6 +1,5 @@
 /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
 /* Remove comment around @import statement below when using as a custom stylesheet */
-@import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700";
 
 article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, section, summary {
     display: block
@@ -185,7 +184,7 @@ table {
 }
 
 html, body {
-    font-size: 100%
+    font-size: 12pt
 }
 
 body {
@@ -193,7 +192,7 @@ body {
     color: rgba(0, 0, 0, .8);
     padding: 0;
     margin: 0;
-    font-family: "Noto Serif", "DejaVu Serif", serif;
+    font-family: "Liberation Sans", Arial, Helvetica, sans-serif;
     font-weight: 400;
     font-style: normal;
     line-height: 1;
@@ -279,7 +278,7 @@ p.lead, .paragraph.lead > p, #preamble > .sectionbody > .paragraph:first-of-type
 
 .subheader, .admonitionblock td.content > .title, .audioblock > .title, .exampleblock > .title, .imageblock > .title, .listingblock > .title, .literalblock > .title, .stemblock > .title, .openblock > .title, .paragraph > .title, .quoteblock > .title, table.tableblock > .title, .verseblock > .title, .videoblock > .title, .dlist > .title, .olist > .title, .ulist > .title, .qlist > .title, .hdlist > .title {
     line-height: 1.45;
-    color: #7a2518;
+    color: #446CAA;
     font-weight: 400;
     margin-top: 0;
     margin-bottom: .25em
@@ -321,10 +320,10 @@ p aside {
 }
 
 h1, h2, h3, #toctitle, .sidebarblock > .content > .title, h4, h5, h6 {
-    font-family: "Open Sans", "DejaVu Sans", sans-serif;
-    font-weight: 300;
+    font-family: "Liberation Sans", Arial, Helvetica, sans-serif;
+    font-weight: bold;
     font-style: normal;
-    color: #ba3925;
+    color: #446CAA;
     text-rendering: optimizeLegibility;
     margin-top: 1em;
     margin-bottom: .5em;
@@ -361,7 +360,7 @@ hr {
     border: solid #ddddd8;
     border-width: 1px 0 0;
     clear: both;
-    margin: 1.25em 0 1.1875em;
+    margin: 2.4em 0 1.5em;
     height: 0
 }
 
@@ -381,7 +380,7 @@ small {
 }
 
 code {
-    font-family: "Droid Sans Mono", "DejaVu Sans Mono", monospace;
+    font-family: "Courier New", monospace;
     font-weight: 400;
     color: rgba(0, 0, 0, .9)
 }
@@ -481,19 +480,27 @@ blockquote, blockquote p {
     }
 
     h1 {
-        font-size: 2.75em
+        font-size: 2em
     }
 
     h2 {
-        font-size: 2.3125em
+        font-size: 1.5em
     }
 
     h3, #toctitle, .sidebarblock > .content > .title {
-        font-size: 1.6875em
+        font-size: 1.2em
     }
 
     h4 {
-        font-size: 1.4375em
+        font-size: 1.0em
+    }
+
+    h5 {
+        font-size: 0.8em
+    }
+
+    h6 {
+        font-size: 0.8em
     }
 }
 
@@ -573,7 +580,7 @@ h1 strong, h2 strong, h3 strong, #toctitle strong, .sidebarblock > .content > .t
 pre, pre > code {
     line-height: 1.45;
     color: rgba(0, 0, 0, .9);
-    font-family: "Droid Sans Mono", "DejaVu Sans Mono", monospace;
+    font-family: "Courier New", monospace;
     font-weight: 400;
     text-rendering: optimizeSpeed
 }
@@ -591,7 +598,7 @@ strong strong {
 }
 
 kbd {
-    font-family: "Droid Sans Mono", "DejaVu Sans Mono", monospace;
+    font-family: "Courier New", monospace;
     display: inline-block;
     color: rgba(0, 0, 0, .8);
     font-size: .65em;
@@ -673,8 +680,8 @@ p a > code:hover {
 }
 
 #header > h1:first-child {
-    color: rgba(0, 0, 0, .85);
-    margin-top: 2.25rem;
+    color: #446CAA;
+    margin-top: 2rem;
     margin-bottom: 0
 }
 
@@ -763,7 +770,7 @@ p a > code:hover {
 }
 
 #toc ul {
-    font-family: "Open Sans", "DejaVu Sans", sans-serif;
+    font-family: "Liberation Sans", Arial, Helvetica, sans-serif;
     list-style-type: none
 }
 
@@ -781,7 +788,7 @@ p a > code:hover {
 }
 
 #toctitle {
-    color: #7a2518;
+    color: #446CAA;
     font-size: 1.2em
 }
 
@@ -915,7 +922,7 @@ p a > code:hover {
 }
 
 .sect1 + .sect1 {
-    border-top: 1px solid #efefed
+    border-top: 1px solid #ddddd8
 }
 
 #content h1 > a.anchor, h2 > a.anchor, h3 > a.anchor, #toctitle > a.anchor, .sidebarblock > .content > .title > a.anchor, h4 > a.anchor, h5 > a.anchor, h6 > a.anchor {
@@ -957,9 +964,10 @@ p a > code:hover {
 .admonitionblock td.content > .title, .audioblock > .title, .exampleblock > .title, .imageblock > .title, .listingblock > .title, .literalblock > .title, .stemblock > .title, .openblock > .title, .paragraph > .title, .quoteblock > .title, table.tableblock > .title, .verseblock > .title, .videoblock > .title, .dlist > .title, .olist > .title, .ulist > .title, .qlist > .title, .hdlist > .title {
     text-rendering: optimizeLegibility;
     text-align: left;
-    font-family: "Noto Serif", "DejaVu Serif", serif;
+    font-family: "Liberation Sans", Arial, Helvetica, sans-serif;
     font-size: 1rem;
-    font-style: italic
+    font-style: italic;
+    margin-tip: 1em
 }
 
 table.tableblock > caption.title {
@@ -994,7 +1002,7 @@ table.tableblock #preamble > .sectionbody > .paragraph:first-of-type p {
 
 .admonitionblock > table td.icon .title {
     font-weight: bold;
-    font-family: "Open Sans", "DejaVu Sans", sans-serif;
+    font-family: "Liberation Sans", Arial, Helvetica, sans-serif;
     text-transform: uppercase
 }
 
@@ -1243,7 +1251,7 @@ table.pyhltable .linenodiv {
 }
 
 .verseblock pre {
-    font-family: "Open Sans", "DejaVu Sans", sans;
+    font-family: "Liberation Sans", Arial, Helvetica, sans-serif;
     font-size: 1.15rem;
     color: rgba(0, 0, 0, .85);
     font-weight: 300;
@@ -1831,7 +1839,7 @@ span.icon > .fa {
     width: 1.67em;
     height: 1.67em;
     line-height: 1.67em;
-    font-family: "Open Sans", "DejaVu Sans", sans-serif;
+    font-family: "Liberation Sans", Arial, Helvetica, sans-serif;
     font-style: normal;
     font-weight: bold
 }
