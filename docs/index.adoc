@@ -12,10 +12,7 @@ image::images/OASISLogo-v2.0.jpg["Oasis Open Logo"]
 == Committee Specification Draft 01 / Public Review Draft 01
 
 [discrete]
-== 13 June 2019
-
-[discrete]
-=== Specification URIs:
+=== 13 June 2019
 
 [discrete]
 ==== This Version:
@@ -35,7 +32,7 @@ N/A
 ==== Latest Version:
 [horizontal]
 ::
-https://docs.oasis-open.org/cxs/cdp/v1.0/cdp-v1.0.txt (Authoritative) +
+https://docs.oasis-open.org/cxs/cdp/v1.0/cdp-v1.0.adoc (Authoritative) +
 https://docs.oasis-open.org/cxs/cdp/v1.0/cdp-v1.0.html +
 https://docs.oasis-open.org/cxs/cdp/v1.0/cdp-v1.0.pdf
 
@@ -49,16 +46,16 @@ OASIS Context Server (CXS) TC
 
 [horizontal]
 ::
-Serge Huber (shuber@jahia.com), Jahia Solutions Group SA +
-Thomas Lund Sigdestad (tsi@enonic.com), Enonic
+Serge Huber (shuber@jahia.com), Jahia Solutions Group SA, https://jahia.com +
+Thomas Lund Sigdestad (tsi@enonic.com), Enonic, https://enonic.com
 
 [discrete]
 ==== Editors:
 
 [horizontal]
 ::
-Thomas Lund Sigdestad (tsi@enonic.com), Enonic +
-Serge Huber (shuber@jahia.com), Jahia Solutions Group SA
+Thomas Lund Sigdestad (tsi@enonic.com), Enonic, https://enonic.com
+Serge Huber (shuber@jahia.com), Jahia Solutions Group SA, https://jahia.com +
 
 [discrete]
 === Additional artifacts:
@@ -84,11 +81,8 @@ npm start
 
 This specification is related to:
 
-[horizontal]
-::
-GraphQL : https://graphql.org +
-GraphQL specification : https://facebook.github.io/graphql/ +
-Apache Unomi: https://unomi.apache.org
+GraphQL:: Query language and execution engine by https://graphql.org and the <<GRAPHQL, GraphQL specification>>.
+Apache Unomi:: Open source and reference implementation project of the CDP specification: https://unomi.apache.org
 
 [discrete]
 === Abstract:
@@ -168,6 +162,9 @@ As such, the API dynamically evolves as you customize your deployment.
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <<RFC2119, RFC2119>> and <<RFC8174, RFC8174>> when, and only when, they appear in all capitals, as shown here.
 
 === Normative References
+
+[#GRAPHQL]
+[GRAPHQL]:: Lee Byron, "GraphQL specification", June 2018, https://graphql.github.io/graphql-spec/June2018/
 
 [#RFC3986]
 [RFC3986]:: T. Berners-Lee, "Uniform Resource Identifier (URI): Generic Syntax", STD 66, RFC 8174, 10.17487/RFC3986, January 2005, http://www.rfc-editor.org/info/rfc3986
