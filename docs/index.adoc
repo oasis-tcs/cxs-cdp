@@ -4,6 +4,7 @@
 //:toc: macro
 :toclevels: 4
 :sectnums:
+:nofooter:
 image::images/OASISLogo-v2.0.jpg["Oasis Open Logo"]
 
 '''
