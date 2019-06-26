@@ -1,18 +1,20 @@
-= Customer Data Platform 1.0
+:sourcedir: ../server
+:stylesheet: oasis.css
 :toc: right
 //:toc: macro
 :toclevels: 4
 :sectnums:
-:sourcedir: ../server
-:stylesheet: oasis.css
-
 image::images/OASISLogo-v2.0.jpg["Oasis Open Logo"]
 
-[discrete]
-== Committee Specification Draft 01 / Public Review Draft 01
+'''
+
+= Customer Data Platform Version 1.0
 
 [discrete]
-=== 13 June 2019
+== Committee Specification Draft 01 / pass:q[<br>]Public Review Draft 01
+
+[discrete]
+== 13 June 2019
 
 [discrete]
 ==== This Version:
@@ -38,55 +40,43 @@ https://docs.oasis-open.org/cxs/cdp/v1.0/cdp-v1.0.pdf
 
 [discrete]
 === Technical Committee:
-
-OASIS Context Server (CXS) TC
+[horizontal]
+::
+https://www.oasis-open.org/committees/cxs/[OASIS Context Server (CXS) TC]
 
 [discrete]
 ==== Chairs:
 
 [horizontal]
 ::
-Serge Huber (shuber@jahia.com), Jahia Solutions Group SA, https://jahia.com +
-Thomas Lund Sigdestad (tsi@enonic.com), Enonic, https://enonic.com
+Serge Huber (shuber@jahia.com),  https://jahia.com[Jahia Solutions Group SA] +
+Thomas Lund Sigdestad (tsi@enonic.com),  https://enonic.com[Enonic]
 
 [discrete]
 ==== Editors:
 
 [horizontal]
 ::
-Thomas Lund Sigdestad (tsi@enonic.com), Enonic, https://enonic.com
-Serge Huber (shuber@jahia.com), Jahia Solutions Group SA, https://jahia.com +
+Thomas Lund Sigdestad (tsi@enonic.com),  https://enonic.com[Enonic] +
+Serge Huber (shuber@jahia.com),  https://jahia.com[Jahia Solutions Group SA]
 
-[discrete]
-=== Additional artifacts:
-
-This prose specification is one component of a Work Product that also includes:
-
-[discrete]
-==== Sample server
-
-Available from: https://github.com/oasis-tcs/cxs-cdp
-
-.To run server locally:
-----
-git clone https://github.com/oasis-tcs/cxs-cdp
-git checkout tags/v1.0.0
-cd cxs-cdp/server/
-npm install
-npm start
-----
 
 [discrete]
 === Related work:
 
+[horizontal]
+::
 This specification is related to:
-
-GraphQL:: Query language and execution engine by https://graphql.org and the <<GRAPHQL, GraphQL specification>>.
-Apache Unomi:: Open source and reference implementation project of the CDP specification: https://unomi.apache.org
++
+*GraphQL*: Query language and execution engine by https://graphql.org and the <<GRAPHQL, GraphQL specification>>. +
+*Apache Unomi*: Open source and reference implementation project of the CDP specification: https://unomi.apache.org +
+*Sample server*: Sample CDP server based on NodeJS available to download and run from https://github.com/oasis-tcs/cxs-cdp[Github]
 
 [discrete]
 === Abstract:
 
+[horizontal]
+::
 This specification aims to standardize exchange of customer data across systems and silos by defining a web-based API using GraphQL.
 The GraphQL api is a self-documented and strongly typed interface.
 It is designed to be dynamically extended, and allows extensive implementation specific customization.
@@ -94,22 +84,26 @@ It is designed to be dynamically extended, and allows extensive implementation s
 [discrete]
 === Status:
 
+[horizontal]
+::
 This document was last revised or approved by the OASIS Context Server (CXS) TC on the above date. The level of approval is also listed above. Check the "Latest version" location noted above for possible later revisions of this document. Any other numbered Versions and other technical work produced by the Technical Committee (TC) are listed at https://www.oasis-open.org/committees/tc_home.php?wg_abbrev=cxs#technical.
-
++
 TC members should send comments on this specification to the TC's email list. Others should send comments to the TC's public comment list, after subscribing to it by following the instructions at the "Send A Comment" button on the TC's web page at https://www.oasis-open.org/committees/cxs/.
-
++
 This specification is provided under the Non-Assertion Mode of the OASIS IPR Policy, the mode chosen when the Technical Committee was established. For information on whether any patents have been disclosed that may be essential to implementing this specification, and any offers of patent licensing terms, please refer to the Intellectual Property Rights section of the TC's web page (https://www.oasis-open.org/committees/cxs/ipr.php).
-
-*Note that:* Any machine-readable content (Computer Language Definitions) declared Normative for this Work Product is provided in separate plain text files. In the event of a discrepancy between any such plain text file and display content in the Work Product's prose narrative document(s), the content in the separate plain text file prevails.
++
+Note that any machine-readable content (Computer Language Definitions) declared Normative for this Work Product is provided in separate plain text files. In the event of a discrepancy between any such plain text file and display content in the Work Product's prose narrative document(s), the content in the separate plain text file prevails.
 
 [discrete]
 === Citation format:
 
+[horizontal]
+::
 When referencing this specification the following citation format should be used:
-
++
 *CDP-v1.0*
-
-_Customer Data Platform Version 1.0_. Edited by Thomas Lund Sigdestad & Serge Huber. 13 June 2019.
++
+_Customer Data Platform Version 1.0_. Edited by Thomas Lund Sigdestad and Serge Huber. 13 June 2019.
 OASIS Committee Specification Draft 01 / Public Review Draft 01.
 https://docs.oasis-open.org/cxs/cdp/v1.0/csprd01/cdp-v1.0-csprd01.html.
 Latest version: https://docs.oasis-open.org/cxs/cdp/v1.0/cdp-v1.0.html.
@@ -156,6 +150,10 @@ The CDP standard is defined as a web-based API using GraphQL - providing a self-
 
 It has been an explicit goal of the CXS committee to allow extensive customization of CDP deployments, in order to fit the need of each different organization.
 As such, the API dynamically evolves as you customize your deployment.
+
+=== IPR Policy
+
+This specification is provided under the Non-Assertion Mode of the OASIS IPR Policy, the mode chosen when the Technical Committee was established. For information on whether any patents have been disclosed that may be essential to implementing this specification, and any offers of patent licensing terms, please refer to the Intellectual Property Rights section of the TC’s web page (https://www.oasis-open.org/committees/cxs/ipr.php).
 
 === Terminology
 

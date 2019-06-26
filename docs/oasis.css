@@ -184,13 +184,12 @@ table {
 }
 
 html, body {
-    font-size: 12pt
+    font-size: 12pt;
 }
 
 body {
     background: #fff;
     color: rgba(0, 0, 0, .8);
-    padding: 0;
     margin: 0;
     font-family: "Liberation Sans", Arial, Helvetica, sans-serif;
     font-weight: 400;
@@ -201,6 +200,11 @@ body {
     tab-size: 4;
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased
+}
+
+body hr:first-of-type {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 a:hover {
