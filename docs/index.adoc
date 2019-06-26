@@ -2645,7 +2645,7 @@ MAY implement any parts of the <<API>> specification marked as OPTIONAL
 
 === FULL conformance
 
-CORE conformance CDP server implementations:
+FULL conformance CDP server implementations:
 
 [horizontal]
 ::
