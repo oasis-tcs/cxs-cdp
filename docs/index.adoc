@@ -15,7 +15,7 @@ image::images/OASISLogo-v2.0.jpg["Oasis Open Logo"]
 == Committee Specification Draft 01 / pass:q[<br>]Public Review Draft 01
 
 [discrete]
-== 13 June 2019
+== 18 July 2019
 
 [discrete]
 ==== This Version:
@@ -104,7 +104,7 @@ When referencing this specification the following citation format should be used
 +
 *CDP-v1.0*
 +
-_Customer Data Platform Version 1.0_. Edited by Thomas Lund Sigdestad and Serge Huber. 13 June 2019.
+_Customer Data Platform Version 1.0_. Edited by Thomas Lund Sigdestad and Serge Huber. 18 July 2019.
 OASIS Committee Specification Draft 01 / Public Review Draft 01.
 https://docs.oasis-open.org/cxs/cdp/v1.0/csprd01/cdp-v1.0-csprd01.html.
 Latest version: https://docs.oasis-open.org/cxs/cdp/v1.0/cdp-v1.0.html.
