@@ -1465,7 +1465,7 @@ include::{sourcedir}/schemas/profiles.js[lines=80..83]
 .Profile subscriptions
 [source,graphql]
 ----
-include::{sourcedir}/schemas/profiles.js[lines=86..86]
+include::{sourcedir}/schemas/profiles.js[lines=86..88]
 ----
 
 
