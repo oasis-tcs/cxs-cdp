@@ -5,7 +5,7 @@ ProfileIDs uniquely identify a profile within a source
 type CDP_ProfileID {
     client : CDP_Client!
     id : ID!
-    uri : ID # "cdp_profile:source/id"
+    uri : ID # "cdp_profile:clientID/id"
 }
 
 input CDP_ProfileIDInput {
